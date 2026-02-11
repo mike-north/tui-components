@@ -1,0 +1,40 @@
+{
+  "name": "@tuicomponents/graph",
+  "version": "0.1.0",
+  "description": "DAG graph visualization component for TUI (git log style)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["tui", "terminal", "graph", "dag", "git", "visualization"],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@tuicomponents/core": "workspace:*",
+    "zod": "^3.25.56",
+    "zod-to-json-schema": "^3.24.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}

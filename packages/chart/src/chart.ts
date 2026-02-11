@@ -1,0 +1,387 @@
+/**
+ * Main Chart component.
+ */
+
+import {
+  BaseTuiComponent,
+  type ComponentMetadata,
+  type RenderContext,
+  type RenderResult,
+  measureLines,
+  registry,
+} from "@tuicomponents/core";
+import { zodToJsonSchema } from "zod-to-json-schema";
+import { chartInputSchema } from "./schema.js";
+import type { ChartInput, ChartInputWithDefaults } from "./types.js";
+import { computeBarLayout, groupBarsByCategory } from "./layout/bar.js";
+import { computeStackedBarLayout } from "./layout/stacked-bar.js";
+import { computeLineLayout } from "./layout/line.js";
+import { computeAreaLayout } from "./layout/area.js";
+import { computeScatterLayout } from "./layout/scatter.js";
+import { computePieLayout } from "./layout/pie.js";
+import {
+  renderBarChartAnsi,
+  renderVerticalBarChartAnsi,
+  renderStackedBarChartAnsi,
+  renderLineChartAnsi,
+  renderAreaChartAnsi,
+  renderScatterChartAnsi,
+  renderPieChartAnsi,
+} from "./renderers/ansi.js";
+import {
+  renderBarChartMarkdown,
+  renderVerticalBarChartMarkdown,
+  renderStackedBarChartMarkdown,
+  renderLineChartMarkdown,
+  renderAreaChartMarkdown,
+  renderScatterChartMarkdown,
+  renderPieChartMarkdown,
+} from "./renderers/markdown.js";
+
+/**
+ * Chart component for rendering various chart types.
+ */
+class ChartComponent extends BaseTuiComponent<
+  ChartInput,
+  typeof chartInputSchema
+> {
+  readonly metadata: ComponentMetadata<ChartInput> = {
+    name: "chart",
+    description: "Renders various chart types including bar, line, and area charts",
+    version: "0.1.0",
+    supportedModes: ["ansi", "markdown"],
+    examples: [
+      {
+        name: "horizontal-bar",
+        description: "Simple horizontal bar chart",
+        input: {
+          type: "bar",
+          series: [
+            {
+              name: "Sales",
+              data: [
+                { x: "Q1", y: 120 },
+                { x: "Q2", y: 150 },
+                { x: "Q3", y: 180 },
+                { x: "Q4", y: 200 },
+              ],
+            },
+          ],
+          showValues: true,
+        },
+      },
+      {
+        name: "vertical-bar",
+        description: "Vertical bar chart (column chart)",
+        input: {
+          type: "bar-vertical",
+          series: [
+            {
+              name: "Revenue",
+              data: [
+                { x: "Jan", y: 65 },
+                { x: "Feb", y: 80 },
+                { x: "Mar", y: 95 },
+                { x: "Apr", y: 70 },
+              ],
+            },
+          ],
+          height: 8,
+          width: 30,
+        },
+      },
+      {
+        name: "stacked-bar",
+        description: "Stacked horizontal bar chart",
+        input: {
+          type: "bar-stacked",
+          series: [
+            {
+              name: "Product A",
+              data: [
+                { x: "Q1", y: 50 },
+                { x: "Q2", y: 60 },
+                { x: "Q3", y: 70 },
+              ],
+            },
+            {
+              name: "Product B",
+              data: [
+                { x: "Q1", y: 30 },
+                { x: "Q2", y: 40 },
+                { x: "Q3", y: 35 },
+              ],
+            },
+          ],
+          width: 40,
+        },
+      },
+      {
+        name: "stacked-vertical",
+        description: "Stacked vertical bar chart",
+        input: {
+          type: "bar-stacked-vertical",
+          series: [
+            {
+              name: "Revenue",
+              data: [
+                { x: "Q1", y: 100 },
+                { x: "Q2", y: 120 },
+                { x: "Q3", y: 90 },
+                { x: "Q4", y: 150 },
+              ],
+            },
+            {
+              name: "Costs",
+              data: [
+                { x: "Q1", y: 60 },
+                { x: "Q2", y: 70 },
+                { x: "Q3", y: 55 },
+                { x: "Q4", y: 80 },
+              ],
+            },
+            {
+              name: "Profit",
+              data: [
+                { x: "Q1", y: 40 },
+                { x: "Q2", y: 50 },
+                { x: "Q3", y: 35 },
+                { x: "Q4", y: 70 },
+              ],
+            },
+          ],
+          height: 10,
+          width: 35,
+        },
+      },
+      {
+        name: "line",
+        description: "Line chart with height blocks",
+        input: {
+          type: "line",
+          series: [
+            {
+              name: "Temperature",
+              data: [
+                { x: "J", y: 30 },
+                { x: "F", y: 35 },
+                { x: "M", y: 50 },
+                { x: "A", y: 65 },
+                { x: "M", y: 75 },
+                { x: "J", y: 85 },
+                { x: "J", y: 90 },
+                { x: "A", y: 88 },
+                { x: "S", y: 78 },
+                { x: "O", y: 62 },
+                { x: "N", y: 45 },
+                { x: "D", y: 32 },
+              ],
+            },
+          ],
+          height: 8,
+          width: 20,
+        },
+      },
+      {
+        name: "multi-line",
+        description: "Multiple series line chart",
+        input: {
+          type: "line",
+          series: [
+            {
+              name: "2023",
+              data: [
+                { x: "Q1", y: 100 },
+                { x: "Q2", y: 120 },
+                { x: "Q3", y: 110 },
+                { x: "Q4", y: 140 },
+              ],
+            },
+            {
+              name: "2024",
+              data: [
+                { x: "Q1", y: 130 },
+                { x: "Q2", y: 145 },
+                { x: "Q3", y: 135 },
+                { x: "Q4", y: 160 },
+              ],
+            },
+          ],
+          height: 6,
+          width: 20,
+        },
+      },
+      {
+        name: "area",
+        description: "Area chart",
+        input: {
+          type: "area",
+          series: [
+            {
+              name: "Users",
+              data: [
+                { x: "W1", y: 100 },
+                { x: "W2", y: 150 },
+                { x: "W3", y: 180 },
+                { x: "W4", y: 160 },
+                { x: "W5", y: 200 },
+              ],
+            },
+          ],
+          height: 6,
+          width: 15,
+        },
+      },
+      {
+        name: "stacked-area",
+        description: "Stacked area chart",
+        input: {
+          type: "area-stacked",
+          series: [
+            {
+              name: "Mobile",
+              data: [
+                { x: "J", y: 50 },
+                { x: "F", y: 60 },
+                { x: "M", y: 70 },
+                { x: "A", y: 65 },
+              ],
+            },
+            {
+              name: "Desktop",
+              data: [
+                { x: "J", y: 100 },
+                { x: "F", y: 90 },
+                { x: "M", y: 85 },
+                { x: "A", y: 95 },
+              ],
+            },
+          ],
+          height: 8,
+          width: 15,
+        },
+      },
+    ],
+  };
+
+  readonly schema = chartInputSchema;
+
+  override getJsonSchema(): object {
+    return zodToJsonSchema(this.schema, {
+      name: this.metadata.name,
+      $refStrategy: "none",
+    });
+  }
+
+  render(input: ChartInput, context: RenderContext): RenderResult {
+    const parsed = this.schema.parse(input) as ChartInputWithDefaults;
+
+    if (parsed.series.length === 0 || parsed.series.every((s) => s.data.length === 0)) {
+      return { output: "", actualWidth: 0, lineCount: 0 };
+    }
+
+    let output: string;
+
+    switch (parsed.type) {
+      case "bar": {
+        const layout = computeBarLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderBarChartMarkdown(layout, { input: parsed })
+            : renderBarChartAnsi(layout, { theme: context.theme, input: parsed });
+        break;
+      }
+
+      case "bar-vertical": {
+        const layout = computeBarLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderVerticalBarChartMarkdown(layout, { input: parsed })
+            : renderVerticalBarChartAnsi(layout, { theme: context.theme, input: parsed });
+        break;
+      }
+
+      case "bar-stacked":
+      case "bar-stacked-vertical": {
+        const layout = computeStackedBarLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderStackedBarChartMarkdown(layout, { input: parsed })
+            : renderStackedBarChartAnsi(layout, { theme: context.theme, input: parsed });
+        break;
+      }
+
+      case "line": {
+        const layout = computeLineLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderLineChartMarkdown(layout, { input: parsed })
+            : renderLineChartAnsi(layout, { theme: context.theme, input: parsed });
+        break;
+      }
+
+      case "area":
+      case "area-stacked": {
+        const layout = computeAreaLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderAreaChartMarkdown(layout, { input: parsed })
+            : renderAreaChartAnsi(layout, { theme: context.theme, input: parsed });
+        break;
+      }
+
+      case "scatter": {
+        const layout = computeScatterLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderScatterChartMarkdown(layout, { input: parsed })
+            : renderScatterChartAnsi(layout, { theme: context.theme, input: parsed });
+        break;
+      }
+
+      case "pie":
+      case "donut": {
+        const layout = computePieLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderPieChartMarkdown(layout, { input: parsed })
+            : renderPieChartAnsi(layout, { theme: context.theme, input: parsed });
+        break;
+      }
+
+      case "heatmap": {
+        // TODO: Implement heatmap
+        output = "Heatmap not yet implemented";
+        break;
+      }
+    }
+
+    // Add title if present
+    if (parsed.title) {
+      const titleLine = context.theme
+        ? context.theme.semantic.header(parsed.title)
+        : parsed.title;
+      output = titleLine + "\n" + output;
+    }
+
+    const measured = measureLines(output);
+
+    return {
+      output,
+      actualWidth: measured.maxWidth,
+      lineCount: measured.lineCount,
+    };
+  }
+}
+
+/**
+ * Factory function to create a chart component.
+ */
+export function createChart(): ChartComponent {
+  return new ChartComponent();
+}
+
+// Register with global registry
+registry.register(createChart);
+
+export { ChartComponent };

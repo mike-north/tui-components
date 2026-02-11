@@ -1,16 +1,36 @@
 {
-  "name": "tui-components",
+  "name": "tui-components-monorepo",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Terminal UI components for CLI and AI assistants",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "lint:root": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "turbo run test",
+    "test:types": "turbo run test:types",
+    "clean": "turbo run clean && rm -rf node_modules/.cache"
   },
-  "keywords": [],
+  "keywords": ["tui", "terminal", "cli", "components"],
   "author": "",
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.29.2",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "@eslint/js": "^9.27.0",
+    "typescript-eslint": "^8.32.0",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "prettier": "^3.5.3",
+    "tsup": "^8.5.0",
+    "turbo": "^2.5.3",
+    "typescript": "^5.9.3",
+    "vitest": "^3.1.3"
   }
 }
