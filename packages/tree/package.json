@@ -24,6 +24,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run",
+    "api-report": "api-extractor run",
+    "api-report:update": "api-extractor run --local",
     "clean": "rm -rf dist"
   },
   "keywords": ["tui", "terminal", "tree", "hierarchy"],

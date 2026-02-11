@@ -143,6 +143,8 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
+    "api-report": "api-extractor run",
+    "api-report:update": "api-extractor run --local",
     "clean": "rm -rf dist"
   },
   "keywords": [
