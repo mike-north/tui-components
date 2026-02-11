@@ -683,3 +683,67 @@ export function renderPieChartMarkdown(
 
   return lines.join("\n");
 }
+
+/**
+ * Render a heatmap chart to markdown.
+ */
+export function renderHeatmapMarkdown(
+  layout: HeatmapChartLayout,
+  options: MarkdownRenderOptions
+): string {
+  const { input } = options;
+  const lines: string[] = [];
+
+  // Handle empty chart
+  if (layout.cells.length === 0 || layout.cells[0]!.length === 0) {
+    lines.push(anchorLine("No data", DEFAULT_ANCHOR));
+    return lines.join("\n");
+  }
+
+  // Column header row
+  const colHeaderPadding = " ".repeat(layout.rowLabelWidth);
+  const colHeaders = layout.colLabels
+    .map((label) => padToWidth(label, layout.colLabelWidth))
+    .join("");
+  lines.push(anchorLine(`${colHeaderPadding}${colHeaders}`, DEFAULT_ANCHOR));
+
+  // Data rows
+  for (let rowIdx = 0; rowIdx < layout.rowLabels.length; rowIdx++) {
+    const rowLabel = padToWidth(layout.rowLabels[rowIdx]!, layout.rowLabelWidth);
+    const rowCells = layout.cells[rowIdx]!;
+
+    let rowContent = "";
+    for (const cell of rowCells) {
+      // For numeric style, don't use backticks; for blocks/ascii, use intensity-based styling
+      if (layout.heatmapStyle === "numeric") {
+        rowContent += padToWidth(cell.displayChar, layout.colLabelWidth);
+      } else {
+        // Alternate backticks for visual distinction, pad to align with column headers
+        const useBackticks = cell.normalizedValue > 0.5;
+        const paddedChar = padToWidth(cell.displayChar, layout.colLabelWidth);
+        const styled = wrapInlineCode(paddedChar, useBackticks);
+        rowContent += styled;
+      }
+    }
+
+    lines.push(anchorLine(`${rowLabel}${rowContent}`, DEFAULT_ANCHOR));
+  }
+
+  // Add scale legend for non-numeric styles
+  if (layout.heatmapStyle !== "numeric") {
+    lines.push(anchorLine("", DEFAULT_ANCHOR));
+    const scaleChars =
+      layout.heatmapStyle === "blocks"
+        ? ["░", "▒", "▓", "█"]
+        : [".", ":", "*", "#"];
+    const scaleLabels = ["Low", "", "", "High"];
+    let scaleLine = "Scale: ";
+    for (let i = 0; i < scaleChars.length; i++) {
+      scaleLine += `${scaleChars[i]} ${scaleLabels[i]}`;
+      if (i < scaleChars.length - 1) scaleLine += " ";
+    }
+    lines.push(anchorLine(scaleLine, DEFAULT_ANCHOR));
+  }
+
+  return lines.join("\n");
+}

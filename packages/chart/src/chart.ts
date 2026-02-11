@@ -19,6 +19,7 @@ import { computeLineLayout } from "./layout/line.js";
 import { computeAreaLayout } from "./layout/area.js";
 import { computeScatterLayout } from "./layout/scatter.js";
 import { computePieLayout } from "./layout/pie.js";
+import { computeHeatmapLayout } from "./layout/heatmap.js";
 import {
   renderBarChartAnsi,
   renderVerticalBarChartAnsi,
@@ -27,6 +28,7 @@ import {
   renderAreaChartAnsi,
   renderScatterChartAnsi,
   renderPieChartAnsi,
+  renderHeatmapAnsi,
 } from "./renderers/ansi.js";
 import {
   renderBarChartMarkdown,
@@ -36,6 +38,7 @@ import {
   renderAreaChartMarkdown,
   renderScatterChartMarkdown,
   renderPieChartMarkdown,
+  renderHeatmapMarkdown,
 } from "./renderers/markdown.js";
 
 /**
@@ -262,6 +265,90 @@ class ChartComponent extends BaseTuiComponent<
           width: 15,
         },
       },
+      {
+        name: "scatter",
+        description: "Scatter plot with numeric axes",
+        input: {
+          type: "scatter",
+          series: [
+            {
+              name: "Data",
+              data: [
+                { x: 10, y: 20 },
+                { x: 30, y: 50 },
+                { x: 50, y: 30 },
+                { x: 70, y: 80 },
+                { x: 90, y: 60 },
+              ],
+            },
+          ],
+          height: 8,
+          width: 30,
+        },
+      },
+      {
+        name: "pie",
+        description: "Pie chart with percentage breakdown",
+        input: {
+          type: "pie",
+          series: [
+            {
+              name: "Revenue",
+              data: [
+                { label: "Sales", x: "Sales", y: 45 },
+                { label: "Support", x: "Support", y: 30 },
+                { label: "Other", x: "Other", y: 25 },
+              ],
+            },
+          ],
+          height: 10,
+          width: 30,
+        },
+      },
+      {
+        name: "donut",
+        description: "Donut chart with center label",
+        input: {
+          type: "donut",
+          series: [
+            {
+              name: "Market Share",
+              data: [
+                { label: "Chrome", x: "Chrome", y: 65 },
+                { label: "Firefox", x: "Firefox", y: 20 },
+                { label: "Safari", x: "Safari", y: 15 },
+              ],
+            },
+          ],
+          height: 10,
+          width: 30,
+          centerLabel: "100%",
+          innerRadius: 0.5,
+        },
+      },
+      {
+        name: "heatmap",
+        description: "Heatmap showing intensity values",
+        input: {
+          type: "heatmap",
+          series: [
+            {
+              name: "Activity",
+              data: [
+                { x: "Mon", y: 10, label: "9am" },
+                { x: "Tue", y: 50, label: "9am" },
+                { x: "Wed", y: 80, label: "9am" },
+                { x: "Mon", y: 30, label: "10am" },
+                { x: "Tue", y: 70, label: "10am" },
+                { x: "Wed", y: 90, label: "10am" },
+              ],
+            },
+          ],
+          height: 6,
+          width: 25,
+          heatmapStyle: "blocks",
+        },
+      },
     ],
   };
 
@@ -375,9 +462,18 @@ class ChartComponent extends BaseTuiComponent<
       }
 
       case "heatmap": {
-        // TODO: Implement heatmap
-        output = "Heatmap not yet implemented";
+        const layout = computeHeatmapLayout(parsed);
+        output =
+          context.renderMode === "markdown"
+            ? renderHeatmapMarkdown(layout, { input: parsed })
+            : renderHeatmapAnsi(layout, { theme: context.theme, input: parsed });
         break;
+      }
+
+      default: {
+        // Exhaustiveness check - TypeScript will error if a case is missing
+        const _exhaustiveCheck: never = parsed.type;
+        throw new Error(`Unknown chart type: ${_exhaustiveCheck}`);
       }
     }
 

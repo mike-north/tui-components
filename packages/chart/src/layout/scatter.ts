@@ -287,13 +287,13 @@ function computeBrailleScatterLayout(
   // Plot points in braille
   for (const point of points) {
     // Convert to dot coordinates (2x width, 4x height)
+    // Braille has 2 dots per character width, 4 dots per character height
     const dotX = Math.round(
       scaleValue(point.dataX, xScale.min, xScale.max, chartWidth * 2 - 1)
     );
-    const dotY = Math.round(
-      (1 - scaleValue(point.dataY, yScale.min, yScale.max, 1)) *
-        (chartHeight * 4 - 1)
-    );
+    // Invert Y since terminal rows go top-to-bottom but data goes bottom-to-top
+    const normalizedY = scaleValue(point.dataY, yScale.min, yScale.max, 1);
+    const dotY = Math.round((1 - normalizedY) * (chartHeight * 4 - 1));
 
     // Draw a small marker
     canvas.drawPoint(dotX, dotY, point.seriesIndex);

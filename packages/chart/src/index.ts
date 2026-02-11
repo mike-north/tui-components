@@ -5,6 +5,9 @@
  * - Bar charts (horizontal, vertical, stacked)
  * - Line charts
  * - Area charts (standard, stacked)
+ * - Scatter plots (dots, braille)
+ * - Pie and donut charts
+ * - Heatmaps (blocks, ascii, numeric)
  */
 
 // Main component
@@ -15,6 +18,9 @@ export {
   chartTypeSchema,
   barStyleSchema,
   lineStyleSchema,
+  scatterStyleSchema,
+  scatterMarkerSchema,
+  heatmapStyleSchema,
   valueFormatSchema,
   legendPositionSchema,
   dataPointSchema,
@@ -30,6 +36,9 @@ export type {
   ChartType,
   BarStyle,
   LineStyle,
+  ScatterStyle,
+  ScatterMarker,
+  HeatmapStyle,
   ValueFormat,
   DataPoint,
   DataSeries,
@@ -74,10 +83,15 @@ export {
   BRAILLE_DOTS,
   SERIES_STYLES,
   LINE_CHARS,
+  SCATTER_MARKERS,
+  SCATTER_MARKER_SEQUENCE,
+  HEATMAP_BLOCKS,
+  HEATMAP_ASCII,
   BrailleCanvas,
   valueToBlock,
   getBarChar,
   toBrailleChar,
+  valueToHeatmapChar,
 } from "./core/chars.js";
 
 export {
@@ -139,6 +153,24 @@ export {
   type AreaChartLayout,
 } from "./layout/area.js";
 
+export {
+  computeScatterLayout,
+  type ScatterPoint,
+  type ScatterChartLayout,
+} from "./layout/scatter.js";
+
+export {
+  computePieLayout,
+  type PieSlice,
+  type PieChartLayout,
+} from "./layout/pie.js";
+
+export {
+  computeHeatmapLayout,
+  type HeatmapCell,
+  type HeatmapChartLayout,
+} from "./layout/heatmap.js";
+
 // Renderers
 export {
   renderBarChartAnsi,
@@ -146,6 +178,9 @@ export {
   renderStackedBarChartAnsi,
   renderLineChartAnsi,
   renderAreaChartAnsi,
+  renderScatterChartAnsi,
+  renderPieChartAnsi,
+  renderHeatmapAnsi,
   type AnsiRenderOptions,
 } from "./renderers/ansi.js";
 
@@ -155,5 +190,8 @@ export {
   renderStackedBarChartMarkdown,
   renderLineChartMarkdown,
   renderAreaChartMarkdown,
+  renderScatterChartMarkdown,
+  renderPieChartMarkdown,
+  renderHeatmapMarkdown,
   type MarkdownRenderOptions,
 } from "./renderers/markdown.js";

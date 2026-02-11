@@ -707,9 +707,7 @@ export function renderHeatmapAnsi(
   const colLabelRow =
     " ".repeat(layout.rowLabelWidth) +
     layout.colLabels
-      .map((label) =>
-        padToWidth(label.substring(0, layout.cellWidth), layout.cellWidth)
-      )
+      .map((label) => padToWidth(label, layout.colLabelWidth))
       .join(" ");
   lines.push(colLabelRow);
 
@@ -726,9 +724,10 @@ export function renderHeatmapAnsi(
     for (const cell of rowCells) {
       let cellStr: string;
       if (layout.heatmapStyle === "numeric") {
-        cellStr = padToWidth(cell.displayChar, layout.cellWidth);
+        cellStr = padToWidth(cell.displayChar, layout.colLabelWidth);
       } else {
-        cellStr = cell.displayChar;
+        // Pad display char to align with column headers
+        cellStr = padToWidth(cell.displayChar, layout.colLabelWidth);
       }
 
       // Apply color based on intensity
@@ -751,8 +750,8 @@ export function renderHeatmapAnsi(
     lines.push("");
     const scaleLabel =
       layout.heatmapStyle === "blocks"
-        ? `Scale: ░ ${String(layout.valueRange.min)} ▒ ▓ █ ${String(layout.valueRange.max)}`
-        : `Scale: . ${String(layout.valueRange.min)} : * # ${String(layout.valueRange.max)}`;
+        ? `Scale: ░ ${layout.valueRange.min} ▒ ▓ █ ${layout.valueRange.max}`
+        : `Scale: . ${layout.valueRange.min} : * # ${layout.valueRange.max}`;
     lines.push(theme ? theme.semantic.secondary(scaleLabel) : scaleLabel);
   }
 
