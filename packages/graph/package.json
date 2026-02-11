@@ -25,6 +25,8 @@
     "lint": "eslint src",
     "test": "vitest run",
     "test:watch": "vitest",
+    "api-report": "api-extractor run",
+    "api-report:update": "api-extractor run --local",
     "clean": "rm -rf dist"
   },
   "keywords": ["tui", "terminal", "graph", "dag", "git", "visualization"],

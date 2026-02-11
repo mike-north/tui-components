@@ -17,6 +17,17 @@
     "test:types": {
       "dependsOn": ["build"]
     },
+    "api-report": {
+      "dependsOn": ["build"],
+      "inputs": ["dist/**/*.d.ts", "api-extractor.json"],
+      "outputs": []
+    },
+    "api-report:update": {
+      "dependsOn": ["build"],
+      "inputs": ["dist/**/*.d.ts", "api-extractor.json"],
+      "outputs": ["api-report/**"],
+      "cache": false
+    },
     "clean": {
       "cache": false
     }
