@@ -1,0 +1,20 @@
+{
+  "name": "tui-components-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuicomponents/box": "workspace:*",
+    "@tuicomponents/chart": "workspace:*",
+    "@tuicomponents/core": "workspace:*",
+    "@tuicomponents/diff": "workspace:*",
+    "@tuicomponents/gauge": "workspace:*",
+    "@tuicomponents/graph": "workspace:*",
+    "@tuicomponents/keyvalue": "workspace:*",
+    "@tuicomponents/list": "workspace:*",
+    "@tuicomponents/progress": "workspace:*",
+    "@tuicomponents/sparkline": "workspace:*",
+    "@tuicomponents/table": "workspace:*",
+    "@tuicomponents/tree": "workspace:*"
+  }
+}
