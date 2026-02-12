@@ -111,8 +111,8 @@ export function computeNiceTicks(options: NiceTicksOptions): NiceTicksResult {
     forceMax,
   } = options;
 
-  // Handle edge cases
-  if (dataMin === dataMax) {
+  // Handle edge cases - only use auto-range for single value if no forced values
+  if (dataMin === dataMax && forceMin === undefined && forceMax === undefined) {
     // Single value - create a range around it
     const center = dataMin;
     const half = center === 0 ? 5 : Math.abs(center) * 0.5;

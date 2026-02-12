@@ -42,6 +42,8 @@ export interface HeatmapChartLayout {
   valueRange: { min: number; max: number };
   /** Width of each cell in characters */
   cellWidth: number;
+  /** Width for column spacing (max of cellWidth and longest column label) */
+  colLabelWidth: number;
   /** Width of row labels */
   rowLabelWidth: number;
   /** Total width */
@@ -62,7 +64,8 @@ export function computeHeatmapLayout(
   // Extract row/col labels and values from data
   const rowLabelSet = new Set<string>();
   const colLabelSet = new Set<string>();
-  const valueMap = new Map<string, number>(); // "row:col" -> value
+  // Use JSON-stringified tuple as key to avoid collisions when labels contain special chars
+  const valueMap = new Map<string, number>();
 
   for (const s of series) {
     for (const point of s.data) {
@@ -76,7 +79,7 @@ export function computeHeatmapLayout(
 
       rowLabelSet.add(rowLabel);
       colLabelSet.add(colLabel);
-      valueMap.set(`${rowLabel}:${colLabel}`, value);
+      valueMap.set(JSON.stringify([rowLabel, colLabel]), value);
     }
   }
 
@@ -114,6 +117,15 @@ export function computeHeatmapLayout(
     cellWidth = 2;
   }
 
+  // Calculate column label width (max of cellWidth and longest column label)
+  let colLabelWidth = cellWidth;
+  for (const label of colLabels) {
+    const width = getStringWidth(label);
+    if (width > colLabelWidth) {
+      colLabelWidth = width;
+    }
+  }
+
   // Build cell grid
   const cells: HeatmapCell[][] = [];
 
@@ -125,7 +137,7 @@ export function computeHeatmapLayout(
     for (let colIdx = 0; colIdx < colLabels.length; colIdx++) {
       const colLabel = colLabels[colIdx];
       if (!colLabel) continue;
-      const key = `${rowLabel}:${colLabel}`;
+      const key = JSON.stringify([rowLabel, colLabel]);
       const value = valueMap.get(key) ?? 0;
 
       // Normalize value
@@ -164,6 +176,7 @@ export function computeHeatmapLayout(
     cells,
     valueRange,
     cellWidth,
+    colLabelWidth,
     rowLabelWidth,
     width: input.width,
     height: input.height,

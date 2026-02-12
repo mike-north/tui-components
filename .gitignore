@@ -157,3 +157,5 @@ vite.config.ts.timestamp-*
 !AGENT_INSTRUCTIONS.md
 !CLAUDE.md
 !AGENTS.md
+# Claude Code local configuration (auto-added)
+.claude/*.local.*

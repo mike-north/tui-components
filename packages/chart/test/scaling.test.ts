@@ -111,6 +111,42 @@ describe("computeNiceTicks", () => {
       expect(result.ticks.length).toBeGreaterThanOrEqual(2);
     });
 
+    it("should apply forced min/max even with single value", () => {
+      const result = computeNiceTicks({
+        dataMin: 50,
+        dataMax: 50,
+        forceMin: 0,
+        forceMax: 100,
+      });
+
+      expect(result.min).toBe(0);
+      expect(result.max).toBe(100);
+      expect(result.ticks).toContain(0);
+      expect(result.ticks).toContain(100);
+    });
+
+    it("should apply only forceMin with single value", () => {
+      const result = computeNiceTicks({
+        dataMin: 50,
+        dataMax: 50,
+        forceMin: 0,
+      });
+
+      expect(result.min).toBe(0);
+      expect(result.max).toBeGreaterThanOrEqual(50);
+    });
+
+    it("should apply only forceMax with single value", () => {
+      const result = computeNiceTicks({
+        dataMin: 50,
+        dataMax: 50,
+        forceMax: 200,
+      });
+
+      expect(result.min).toBeLessThanOrEqual(50);
+      expect(result.max).toBe(200);
+    });
+
     it("should not include zero when explicitly disabled", () => {
       const result = computeNiceTicks({
         dataMin: 50,

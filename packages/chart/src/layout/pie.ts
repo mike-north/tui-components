@@ -76,8 +76,8 @@ export function computePieLayout(
   for (const s of series) {
     for (const point of s.data) {
       const label = point.label ?? String(point.x);
-      // Only accept non-negative values
-      if (point.y >= 0) {
+      // Only accept positive values (filter out zero and negative)
+      if (point.y > 0) {
         slicesData.push({ label, value: point.y });
       }
     }
@@ -108,16 +108,17 @@ export function computePieLayout(
   }
 
   // Calculate dimensions
-  // Terminal chars are approximately 2:1 aspect ratio (wider than tall in dots)
-  // For circle: need to account for braille being 2 wide x 4 tall dots per char
-  const chartHeight = input.height - 2; // Reserve space for legend
+  // Reserve space for legend at bottom
+  const chartHeight = input.height - 2;
   const chartWidth = input.width;
 
   // Radius in character cells
-  // Height needs adjustment because each char row is 4 dots, but each char col is 2 dots
-  // So effective height in "square" units is chartHeight * 4/2 = chartHeight * 2
+  // Terminal characters have a ~2:1 aspect ratio (taller than wide visually)
+  // Braille cells are 2 dots wide x 4 dots tall
+  // To make circles appear round, we compute radius in character cells,
+  // then scale differently for X and Y when converting to dot coordinates
   const maxRadiusY = Math.floor(chartHeight / 2);
-  const maxRadiusX = Math.floor(chartWidth / 4); // Divide by 4 to account for aspect ratio
+  const maxRadiusX = Math.floor(chartWidth / 2);
   const radius = Math.min(maxRadiusX, maxRadiusY);
 
   // Center position
@@ -208,6 +209,21 @@ export function computePieLayout(
 
 /**
  * Draw an elliptical wedge to compensate for terminal character aspect ratio.
+ *
+ * Terminal characters have a ~2:1 aspect ratio (taller than wide). This function
+ * draws wedges with separate X and Y radii to produce circles that appear round
+ * on screen.
+ *
+ * @param canvas - Braille canvas to draw on
+ * @param centerX - Center X coordinate in dot space
+ * @param centerY - Center Y coordinate in dot space
+ * @param radiusX - Horizontal radius in dots
+ * @param radiusY - Vertical radius in dots
+ * @param startAngle - Start angle in radians (0 = top, clockwise)
+ * @param endAngle - End angle in radians
+ * @param seriesIndex - Series index for coloring
+ * @param innerRadiusX - Inner horizontal radius for donut hole
+ * @param innerRadiusY - Inner vertical radius for donut hole
  */
 function drawEllipticalWedge(
   canvas: BrailleCanvas,
