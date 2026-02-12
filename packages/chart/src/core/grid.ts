@@ -139,8 +139,11 @@ export function createGridBuffer(
   for (const line of grid.horizontalLines) {
     const y = line.position;
     if (y >= 0 && y < height) {
-      for (let x = line.start; x < line.end && x < width; x++) {
-        buffer[y]![x] = grid.char;
+      const row = buffer[y];
+      if (row) {
+        for (let x = line.start; x < line.end && x < width; x++) {
+          row[x] = grid.char;
+        }
       }
     }
   }
@@ -150,7 +153,10 @@ export function createGridBuffer(
     const x = line.position;
     if (x >= 0 && x < width) {
       for (let y = line.start; y < line.end && y < height; y++) {
-        buffer[y]![x] = grid.char;
+        const row = buffer[y];
+        if (row) {
+          row[x] = grid.char;
+        }
       }
     }
   }

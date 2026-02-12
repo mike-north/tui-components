@@ -69,7 +69,7 @@ const INTERESTING_ENV_VARS = [
   "ITERM_PROFILE",
   "KONSOLE_VERSION",
   "GNOME_TERMINAL_SCREEN",
-  "WT_SESSION",  // Windows Terminal
+  "WT_SESSION", // Windows Terminal
   "ALACRITTY_LOG",
   "KITTY_WINDOW_ID",
   "WEZTERM_PANE",
@@ -136,12 +136,12 @@ function getProcessTree(): ProcessAncestor[] {
 
   for (let i = 0; i < 20 && pid > 1; i++) {
     try {
-      const output = execSync(`ps -p ${pid} -o ppid=,comm=`, {
+      const output = execSync(`ps -p ${String(pid)} -o ppid=,comm=`, {
         encoding: "utf-8",
         timeout: 1000,
       }).trim();
       const match = /^\s*(\d+)\s+(.+)$/.exec(output);
-      if (!match) break;
+      if (!match?.[1] || !match[2]) break;
       const ppid = parseInt(match[1], 10);
       const command = match[2];
       ancestors.push({ pid, command });
@@ -165,7 +165,7 @@ const AI_ASSISTANT_PATTERNS = [
   /windsurf/i,
   /cody/i,
   /aider/i,
-  /continue/i,  // continue.dev
+  /continue/i, // continue.dev
 ];
 
 function gatherEnvironmentInfo(includeAllEnv: boolean): EnvironmentInfo {
@@ -178,9 +178,9 @@ function gatherEnvironmentInfo(includeAllEnv: boolean): EnvironmentInfo {
   }
 
   // Gather detection info
-  const stdoutIsTTY = Boolean(process.stdout.isTTY);
-  const stderrIsTTY = Boolean(process.stderr.isTTY);
-  const stdinIsTTY = Boolean(process.stdin.isTTY);
+  const stdoutIsTTY = process.stdout.isTTY;
+  const stderrIsTTY = process.stderr.isTTY;
+  const stdinIsTTY = process.stdin.isTTY;
   const colorLevel = detectColorLevel();
   const terminalSize = getTerminalSize();
   const processTree = getProcessTree();
@@ -241,7 +241,9 @@ function runHeuristics(input: HeuristicInput): EnvironmentInfo["heuristics"] {
   // TTY checks
   if (!input.stdoutIsTTY) {
     aiScore += 2;
-    reasons.push("stdout is not a TTY (common in AI assistants that capture output)");
+    reasons.push(
+      "stdout is not a TTY (common in AI assistants that capture output)"
+    );
   } else {
     terminalScore += 2;
     reasons.push("stdout is a TTY (suggests interactive terminal)");
@@ -258,7 +260,9 @@ function runHeuristics(input: HeuristicInput): EnvironmentInfo["heuristics"] {
     reasons.push("No color support detected");
   } else if (input.colorLevel >= 2) {
     terminalScore += 1;
-    reasons.push(`Color level ${input.colorLevel} detected (rich terminal)`);
+    reasons.push(
+      `Color level ${String(input.colorLevel)} detected (rich terminal)`
+    );
   }
 
   // Known AI assistant env vars
@@ -281,8 +285,16 @@ function runHeuristics(input: HeuristicInput): EnvironmentInfo["heuristics"] {
   // Terminal program identification
   const termProgram = input.env["TERM_PROGRAM"];
   if (termProgram) {
-    const knownTerminals = ["iTerm.app", "Apple_Terminal", "Hyper", "Alacritty", "kitty", "WezTerm", "Ghostty"];
-    if (knownTerminals.some(t => termProgram.includes(t))) {
+    const knownTerminals = [
+      "iTerm.app",
+      "Apple_Terminal",
+      "Hyper",
+      "Alacritty",
+      "kitty",
+      "WezTerm",
+      "Ghostty",
+    ];
+    if (knownTerminals.some((t) => termProgram.includes(t))) {
       terminalScore += 2;
       reasons.push(`Known terminal program: ${termProgram}`);
     }
@@ -331,7 +343,9 @@ function runHeuristics(input: HeuristicInput): EnvironmentInfo["heuristics"] {
   }
   if (foundAIAssistants.length > 0) {
     aiScore += 10; // Strong signal
-    reasons.push(`AI assistant found in process tree: ${foundAIAssistants.join(", ")}`);
+    reasons.push(
+      `AI assistant found in process tree: ${foundAIAssistants.join(", ")}`
+    );
   }
 
   // Calculate result
@@ -348,7 +362,9 @@ function runHeuristics(input: HeuristicInput): EnvironmentInfo["heuristics"] {
     confidence = "low";
   }
 
-  reasons.push(`Final scores - AI: ${aiScore}, Terminal: ${terminalScore}`);
+  reasons.push(
+    `Final scores - AI: ${String(aiScore)}, Terminal: ${String(terminalScore)}`
+  );
 
   return {
     likelyAIAssistant,
@@ -362,15 +378,19 @@ function printHumanReadable(info: EnvironmentInfo): void {
   console.log("=== TUI Environment Detection Debug ===\n");
 
   console.log("## Detection Results");
-  console.log(`  isTTY (stdout): ${info.detection.stdoutIsTTY}`);
-  console.log(`  isTTY (stderr): ${info.detection.stderrIsTTY}`);
-  console.log(`  isTTY (stdin):  ${info.detection.stdinIsTTY}`);
-  console.log(`  Color Level:    ${info.detection.colorLevel} (0=none, 1=basic, 2=256, 3=truecolor)`);
-  console.log(`  Terminal Size:  ${info.detection.terminalSize.columns}x${info.detection.terminalSize.rows}`);
+  console.log(`  isTTY (stdout): ${String(info.detection.stdoutIsTTY)}`);
+  console.log(`  isTTY (stderr): ${String(info.detection.stderrIsTTY)}`);
+  console.log(`  isTTY (stdin):  ${String(info.detection.stdinIsTTY)}`);
+  console.log(
+    `  Color Level:    ${String(info.detection.colorLevel)} (0=none, 1=basic, 2=256, 3=truecolor)`
+  );
+  console.log(
+    `  Terminal Size:  ${String(info.detection.terminalSize.columns)}x${String(info.detection.terminalSize.rows)}`
+  );
 
   console.log("\n## Process Info");
-  console.log(`  PID:    ${info.process.pid}`);
-  console.log(`  PPID:   ${info.process.ppid}`);
+  console.log(`  PID:    ${String(info.process.pid)}`);
+  console.log(`  PPID:   ${String(info.process.ppid)}`);
   console.log(`  Title:  ${info.process.title}`);
 
   console.log("\n## Process Tree (ancestors)");
@@ -381,7 +401,7 @@ function printHumanReadable(info: EnvironmentInfo): void {
       // Highlight AI assistant processes
       const isAI = AI_ASSISTANT_PATTERNS.some((p) => p.test(ancestor.command));
       const marker = isAI ? " <-- AI ASSISTANT" : "";
-      console.log(`  ${ancestor.pid}: ${ancestor.command}${marker}`);
+      console.log(`  ${String(ancestor.pid)}: ${ancestor.command}${marker}`);
     }
   }
 
@@ -391,14 +411,19 @@ function printHumanReadable(info: EnvironmentInfo): void {
     console.log("  (none found)");
   } else {
     for (const [key, value] of envEntries) {
-      const displayValue = value && value.length > 60 ? value.slice(0, 60) + "..." : value;
-      console.log(`  ${key}: ${displayValue}`);
+      const displayValue =
+        value && value.length > 60 ? value.slice(0, 60) + "..." : value;
+      console.log(`  ${key}: ${displayValue ?? "(undefined)"}`);
     }
   }
 
   console.log("\n## Heuristic Analysis");
-  console.log(`  Likely AI Assistant: ${info.heuristics.likelyAIAssistant}`);
-  console.log(`  Likely Terminal:     ${info.heuristics.likelyTerminal}`);
+  console.log(
+    `  Likely AI Assistant: ${String(info.heuristics.likelyAIAssistant)}`
+  );
+  console.log(
+    `  Likely Terminal:     ${String(info.heuristics.likelyTerminal)}`
+  );
   console.log(`  Confidence:          ${info.heuristics.confidence}`);
   console.log("\n  Reasons:");
   for (const reason of info.heuristics.reasons) {
@@ -407,5 +432,7 @@ function printHumanReadable(info: EnvironmentInfo): void {
 
   // Color test
   console.log("\n## Color Test (if you see colors, ANSI is working)");
-  console.log(`  \x1b[31mRed\x1b[0m \x1b[32mGreen\x1b[0m \x1b[33mYellow\x1b[0m \x1b[34mBlue\x1b[0m \x1b[35mMagenta\x1b[0m \x1b[36mCyan\x1b[0m`);
+  console.log(
+    `  \x1b[31mRed\x1b[0m \x1b[32mGreen\x1b[0m \x1b[33mYellow\x1b[0m \x1b[34mBlue\x1b[0m \x1b[35mMagenta\x1b[0m \x1b[36mCyan\x1b[0m`
+  );
 }

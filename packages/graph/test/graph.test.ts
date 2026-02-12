@@ -67,9 +67,7 @@ describe("GraphComponent", () => {
 
     it("should render refs when showRefs is true", () => {
       const input: GraphInput = {
-        nodes: [
-          { id: "a", label: "commit", refs: ["main", "HEAD"] },
-        ],
+        nodes: [{ id: "a", label: "commit", refs: ["main", "HEAD"] }],
         showRefs: true,
       };
 
@@ -81,9 +79,7 @@ describe("GraphComponent", () => {
 
     it("should hide refs when showRefs is false", () => {
       const input: GraphInput = {
-        nodes: [
-          { id: "a", label: "commit", refs: ["main", "HEAD"] },
-        ],
+        nodes: [{ id: "a", label: "commit", refs: ["main", "HEAD"] }],
         showRefs: false,
       };
 
@@ -219,9 +215,7 @@ describe("GraphComponent", () => {
 
     it("should handle unicode in labels", () => {
       const input: GraphInput = {
-        nodes: [
-          { id: "a", label: "feat: add 日本語 support 🎉" },
-        ],
+        nodes: [{ id: "a", label: "feat: add 日本語 support 🎉" }],
       };
 
       const result = graph.render(input, defaultContext);
@@ -314,9 +308,7 @@ describe("GraphComponent", () => {
 
     it("should render highlighted nodes with inline code backticks in markdown", () => {
       const input: GraphInput = {
-        nodes: [
-          { id: "a", label: "highlighted commit", highlight: true },
-        ],
+        nodes: [{ id: "a", label: "highlighted commit", highlight: true }],
       };
 
       const markdownContext: RenderContext = {
@@ -402,9 +394,7 @@ describe("GraphComponent", () => {
   describe("actualWidth", () => {
     it("should provide correct actualWidth for simple graph", () => {
       const input: GraphInput = {
-        nodes: [
-          { id: "a", label: "short label" },
-        ],
+        nodes: [{ id: "a", label: "short label" }],
       };
 
       const result = graph.render(input, defaultContext);
@@ -471,9 +461,7 @@ describe("GraphComponent", () => {
     describe("highlight with inline code", () => {
       it("should wrap entire highlighted line in backticks in markdown mode", () => {
         const input: GraphInput = {
-          nodes: [
-            { id: "a", label: "Highlighted", highlight: true },
-          ],
+          nodes: [{ id: "a", label: "Highlighted", highlight: true }],
         };
 
         const markdownContext: RenderContext = {
@@ -489,9 +477,7 @@ describe("GraphComponent", () => {
 
       it("should not use backticks for non-highlighted nodes in markdown mode", () => {
         const input: GraphInput = {
-          nodes: [
-            { id: "a", label: "Normal" },
-          ],
+          nodes: [{ id: "a", label: "Normal" }],
         };
 
         const markdownContext: RenderContext = {
@@ -503,7 +489,7 @@ describe("GraphComponent", () => {
         const lines = result.output.split("\n");
 
         // Line with "Normal" should not have backticks (except anchor)
-        const normalLine = lines.find(l => l.includes("Normal"));
+        const normalLine = lines.find((l) => l.includes("Normal"));
         expect(normalLine).toBeDefined();
         // Count backticks - should only be anchor, not wrapping
         const backtickCount = (normalLine?.match(/`/g) || []).length;
@@ -582,9 +568,7 @@ describe("GraphComponent", () => {
 
       it("should work with ASCII style and custom global nodeChar", () => {
         const input: GraphInput = {
-          nodes: [
-            { id: "a", label: "Test" },
-          ],
+          nodes: [{ id: "a", label: "Test" }],
           style: "ascii",
           nodeChar: "#",
         };
@@ -600,8 +584,20 @@ describe("GraphComponent", () => {
       it("should handle highlight + custom nodeChar + merge + refs together", () => {
         const input: GraphInput = {
           nodes: [
-            { id: "a", label: "Merge", parents: ["b", "c"], nodeChar: "◉", refs: ["main"] },
-            { id: "b", label: "Feature", parents: ["d"], highlight: true, refs: ["HEAD"] },
+            {
+              id: "a",
+              label: "Merge",
+              parents: ["b", "c"],
+              nodeChar: "◉",
+              refs: ["main"],
+            },
+            {
+              id: "b",
+              label: "Feature",
+              parents: ["d"],
+              highlight: true,
+              refs: ["HEAD"],
+            },
             { id: "c", label: "Hotfix", parents: ["d"], nodeChar: "★" },
             { id: "d", label: "Initial" },
           ],
@@ -630,7 +626,7 @@ describe("GraphComponent", () => {
 
         // Highlight uses backticks
         const lines = result.output.split("\n");
-        const highlightedLine = lines.find(l => l.includes("Feature"));
+        const highlightedLine = lines.find((l) => l.includes("Feature"));
         expect(highlightedLine).toContain("`");
       });
     });

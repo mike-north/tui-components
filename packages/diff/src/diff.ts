@@ -121,7 +121,10 @@ class DiffComponent extends BaseTuiComponent<
               lines: [
                 { type: "context", content: "function greet() {" },
                 { type: "deletion", content: '  console.log("Hello");' },
-                { type: "addition", content: '  console.log("Hello, World!");' },
+                {
+                  type: "addition",
+                  content: '  console.log("Hello, World!");',
+                },
                 { type: "context", content: "}" },
               ],
             },

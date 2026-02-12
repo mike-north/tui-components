@@ -5,6 +5,10 @@ import { renderCommand } from "./commands/render.js";
 import { examplesCommand } from "./commands/examples.js";
 import { envDebugCommand } from "./commands/env-debug.js";
 import { batchCommand } from "./commands/batch.js";
+import {
+  isAgentEnvironment,
+  AGENT_INSTRUCTIONS,
+} from "./agent-instructions.js";
 
 // Import components to register them with the registry
 import "@tuicomponents/box";
@@ -32,5 +36,15 @@ program.addCommand(renderCommand);
 program.addCommand(examplesCommand);
 program.addCommand(envDebugCommand);
 program.addCommand(batchCommand);
+
+// Add agent instructions to help output when running in an agentic TUI
+// Wrapped in try-catch since detection is nice-to-have, not critical
+try {
+  if (isAgentEnvironment()) {
+    program.addHelpText("after", AGENT_INSTRUCTIONS);
+  }
+} catch {
+  // Silently ignore detection failures - this is a non-critical enhancement
+}
 
 program.parse();

@@ -96,9 +96,10 @@ export function computeSparklineLayout(
   const { values, width, min: explicitMin, max: explicitMax, label } = input;
 
   // Apply width compression if needed
-  const displayValues = width !== undefined && width < values.length
-    ? bucketValues(values, width)
-    : values;
+  const displayValues =
+    width !== undefined && width < values.length
+      ? bucketValues(values, width)
+      : values;
 
   // Determine min/max for scaling
   const actualMin = Math.min(...displayValues);

@@ -57,8 +57,8 @@ describe("computeAxisLayout", () => {
       });
 
       // Labels should use compact format
-      const hasCompactLabel = layout.ticks.some((t) =>
-        t.label.includes("K") || !t.label.includes(",")
+      const hasCompactLabel = layout.ticks.some(
+        (t) => t.label.includes("K") || !t.label.includes(",")
       );
       expect(hasCompactLabel).toBe(true);
     });

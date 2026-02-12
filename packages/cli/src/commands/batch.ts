@@ -1,6 +1,10 @@
 import { Command } from "commander";
 import { readFileSync } from "node:fs";
-import { registry, createRenderContext, type RenderMode } from "@tuicomponents/core";
+import {
+  registry,
+  createRenderContext,
+  type RenderMode,
+} from "@tuicomponents/core";
 
 /**
  * Output format for the batch command.
@@ -38,7 +42,9 @@ interface BatchJsonError {
  */
 function parseRenderMode(value: string): RenderMode {
   if (value !== "ansi" && value !== "markdown") {
-    throw new Error(`Invalid render mode: ${value}. Must be 'ansi' or 'markdown'.`);
+    throw new Error(
+      `Invalid render mode: ${value}. Must be 'ansi' or 'markdown'.`
+    );
   }
   return value;
 }
@@ -48,7 +54,9 @@ function parseRenderMode(value: string): RenderMode {
  */
 function parseOutputFormat(value: string): OutputFormat {
   if (value !== "text" && value !== "json") {
-    throw new Error(`Invalid output format: ${value}. Must be 'text' or 'json'.`);
+    throw new Error(
+      `Invalid output format: ${value}. Must be 'text' or 'json'.`
+    );
   }
   return value;
 }
@@ -89,7 +97,9 @@ function parseJsonL(input: string): BatchInputItem[] {
       items.push({ component: item.component, input: item.input });
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : String(e);
-      throw new Error(`Line ${index + 1}: Invalid JSON-L - ${errorMessage}`);
+      throw new Error(
+        `Line ${String(index + 1)}: Invalid JSON-L - ${errorMessage}`
+      );
     }
   });
 
@@ -183,7 +193,7 @@ export const batchCommand = new Command("batch")
           if (options.format === "json") {
             jsonOutputs.push({ component: item.component, error: errorMsg });
           } else {
-            console.error(`Error on item ${index + 1}: ${errorMsg}`);
+            console.error(`Error on item ${String(index + 1)}: ${errorMsg}`);
           }
           hasError = true;
           if (!options.continueOnError) {
@@ -199,7 +209,7 @@ export const batchCommand = new Command("batch")
           if (options.format === "json") {
             jsonOutputs.push({ component: item.component, error: errorMsg });
           } else {
-            console.error(`Error on item ${index + 1}: ${errorMsg}`);
+            console.error(`Error on item ${String(index + 1)}: ${errorMsg}`);
           }
           hasError = true;
           if (!options.continueOnError) {
@@ -227,7 +237,9 @@ export const batchCommand = new Command("batch")
           if (options.format === "json") {
             jsonOutputs.push({ component: item.component, error: errorMsg });
           } else {
-            console.error(`Error on item ${index + 1}: Render failed - ${errorMsg}`);
+            console.error(
+              `Error on item ${String(index + 1)}: Render failed - ${errorMsg}`
+            );
           }
           hasError = true;
           if (!options.continueOnError) {

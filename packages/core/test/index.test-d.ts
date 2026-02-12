@@ -8,7 +8,10 @@ import type {
 } from "../src/index.js";
 
 // Test that TuiComponent interface is correctly typed
-declare const component: TuiComponent<{ name: string }, z.ZodObject<{ name: z.ZodString }>>;
+declare const component: TuiComponent<
+  { name: string },
+  z.ZodObject<{ name: z.ZodString }>
+>;
 
 expectType<ComponentMetadata<{ name: string }>>(component.metadata);
 expectAssignable<z.ZodType<{ name: string }>>(component.schema);

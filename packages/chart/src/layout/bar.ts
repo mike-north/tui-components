@@ -3,7 +3,11 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { getBarChar, SERIES_STYLES } from "../core/chars.js";
 import type { ChartInputWithDefaults, BarLayout } from "../types.js";
 import type { AxisLayout } from "../core/axis.js";
@@ -41,7 +45,9 @@ export interface BarChartLayout {
  * @param input - Chart input with defaults
  * @returns Computed bar chart layout
  */
-export function computeBarLayout(input: ChartInputWithDefaults): BarChartLayout {
+export function computeBarLayout(
+  input: ChartInputWithDefaults
+): BarChartLayout {
   const isVertical = input.type === "bar-vertical";
   const series = input.series;
 
@@ -89,19 +95,27 @@ export function computeBarLayout(input: ChartInputWithDefaults): BarChartLayout 
   const formattedValues: string[] = [];
 
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
     const styleIndex = seriesIndex % SERIES_STYLES.length;
-    const styleInfo = SERIES_STYLES[styleIndex]!;
+    const styleInfo = SERIES_STYLES[styleIndex];
+    if (!styleInfo) continue;
     const barChar = s.style ? getBarChar(s.style) : styleInfo.char;
     const useBackticks = s.style ? false : styleInfo.useBackticks;
 
     for (let pointIndex = 0; pointIndex < s.data.length; pointIndex++) {
-      const point = s.data[pointIndex]!;
+      const point = s.data[pointIndex];
+      if (!point) continue;
       const value = point.y;
       const label = point.label ?? String(point.x);
 
       // Scale value to bar length
-      const normalizedValue = scaleValue(value, yScale.min, yScale.max, barAreaSize);
+      const normalizedValue = scaleValue(
+        value,
+        yScale.min,
+        yScale.max,
+        barAreaSize
+      );
       const length = Math.max(0, Math.round(normalizedValue));
 
       // Format value
@@ -111,9 +125,10 @@ export function computeBarLayout(input: ChartInputWithDefaults): BarChartLayout 
       formattedValues.push(formattedValue);
 
       // Calculate percentage
-      const percentage = yScale.max !== yScale.min
-        ? ((value - yScale.min) / (yScale.max - yScale.min)) * 100
-        : 0;
+      const percentage =
+        yScale.max !== yScale.min
+          ? ((value - yScale.min) / (yScale.max - yScale.min)) * 100
+          : 0;
 
       bars.push({
         seriesIndex,

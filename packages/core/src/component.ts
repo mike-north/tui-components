@@ -131,15 +131,18 @@ export type ComponentFactory<
 export abstract class BaseTuiComponent<
   TInput,
   TSchema extends ZodType<TInput, ZodTypeDef, unknown>,
-> implements TuiComponent<TInput, TSchema>
-{
+> implements TuiComponent<TInput, TSchema> {
   abstract readonly metadata: ComponentMetadata<TInput>;
   abstract readonly schema: TSchema;
 
   abstract render(input: TInput, context: RenderContext): RenderResult;
 
   getJsonSchema(): object {
-    return zodToJsonSchema(this.schema, {
+    // Use type assertion to avoid TypeScript's "excessively deep" type instantiation
+    // error with complex nested Zod schemas when passed to zodToJsonSchema.
+    // The ZodType constraint is safe here since TSchema already extends ZodType.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+    return zodToJsonSchema(this.schema as any, {
       name: this.metadata.name,
       $refStrategy: "none",
     });

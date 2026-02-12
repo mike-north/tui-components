@@ -124,9 +124,9 @@ class BoxComponent extends BaseTuiComponent<BoxInput, typeof boxInputSchema> {
     // Calculate title width requirement (title + surrounding spaces)
     // In markdown mode, use visual width (formatting chars like ** and _ are invisible)
     const titleWidth = parsed.title
-      ? (context.renderMode === "markdown"
-          ? getMarkdownRenderedWidth(` ${parsed.title} `)
-          : getStringWidth(` ${parsed.title} `))
+      ? context.renderMode === "markdown"
+        ? getMarkdownRenderedWidth(` ${parsed.title} `)
+        : getStringWidth(` ${parsed.title} `)
       : 0;
 
     // Determine content width - must fit both content and title
@@ -135,7 +135,10 @@ class BoxComponent extends BaseTuiComponent<BoxInput, typeof boxInputSchema> {
       contentWidth = parsed.width - 2 - padding.left - padding.right; // Account for borders and padding
     } else {
       // Use the larger of content width or title width (minus padding)
-      const minWidthForTitle = Math.max(0, titleWidth - padding.left - padding.right);
+      const minWidthForTitle = Math.max(
+        0,
+        titleWidth - padding.left - padding.right
+      );
       contentWidth = Math.max(contentMeasured.maxWidth, minWidthForTitle);
     }
 
@@ -147,7 +150,14 @@ class BoxComponent extends BaseTuiComponent<BoxInput, typeof boxInputSchema> {
 
     // Top border with optional title
     outputLines.push(
-      this.buildTopBorder(chars, innerWidth, parsed.title, parsed.titleAlignment, theme, context.renderMode)
+      this.buildTopBorder(
+        chars,
+        innerWidth,
+        parsed.title,
+        parsed.titleAlignment,
+        theme,
+        context.renderMode
+      )
     );
 
     // Top padding
@@ -215,15 +225,17 @@ class BoxComponent extends BaseTuiComponent<BoxInput, typeof boxInputSchema> {
     renderMode: RenderMode
   ): string {
     if (!title) {
-      const border = chars.topLeft + chars.top.repeat(innerWidth) + chars.topRight;
+      const border =
+        chars.topLeft + chars.top.repeat(innerWidth) + chars.topRight;
       return colorBorder(border, theme);
     }
 
     const titleWithSpace = ` ${title} `;
     // In markdown mode, use visual width (formatting chars like ** and _ are invisible when rendered)
-    const titleWidth = renderMode === "markdown"
-      ? getMarkdownRenderedWidth(titleWithSpace)
-      : getStringWidth(titleWithSpace);
+    const titleWidth =
+      renderMode === "markdown"
+        ? getMarkdownRenderedWidth(titleWithSpace)
+        : getStringWidth(titleWithSpace);
 
     // If title is too long, truncate
     if (titleWidth > innerWidth) {
@@ -317,7 +329,8 @@ class BoxComponent extends BaseTuiComponent<BoxInput, typeof boxInputSchema> {
     innerWidth: number,
     theme: TuiTheme | undefined
   ): string {
-    const border = chars.bottomLeft + chars.bottom.repeat(innerWidth) + chars.bottomRight;
+    const border =
+      chars.bottomLeft + chars.bottom.repeat(innerWidth) + chars.bottomRight;
     return colorBorder(border, theme);
   }
 }

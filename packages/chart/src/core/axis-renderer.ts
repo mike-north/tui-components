@@ -53,8 +53,17 @@ export interface YAxisRowResult {
  * @param config - Y-axis configuration
  * @returns Label, tick status, and axis character for this row
  */
-export function computeYAxisRow(row: number, config: YAxisConfig): YAxisRowResult {
-  const { scale, chartHeight, labelWidth, format = "number", decimals } = config;
+export function computeYAxisRow(
+  row: number,
+  config: YAxisConfig
+): YAxisRowResult {
+  const {
+    scale,
+    chartHeight,
+    labelWidth,
+    format = "number",
+    decimals,
+  } = config;
 
   const rowBottom = row / chartHeight;
   const rowTop = (row + 1) / chartHeight;
@@ -71,7 +80,9 @@ export function computeYAxisRow(row: number, config: YAxisConfig): YAxisRowResul
     // Use inclusive upper bound, exclusive lower bound with small epsilon
     const epsilon = 0.001;
     if (tickNorm > rowBottom - epsilon && tickNorm <= rowTop) {
-      label = padToWidth(formatTickValue(tick, format, decimals), labelWidth - 1) + " ";
+      label =
+        padToWidth(formatTickValue(tick, format, decimals), labelWidth - 1) +
+        " ";
       hasTick = true;
       break;
     }
@@ -130,7 +141,9 @@ export function renderXAxis(config: XAxisConfig): XAxisResult {
   } = config;
 
   // Zero label aligned with origin
-  const zeroLabel = padToWidth(formatTickValue(minValue, format, decimals), yAxisWidth - 1) + " ";
+  const zeroLabel =
+    padToWidth(formatTickValue(minValue, format, decimals), yAxisWidth - 1) +
+    " ";
 
   // Build x-axis line with tick marks at category centers
   let xAxisLine = "";
@@ -155,7 +168,8 @@ export function renderXAxis(config: XAxisConfig): XAxisResult {
   // Build label line with centered labels
   let labelLine = "";
   for (let i = 0; i < categories.length; i++) {
-    const label = categories[i]!;
+    const label = categories[i];
+    if (!label) continue;
     const tickPos = Math.floor(barWidth / 2);
     const labelStart = Math.max(0, tickPos - Math.floor(label.length / 2));
     const labelEnd = labelStart + label.length;

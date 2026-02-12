@@ -136,7 +136,15 @@ class TreeComponent extends BaseTuiComponent<
           const child: TreeNode | undefined = children[j];
           if (!child) continue;
           const isLast = j === children.length - 1 && isLastRoot;
-          this.renderNode(child, lines, "", isLast, chars, parsed.indent, theme);
+          this.renderNode(
+            child,
+            lines,
+            "",
+            isLast,
+            chars,
+            parsed.indent,
+            theme
+          );
         }
       }
 
@@ -178,11 +186,20 @@ class TreeComponent extends BaseTuiComponent<
     // Calculate prefix for children (colored structure)
     const childPrefix = isLast
       ? prefix + chars.space.repeat(indent + 1)
-      : prefix + colorStructure(chars.vertical, theme) + chars.space.repeat(indent);
+      : prefix +
+        colorStructure(chars.vertical, theme) +
+        chars.space.repeat(indent);
 
     // Render children if expanded
     if (node.expanded !== false && node.children) {
-      this.renderChildren(node.children, lines, childPrefix, chars, indent, theme);
+      this.renderChildren(
+        node.children,
+        lines,
+        childPrefix,
+        chars,
+        indent,
+        theme
+      );
     }
   }
 

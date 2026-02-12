@@ -1,8 +1,4 @@
-import {
-  type TuiTheme,
-  anchorLine,
-  DEFAULT_ANCHOR,
-} from "@tuicomponents/core";
+import { type TuiTheme, anchorLine, DEFAULT_ANCHOR } from "@tuicomponents/core";
 import type { GaugeLayout, GaugeSegment } from "./layout.js";
 import type { GaugeInputWithDefaults, GaugeZoneColor } from "./schema.js";
 
@@ -129,7 +125,11 @@ export function renderGaugeMarkdown(
   // Group consecutive segments by whether they need emphasis
   let i = 0;
   while (i < layout.segments.length) {
-    const segment = layout.segments[i]!;
+    const segment = layout.segments[i];
+    if (!segment) {
+      i++;
+      continue;
+    }
     const needsEmphasis = segmentNeedsEmphasis(segment);
     const char = segment.filled ? layout.filledChar : layout.emptyChar;
 
@@ -138,7 +138,8 @@ export function renderGaugeMarkdown(
       let combinedStr = char.repeat(segment.length);
       let j = i + 1;
       while (j < layout.segments.length) {
-        const nextSegment = layout.segments[j]!;
+        const nextSegment = layout.segments[j];
+        if (!nextSegment) break;
         if (!segmentNeedsEmphasis(nextSegment)) {
           break;
         }

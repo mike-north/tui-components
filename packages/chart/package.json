@@ -18,7 +18,9 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
@@ -29,7 +31,15 @@
     "api-report:update": "api-extractor run --local",
     "clean": "rm -rf dist"
   },
-  "keywords": ["tui", "terminal", "chart", "bar", "line", "area", "visualization"],
+  "keywords": [
+    "tui",
+    "terminal",
+    "chart",
+    "bar",
+    "line",
+    "area",
+    "visualization"
+  ],
   "license": "UNLICENSED",
   "dependencies": {
     "@tuicomponents/core": "workspace:*",

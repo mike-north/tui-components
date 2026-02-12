@@ -1,6 +1,10 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { createBox, type BoxInput } from "../src/index.js";
-import { type RenderContext, getMarkdownRenderedWidth, createStyleFunctions } from "@tuicomponents/core";
+import {
+  type RenderContext,
+  getMarkdownRenderedWidth,
+  createStyleFunctions,
+} from "@tuicomponents/core";
 
 describe("BoxComponent", () => {
   let box: ReturnType<typeof createBox>;
@@ -301,15 +305,17 @@ describe("BoxComponent", () => {
       const lines = result.output.split("\n");
 
       // Find top and bottom borders
-      const topBorder = lines.find(l => l.includes("╭"));
-      const bottomBorder = lines.find(l => l.includes("╰"));
+      const topBorder = lines.find((l) => l.includes("╭"));
+      const bottomBorder = lines.find((l) => l.includes("╰"));
 
       expect(topBorder).toBeDefined();
       expect(bottomBorder).toBeDefined();
 
       // Top and bottom borders should have the same VISUAL width
       // (title formatting chars are invisible when rendered)
-      expect(getMarkdownRenderedWidth(topBorder!)).toBe(getMarkdownRenderedWidth(bottomBorder!));
+      expect(getMarkdownRenderedWidth(topBorder!)).toBe(
+        getMarkdownRenderedWidth(bottomBorder!)
+      );
     });
 
     it("should render bold title with correct border alignment", () => {
@@ -322,12 +328,14 @@ describe("BoxComponent", () => {
       const result = box.render(input, markdownContext);
       const lines = result.output.split("\n");
 
-      const topBorder = lines.find(l => l.includes("╭"));
-      const bottomBorder = lines.find(l => l.includes("╰"));
+      const topBorder = lines.find((l) => l.includes("╭"));
+      const bottomBorder = lines.find((l) => l.includes("╰"));
 
       expect(topBorder).toBeDefined();
       expect(bottomBorder).toBeDefined();
-      expect(getMarkdownRenderedWidth(topBorder!)).toBe(getMarkdownRenderedWidth(bottomBorder!));
+      expect(getMarkdownRenderedWidth(topBorder!)).toBe(
+        getMarkdownRenderedWidth(bottomBorder!)
+      );
     });
 
     it("should render bold-italic title with correct border alignment", () => {
@@ -340,12 +348,14 @@ describe("BoxComponent", () => {
       const result = box.render(input, markdownContext);
       const lines = result.output.split("\n");
 
-      const topBorder = lines.find(l => l.includes("╔"));
-      const bottomBorder = lines.find(l => l.includes("╚"));
+      const topBorder = lines.find((l) => l.includes("╔"));
+      const bottomBorder = lines.find((l) => l.includes("╚"));
 
       expect(topBorder).toBeDefined();
       expect(bottomBorder).toBeDefined();
-      expect(getMarkdownRenderedWidth(topBorder!)).toBe(getMarkdownRenderedWidth(bottomBorder!));
+      expect(getMarkdownRenderedWidth(topBorder!)).toBe(
+        getMarkdownRenderedWidth(bottomBorder!)
+      );
     });
 
     it("should include markdown formatting markers in output", () => {
@@ -378,8 +388,8 @@ describe("BoxComponent", () => {
 
       // In ANSI mode, ** should be treated as literal characters
       // so they count toward the title width
-      const topBorder = lines.find(l => l.includes("┌"));
-      const bottomBorder = lines.find(l => l.includes("└"));
+      const topBorder = lines.find((l) => l.includes("┌"));
+      const bottomBorder = lines.find((l) => l.includes("└"));
 
       expect(topBorder).toBeDefined();
       expect(bottomBorder).toBeDefined();
@@ -401,12 +411,14 @@ describe("BoxComponent", () => {
         const result = box.render(input, markdownContext);
         const lines = result.output.split("\n");
 
-        const topBorder = lines.find(l => l.includes("╭"));
-        const bottomBorder = lines.find(l => l.includes("╰"));
+        const topBorder = lines.find((l) => l.includes("╭"));
+        const bottomBorder = lines.find((l) => l.includes("╰"));
 
         expect(topBorder).toBeDefined();
         expect(bottomBorder).toBeDefined();
-        expect(getMarkdownRenderedWidth(topBorder!)).toBe(getMarkdownRenderedWidth(bottomBorder!));
+        expect(getMarkdownRenderedWidth(topBorder!)).toBe(
+          getMarkdownRenderedWidth(bottomBorder!)
+        );
       }
     });
   });

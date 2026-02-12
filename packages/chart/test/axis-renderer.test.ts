@@ -114,7 +114,9 @@ describe("axis-renderer", () => {
       expect(result.labelLine).toContain("Q2");
       expect(result.labelLine).toContain("Q3");
       // Should have indentation for y-axis width
-      expect(result.labelLine.startsWith(" ".repeat(defaultConfig.yAxisWidth))).toBe(true);
+      expect(
+        result.labelLine.startsWith(" ".repeat(defaultConfig.yAxisWidth))
+      ).toBe(true);
     });
 
     it("should handle single category", () => {

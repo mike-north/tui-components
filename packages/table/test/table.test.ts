@@ -389,9 +389,7 @@ describe("markdown header formatting", () => {
           { header: "Name", key: "name" },
           { header: "Age", key: "age" },
         ],
-        rows: [
-          { name: "Alice", age: 30 },
-        ],
+        rows: [{ name: "Alice", age: 30 }],
         borderStyle: "single",
         headerStyle: "bold",
       };
@@ -401,9 +399,9 @@ describe("markdown header formatting", () => {
 
       // All lines should have the same visual width when markdown is rendered
       // Find border lines (contain ┌ or ├ or └)
-      const topBorder = lines.find(l => l.includes("┌"));
-      const midBorder = lines.find(l => l.includes("├"));
-      const bottomBorder = lines.find(l => l.includes("└"));
+      const topBorder = lines.find((l) => l.includes("┌"));
+      const midBorder = lines.find((l) => l.includes("├"));
+      const bottomBorder = lines.find((l) => l.includes("└"));
 
       expect(topBorder).toBeDefined();
       expect(midBorder).toBeDefined();
@@ -428,7 +426,7 @@ describe("markdown header formatting", () => {
       const lines = result.output.split("\n");
 
       // Find the data row (contains "Hello")
-      const dataRow = lines.find(l => l.includes("Hello"));
+      const dataRow = lines.find((l) => l.includes("Hello"));
       expect(dataRow).toBeDefined();
 
       // The data "Hello" should NOT have excessive padding
@@ -452,7 +450,7 @@ describe("markdown header formatting", () => {
 
         const result = table.render(input, markdownContext);
         const lines = result.output.split("\n");
-        const topBorder = lines.find(l => l.includes("┌"));
+        const topBorder = lines.find((l) => l.includes("┌"));
         if (topBorder) {
           columnWidths.push(topBorder.length);
         }
@@ -476,11 +474,11 @@ describe("markdown header formatting", () => {
       const lines = result.output.split("\n");
 
       // Header row should contain centered **Hi** with proper padding
-      const headerRow = lines.find(l => l.includes("**Hi**"));
+      const headerRow = lines.find((l) => l.includes("**Hi**"));
       expect(headerRow).toBeDefined();
 
       // Data row should also be properly aligned
-      const dataRow = lines.find(l => l.includes("Hello"));
+      const dataRow = lines.find((l) => l.includes("Hello"));
       expect(dataRow).toBeDefined();
     });
 
@@ -495,7 +493,7 @@ describe("markdown header formatting", () => {
       const result = table.render(input, markdownContext);
       const lines = result.output.split("\n");
 
-      const headerRow = lines.find(l => l.includes("**Hi**"));
+      const headerRow = lines.find((l) => l.includes("**Hi**"));
       expect(headerRow).toBeDefined();
 
       // Right-aligned: padding should be on the left of **Hi**

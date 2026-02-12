@@ -1,4 +1,8 @@
-import type { GaugeInputWithDefaults, GaugeZone, GaugeZoneColor } from "./schema.js";
+import type {
+  GaugeInputWithDefaults,
+  GaugeZone,
+  GaugeZoneColor,
+} from "./schema.js";
 import type { GaugeChars } from "./chars.js";
 
 /**
@@ -38,10 +42,10 @@ export interface GaugeLayout {
 /**
  * Find which zone a value belongs to.
  */
-function findZoneForValue(
+function _findZoneForValue(
   value: number,
   zones: GaugeZone[] | undefined,
-  min: number
+  _min: number
 ): GaugeZone | undefined {
   if (!zones || zones.length === 0) {
     return undefined;
@@ -96,7 +100,7 @@ export function computeGaugeLayout(
   } else {
     // With zones - build colored segments
     // Calculate character positions for each zone boundary
-    const zonePositions: Array<{ position: number; zone: GaugeZone }> = [];
+    const zonePositions: { position: number; zone: GaugeZone }[] = [];
 
     for (const zone of zones) {
       // Convert zone threshold to character position
@@ -111,7 +115,9 @@ export function computeGaugeLayout(
     let remainingFilled = totalFilled;
 
     for (let i = 0; i < zonePositions.length && remainingFilled > 0; i++) {
-      const { position, zone } = zonePositions[i]!;
+      const zonePos = zonePositions[i];
+      if (!zonePos) continue;
+      const { position, zone } = zonePos;
       const zoneEnd = Math.min(position, totalFilled);
       const segmentLength = zoneEnd - currentPos;
 
@@ -128,12 +134,15 @@ export function computeGaugeLayout(
 
     // If there's remaining filled area beyond all zones, use the last zone's color
     if (remainingFilled > 0 && zonePositions.length > 0) {
-      const lastZone = zonePositions[zonePositions.length - 1]!.zone;
-      segments.push({
-        length: remainingFilled,
-        filled: true,
-        color: lastZone.color,
-      });
+      const lastZonePos = zonePositions[zonePositions.length - 1];
+      if (lastZonePos) {
+        const lastZone = lastZonePos.zone;
+        segments.push({
+          length: remainingFilled,
+          filled: true,
+          color: lastZone.color,
+        });
+      }
     }
 
     // Add empty segment
@@ -143,7 +152,9 @@ export function computeGaugeLayout(
   }
 
   // Format value string
-  const valueStr = unit ? `${clampedValue}${unit}` : `${clampedValue}`;
+  const valueStr = unit
+    ? `${String(clampedValue)}${unit}`
+    : String(clampedValue);
 
   return {
     label: input.label ?? "",

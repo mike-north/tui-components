@@ -1,6 +1,11 @@
 import { Command } from "commander";
 import { readFileSync } from "node:fs";
-import { registry, createRenderContext, type RenderMode } from "@tuicomponents/core";
+import {
+  registry,
+  createRenderContext,
+  type RenderMode,
+} from "@tuicomponents/core";
+import { getAgentDiagramPadding } from "../agent-instructions.js";
 
 export const renderCommand = new Command("render")
   .description("Render a component with the given input")
@@ -14,7 +19,9 @@ export const renderCommand = new Command("render")
     "Render mode: ansi (rich terminal) or markdown (AI assistants)",
     (value: string): RenderMode => {
       if (value !== "ansi" && value !== "markdown") {
-        throw new Error(`Invalid render mode: ${value}. Must be 'ansi' or 'markdown'.`);
+        throw new Error(
+          `Invalid render mode: ${value}. Must be 'ansi' or 'markdown'.`
+        );
       }
       return value;
     }
@@ -97,6 +104,14 @@ export const renderCommand = new Command("render")
 
       // Render the component
       const result = component.render(parseResult.data, context);
+
+      // Add padding for agent environments to improve readability in chat interfaces
+      // Only add padding in markdown mode - if user explicitly chose ANSI, respect that
+      const padding =
+        context.renderMode === "markdown" ? getAgentDiagramPadding() : "";
+      if (padding) {
+        console.log(padding);
+      }
       console.log(result.output);
     }
   );

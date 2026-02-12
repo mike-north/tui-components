@@ -4,7 +4,6 @@
  * Uses braille characters to draw circular charts with filled wedges.
  */
 
-import { getStringWidth } from "@tuicomponents/core";
 import { BrailleCanvas, SERIES_STYLES } from "../core/chars.js";
 import type { ChartInputWithDefaults } from "../types.js";
 
@@ -65,7 +64,9 @@ export interface PieChartLayout {
 /**
  * Compute layout for a pie or donut chart.
  */
-export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout {
+export function computePieLayout(
+  input: ChartInputWithDefaults
+): PieChartLayout {
   const type = input.type as "pie" | "donut";
   const series = input.series;
 
@@ -95,7 +96,9 @@ export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout 
       centerX: Math.floor(input.width / 2),
       centerY: Math.floor(input.height / 2),
       innerRadius: 0,
-      centerLabel: input.centerLabel,
+      ...(input.centerLabel !== undefined && {
+        centerLabel: input.centerLabel,
+      }),
       width: input.width,
       height: input.height,
       brailleChars: [],
@@ -129,11 +132,13 @@ export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout 
   let currentAngle = 0; // Start at top (0 radians)
 
   for (let i = 0; i < slicesData.length; i++) {
-    const data = slicesData[i]!;
+    const data = slicesData[i];
+    if (!data) continue;
     const percentage = (data.value / total) * 100;
     const arcAngle = (data.value / total) * Math.PI * 2;
 
-    const style = SERIES_STYLES[i % SERIES_STYLES.length]!;
+    const style = SERIES_STYLES[i % SERIES_STYLES.length];
+    if (!style) continue;
 
     slices.push({
       label: data.label,
@@ -161,7 +166,7 @@ export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout 
   const dotRadiusX = radius * 2;
   const dotRadiusY = radius * 4;
   const dotRadius = Math.min(dotRadiusX, dotRadiusY);
-  const dotInnerRadius = dotRadius * innerRadiusRatio;
+  const _dotInnerRadius = dotRadius * innerRadiusRatio;
 
   // Draw each slice
   for (const slice of slices) {
@@ -192,7 +197,7 @@ export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout 
     centerX,
     centerY,
     innerRadius: radius * innerRadiusRatio,
-    centerLabel: input.centerLabel,
+    ...(input.centerLabel !== undefined && { centerLabel: input.centerLabel }),
     width: input.width,
     height: input.height,
     brailleChars: rendered.chars,

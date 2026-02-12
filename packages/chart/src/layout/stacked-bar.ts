@@ -3,9 +3,17 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { getBarChar, SERIES_STYLES } from "../core/chars.js";
-import type { ChartInputWithDefaults, BarLayout, StackedBarLayout } from "../types.js";
+import type {
+  ChartInputWithDefaults,
+  BarLayout,
+  StackedBarLayout,
+} from "../types.js";
 
 /**
  * Computed layout for a stacked bar chart.
@@ -18,7 +26,7 @@ export interface StackedBarChartLayout {
   /** Series names for legend */
   seriesNames: string[];
   /** Series styles for legend */
-  seriesStyles: Array<{ char: string; useBackticks: boolean }>;
+  seriesStyles: { char: string; useBackticks: boolean }[];
   /** Maximum label width */
   maxLabelWidth: number;
   /** Maximum total value width */
@@ -51,7 +59,8 @@ export function computeStackedBarLayout(
   const categoryData = new Map<string, Map<number, number>>();
 
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
     for (const point of s.data) {
       const category = String(point.x);
       const value = point.y;
@@ -102,8 +111,9 @@ export function computeStackedBarLayout(
   let maxValueWidth = 0;
 
   for (const category of categories) {
-    const seriesMap = categoryData.get(category)!;
-    const total = categoryTotals.get(category)!;
+    const seriesMap = categoryData.get(category);
+    const total = categoryTotals.get(category);
+    if (!seriesMap || total === undefined) continue;
     const segments: BarLayout[] = [];
 
     let cumulativeValue = 0;
@@ -113,15 +123,27 @@ export function computeStackedBarLayout(
       if (value <= 0) continue;
 
       const styleIndex = seriesIndex % SERIES_STYLES.length;
-      const styleInfo = SERIES_STYLES[styleIndex]!;
-      const s = series[seriesIndex]!;
+      const styleInfo = SERIES_STYLES[styleIndex];
+      if (!styleInfo) continue;
+      const s = series[seriesIndex];
+      if (!s) continue;
       const barChar = s.style ? getBarChar(s.style) : styleInfo.char;
       const useBackticks = s.style ? false : styleInfo.useBackticks;
 
       // Scale cumulative position
-      const startPos = scaleValue(cumulativeValue, yScale.min, yScale.max, barAreaSize);
+      const startPos = scaleValue(
+        cumulativeValue,
+        yScale.min,
+        yScale.max,
+        barAreaSize
+      );
       cumulativeValue += value;
-      const endPos = scaleValue(cumulativeValue, yScale.min, yScale.max, barAreaSize);
+      const endPos = scaleValue(
+        cumulativeValue,
+        yScale.min,
+        yScale.max,
+        barAreaSize
+      );
       const length = Math.max(1, Math.round(endPos - startPos));
 
       const format = input.yAxis?.format ?? "number";
@@ -155,14 +177,20 @@ export function computeStackedBarLayout(
 
   // Build series info for legend
   const seriesNames = series.map((s) => s.name);
-  const seriesStyles = series.map((s, i) => {
-    const styleIndex = i % SERIES_STYLES.length;
-    const styleInfo = SERIES_STYLES[styleIndex]!;
-    return {
-      char: s.style ? getBarChar(s.style) : styleInfo.char,
-      useBackticks: s.style ? false : styleInfo.useBackticks,
-    };
-  });
+  const seriesStyles = series
+    .map((s, i) => {
+      const styleIndex = i % SERIES_STYLES.length;
+      const styleInfo = SERIES_STYLES[styleIndex];
+      if (!styleInfo) return null;
+      return {
+        char: s.style ? getBarChar(s.style) : styleInfo.char,
+        useBackticks: s.style ? false : styleInfo.useBackticks,
+      };
+    })
+    .filter(
+      (style): style is { char: string; useBackticks: boolean } =>
+        style !== null
+    );
 
   return {
     type: isVertical ? "bar-stacked-vertical" : "bar-stacked",

@@ -3,6 +3,7 @@
 ## When to Apply
 
 Apply these guidelines when:
+
 - Demonstrating TUI component output to the user
 - Verifying that chart, sparkline, box, or other visual components render correctly
 - Showing examples of component rendering
@@ -29,12 +30,14 @@ Q2 █████████████████████████�
 ### Incorrect Approaches
 
 Showing bash command output:
+
 ```
 $ echo '...' | node cli.js render chart
 Q1 ████████████████████
 ```
 
 Wrapping in code blocks:
+
 ```
 Q1 ████████████████████
 Q2 ██████████████████████████████

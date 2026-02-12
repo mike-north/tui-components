@@ -22,7 +22,9 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
@@ -33,12 +35,16 @@
     "api-report:update": "api-extractor run --local",
     "clean": "rm -rf dist"
   },
-  "keywords": ["tui", "terminal", "cli"],
+  "keywords": [
+    "tui",
+    "terminal",
+    "cli"
+  ],
   "license": "UNLICENSED",
   "dependencies": {
-    "@tuicomponents/core": "workspace:*",
     "@tuicomponents/box": "workspace:*",
     "@tuicomponents/chart": "workspace:*",
+    "@tuicomponents/core": "workspace:*",
     "@tuicomponents/diff": "workspace:*",
     "@tuicomponents/gauge": "workspace:*",
     "@tuicomponents/graph": "workspace:*",
@@ -48,7 +54,8 @@
     "@tuicomponents/sparkline": "workspace:*",
     "@tuicomponents/table": "workspace:*",
     "@tuicomponents/tree": "workspace:*",
-    "commander": "^14.0.0"
+    "commander": "^14.0.0",
+    "is-agentic-tui": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0"

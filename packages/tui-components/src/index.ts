@@ -57,7 +57,12 @@ export type {
   LineStyle,
 } from "@tuicomponents/chart";
 export type { DiffInput, DiffLine, Hunk, LineType } from "@tuicomponents/diff";
-export type { GaugeInput, GaugeZone, GaugeZoneColor, GaugeStyle } from "@tuicomponents/gauge";
+export type {
+  GaugeInput,
+  GaugeZone,
+  GaugeZoneColor,
+  GaugeStyle,
+} from "@tuicomponents/gauge";
 export type { GraphInput, GraphNode, GraphStyle } from "@tuicomponents/graph";
 export type { KeyValueInput, KeyValuePair } from "@tuicomponents/keyvalue";
 export type { ListInput, ListItem, ListStyle } from "@tuicomponents/list";

@@ -31,7 +31,9 @@ describe("CLI", () => {
       const output = runCli("list --json");
       const parsed = JSON.parse(output);
       expect(Array.isArray(parsed)).toBe(true);
-      expect(parsed.find((c: { name: string }) => c.name === "table")).toBeDefined();
+      expect(
+        parsed.find((c: { name: string }) => c.name === "table")
+      ).toBeDefined();
     });
   });
 

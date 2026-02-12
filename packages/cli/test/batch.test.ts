@@ -149,7 +149,8 @@ describe("CLI batch command", () => {
     });
 
     it("should include dimensions in JSON output", () => {
-      const input = '{"component":"sparkline","input":{"values":[1,2,3,4,5],"label":"CPU: "}}';
+      const input =
+        '{"component":"sparkline","input":{"values":[1,2,3,4,5],"label":"CPU: "}}';
 
       // Use --render-mode ansi to get predictable width without anchor character
       const output = runCli("batch --format json --render-mode ansi", input);
@@ -299,7 +300,8 @@ describe("CLI batch command", () => {
       const tempDir = mkdtempSync(join(tmpdir(), "tui-test-"));
       const tempFile = join(tempDir, "input.jsonl");
 
-      const content = '{"component":"sparkline","input":{"values":[1,2,3,4,5]}}';
+      const content =
+        '{"component":"sparkline","input":{"values":[1,2,3,4,5]}}';
       writeFileSync(tempFile, content);
 
       try {

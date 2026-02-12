@@ -7,9 +7,13 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
-import { BrailleCanvas, SCATTER_MARKER_SEQUENCE, SERIES_STYLES } from "../core/chars.js";
-import type { ChartInputWithDefaults, ScatterStyle, ValueFormat } from "../types.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
+import { BrailleCanvas, SCATTER_MARKER_SEQUENCE } from "../core/chars.js";
+import type { ChartInputWithDefaults, ScatterStyle } from "../types.js";
 import type { NiceTicksResult } from "../core/scaling.js";
 
 /**
@@ -67,7 +71,9 @@ export interface ScatterChartLayout {
 /**
  * Compute layout for a scatter plot.
  */
-export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChartLayout {
+export function computeScatterLayout(
+  input: ChartInputWithDefaults
+): ScatterChartLayout {
   const series = input.series;
   const scatterStyle = input.scatterStyle;
 
@@ -77,7 +83,7 @@ export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChar
 
   for (const s of series) {
     for (const point of s.data) {
-      const xVal = typeof point.x === "number" ? point.x : parseFloat(String(point.x));
+      const xVal = typeof point.x === "number" ? point.x : parseFloat(point.x);
       if (!isNaN(xVal)) {
         allXValues.push(xVal);
       }
@@ -148,17 +154,22 @@ export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChar
   const points: ScatterPoint[] = [];
 
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
 
     for (const point of s.data) {
-      const xVal = typeof point.x === "number" ? point.x : parseFloat(String(point.x));
+      const xVal = typeof point.x === "number" ? point.x : parseFloat(point.x);
       if (isNaN(xVal)) continue;
 
       const normalizedX = scaleValue(xVal, xScale.min, xScale.max, 1);
       const normalizedY = scaleValue(point.y, yScale.min, yScale.max, 1);
 
-      const charX = Math.round(Math.max(0, Math.min(1, normalizedX)) * (chartWidth - 1));
-      const charY = Math.round((1 - Math.max(0, Math.min(1, normalizedY))) * (chartHeight - 1));
+      const charX = Math.round(
+        Math.max(0, Math.min(1, normalizedX)) * (chartWidth - 1)
+      );
+      const charY = Math.round(
+        (1 - Math.max(0, Math.min(1, normalizedY))) * (chartHeight - 1)
+      );
 
       points.push({
         dataX: xVal,
@@ -214,8 +225,8 @@ function computeDotsScatterLayout(
   const seriesIndices: (number | null)[][] = [];
 
   for (let row = 0; row < chartHeight; row++) {
-    grid.push(Array(chartWidth).fill(" "));
-    seriesIndices.push(Array(chartWidth).fill(null));
+    grid.push(Array<string>(chartWidth).fill(" "));
+    seriesIndices.push(Array<number | null>(chartWidth).fill(null));
   }
 
   // Plot points
@@ -228,9 +239,15 @@ function computeDotsScatterLayout(
     ) {
       // Use different markers for different series
       const marker =
-        SCATTER_MARKER_SEQUENCE[point.seriesIndex % SCATTER_MARKER_SEQUENCE.length]!;
-      grid[point.charY]![point.charX] = marker;
-      seriesIndices[point.charY]![point.charX] = point.seriesIndex;
+        SCATTER_MARKER_SEQUENCE[
+          point.seriesIndex % SCATTER_MARKER_SEQUENCE.length
+        ];
+      if (!marker) continue;
+      const gridRow = grid[point.charY];
+      const seriesRow = seriesIndices[point.charY];
+      if (!gridRow || !seriesRow) continue;
+      gridRow[point.charX] = marker;
+      seriesRow[point.charX] = point.seriesIndex;
     }
   }
 
@@ -274,7 +291,8 @@ function computeBrailleScatterLayout(
       scaleValue(point.dataX, xScale.min, xScale.max, chartWidth * 2 - 1)
     );
     const dotY = Math.round(
-      (1 - scaleValue(point.dataY, yScale.min, yScale.max, 1)) * (chartHeight * 4 - 1)
+      (1 - scaleValue(point.dataY, yScale.min, yScale.max, 1)) *
+        (chartHeight * 4 - 1)
     );
 
     // Draw a small marker

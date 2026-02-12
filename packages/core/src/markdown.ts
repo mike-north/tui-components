@@ -55,7 +55,10 @@ export function inlineCode(text: string): string {
  * anchorLine("  Sales    ████████") // "│  Sales    ████████"
  * ```
  */
-export function anchorLine(content: string, anchor: string = DEFAULT_ANCHOR): string {
+export function anchorLine(
+  content: string,
+  anchor: string = DEFAULT_ANCHOR
+): string {
   return `${anchor}${content}`;
 }
 
@@ -141,10 +144,16 @@ export function stripMarkdownFormatting(str: string): string {
   // Remove italic markers at word boundaries: *text* or _text_
   // These patterns match markers at start/end of string or with word boundaries
   // *text* - asterisks at word boundaries (not mid-word, not spaced like "a * b")
-  result = result.replace(/(?<![*\w])\*([^*\s][^*]*[^*\s]|[^*\s])\*(?![*\w])/g, "$1");
+  result = result.replace(
+    /(?<![*\w])\*([^*\s][^*]*[^*\s]|[^*\s])\*(?![*\w])/g,
+    "$1"
+  );
 
   // _text_ - underscores at word boundaries (not mid-word like foo_bar)
-  result = result.replace(/(?<![_\w])_([^_\s][^_]*[^_\s]|[^_\s])_(?![_\w])/g, "$1");
+  result = result.replace(
+    /(?<![_\w])_([^_\s][^_]*[^_\s]|[^_\s])_(?![_\w])/g,
+    "$1"
+  );
 
   return result;
 }

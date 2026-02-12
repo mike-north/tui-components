@@ -3,7 +3,11 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { valueToBlock, SERIES_STYLES } from "../core/chars.js";
 import type { ChartInputWithDefaults, LineStyle } from "../types.js";
 
@@ -48,7 +52,7 @@ export interface AreaChartLayout {
   /** Series names */
   seriesNames: string[];
   /** Series styles */
-  seriesStyles: Array<{ char: string; useBackticks: boolean }>;
+  seriesStyles: { char: string; useBackticks: boolean }[];
   /** Column data */
   columns: AreaColumn[];
   /** Display rows (top to bottom) */
@@ -70,7 +74,9 @@ export interface AreaChartLayout {
  * @param input - Chart input with defaults
  * @returns Computed area chart layout
  */
-export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayout {
+export function computeAreaLayout(
+  input: ChartInputWithDefaults
+): AreaChartLayout {
   const isStacked = input.type === "area-stacked";
   const series = input.series;
   const lineStyle = input.lineStyle;
@@ -84,7 +90,10 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
     for (const point of s.data) {
       const category = String(point.x);
       if (!categoryData.has(category)) {
-        categoryData.set(category, new Array(series.length).fill(0) as number[]);
+        categoryData.set(
+          category,
+          new Array(series.length).fill(0) as number[]
+        );
         categories.push(category);
       }
     }
@@ -92,10 +101,12 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
 
   // Second pass: fill in values
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
     for (const point of s.data) {
       const category = String(point.x);
-      const values = categoryData.get(category)!;
+      const values = categoryData.get(category);
+      if (!values) continue;
       values[seriesIndex] = point.y;
     }
   }
@@ -105,8 +116,10 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
   const columns: AreaColumn[] = [];
 
   for (let i = 0; i < categories.length; i++) {
-    const category = categories[i]!;
-    const values = categoryData.get(category)!;
+    const category = categories[i];
+    if (!category) continue;
+    const values = categoryData.get(category);
+    if (!values) continue;
 
     const cumulativeValues: number[] = [];
     let cumulative = 0;
@@ -165,7 +178,9 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
   const seriesNames = series.map((s) => s.name);
   const seriesStyles = series.map((_, i) => {
     const styleIndex = i % SERIES_STYLES.length;
-    return SERIES_STYLES[styleIndex]!;
+    const style = SERIES_STYLES[styleIndex];
+    if (!style) throw new Error(`Invalid style index: ${String(styleIndex)}`);
+    return style;
   });
 
   // Determine chart height
@@ -198,9 +213,17 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
       let activeSeriesIndex = -1;
       let fillLevel = 0;
 
-      for (let seriesIndex = column.normalizedHeights.length - 1; seriesIndex >= 0; seriesIndex--) {
-        const height = column.normalizedHeights[seriesIndex]!;
-        const prevHeight = seriesIndex > 0 ? column.normalizedHeights[seriesIndex - 1]! : 0;
+      for (
+        let seriesIndex = column.normalizedHeights.length - 1;
+        seriesIndex >= 0;
+        seriesIndex--
+      ) {
+        const height = column.normalizedHeights[seriesIndex];
+        if (height === undefined) continue;
+        const prevHeight =
+          seriesIndex > 0
+            ? (column.normalizedHeights[seriesIndex - 1] ?? 0)
+            : 0;
 
         if (height > rowBottom && prevHeight < rowTop) {
           activeSeriesIndex = seriesIndex;
@@ -214,11 +237,16 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
 
       if (activeSeriesIndex >= 0) {
         const char = valueToBlock(fillLevel);
-        const style = seriesStyles[activeSeriesIndex]!;
-
-        chars.push(char);
-        useBackticks.push(style.useBackticks);
-        fillChars.push(style.char);
+        const style = seriesStyles[activeSeriesIndex];
+        if (!style) {
+          chars.push(" ");
+          useBackticks.push(false);
+          fillChars.push(" ");
+        } else {
+          chars.push(char);
+          useBackticks.push(style.useBackticks);
+          fillChars.push(style.char);
+        }
       } else {
         chars.push(" ");
         useBackticks.push(false);

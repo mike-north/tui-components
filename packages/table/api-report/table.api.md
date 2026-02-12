@@ -93,7 +93,6 @@ export const headerStyleSchema: z.ZodEnum<["normal", "bold", "italic", "bold-ita
 
 // @public
 export class TableComponent extends BaseTuiComponent<TableInput, typeof tableInputSchema> {
-    getJsonSchema(): object;
     // (undocumented)
     readonly metadata: ComponentMetadata<TableInput>;
     // (undocumented)

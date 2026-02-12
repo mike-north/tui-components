@@ -88,7 +88,10 @@ export function getLegendItemWidth(item: LegendItem): number {
  * @param forMarkdown - Whether to format for markdown
  * @returns Formatted string
  */
-export function formatLegendItem(item: LegendItem, forMarkdown: boolean): string {
+export function formatLegendItem(
+  item: LegendItem,
+  forMarkdown: boolean
+): string {
   if (forMarkdown && item.useBackticks) {
     return ` \`${item.symbol}\` ${item.name}`;
   }
@@ -102,12 +105,7 @@ export function formatLegendItem(item: LegendItem, forMarkdown: boolean): string
  * @returns Computed legend layout
  */
 export function computeLegendLayout(options: LegendOptions): LegendLayout {
-  const {
-    items,
-    position,
-    boxed = false,
-    maxWidth = 80,
-  } = options;
+  const { items, position, boxed = false, maxWidth = 80 } = options;
 
   if (position === "none" || items.length === 0) {
     return {
@@ -123,7 +121,7 @@ export function computeLegendLayout(options: LegendOptions): LegendLayout {
   const itemWidths = items.map((item) => getLegendItemWidth(item));
 
   // Separator between items
-  const separator = "  "; // Two spaces
+  const _separator = "  "; // Two spaces
   const separatorWidth = 2;
 
   // Try to fit all items on one row
@@ -132,9 +130,11 @@ export function computeLegendLayout(options: LegendOptions): LegendLayout {
   let currentWidth = 0;
 
   for (let i = 0; i < items.length; i++) {
-    const item = items[i]!;
-    const itemWidth = itemWidths[i]!;
-    const widthWithSeparator = currentRow.length > 0 ? itemWidth + separatorWidth : itemWidth;
+    const item = items[i];
+    const itemWidth = itemWidths[i];
+    if (!item || itemWidth === undefined) continue;
+    const widthWithSeparator =
+      currentRow.length > 0 ? itemWidth + separatorWidth : itemWidth;
 
     if (currentWidth + widthWithSeparator > maxWidth && currentRow.length > 0) {
       // Start new row

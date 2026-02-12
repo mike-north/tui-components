@@ -33,9 +33,6 @@ function renderNodeLineAnsi(
 ): string {
   const { node, graphLine } = nodeLayout;
 
-  // Color the graph portion
-  const coloredGraph = theme ? theme.semantic.border(graphLine) : graphLine;
-
   // Format refs if enabled
   const refsStr = input.showRefs ? formatRefs(node.refs, theme) : "";
 
@@ -53,7 +50,9 @@ function renderNodeLineAnsi(
   // Build the full line
   const gap = " ".repeat(input.labelGap);
   const paddedGraph = graphLine.padEnd(graphWidth);
-  const coloredPaddedGraph = theme ? theme.semantic.border(paddedGraph) : paddedGraph;
+  const coloredPaddedGraph = theme
+    ? theme.semantic.border(paddedGraph)
+    : paddedGraph;
 
   return `${coloredPaddedGraph}${gap}${refsStr}${label}`;
 }
@@ -91,13 +90,13 @@ export function renderGraphAnsi(
 
   for (const nodeLayout of layout.nodes) {
     // Render the node line
-    lines.push(
-      renderNodeLineAnsi(nodeLayout, input, layout.graphWidth, theme)
-    );
+    lines.push(renderNodeLineAnsi(nodeLayout, input, layout.graphWidth, theme));
 
     // Render continuation lines
     for (const contLine of nodeLayout.continuationLines) {
-      lines.push(renderContinuationLineAnsi(contLine, layout.graphWidth, theme));
+      lines.push(
+        renderContinuationLineAnsi(contLine, layout.graphWidth, theme)
+      );
     }
   }
 
@@ -115,9 +114,8 @@ function renderNodeLineMarkdown(
   const { node, graphLine } = nodeLayout;
 
   // Format refs if enabled (no colors in markdown)
-  const refsStr = input.showRefs && node.refs?.length
-    ? `(${node.refs.join(", ")}) `
-    : "";
+  const refsStr =
+    input.showRefs && node.refs?.length ? `(${node.refs.join(", ")}) ` : "";
 
   // Truncate label if needed
   const availableWidth = input.labelWidth - refsStr.length;

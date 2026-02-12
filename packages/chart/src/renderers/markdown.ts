@@ -6,22 +6,26 @@
  * - Secondary: Inline code (backticks)
  */
 
-import {
-  padToWidth,
-  anchorLine,
-  DEFAULT_ANCHOR,
-} from "@tuicomponents/core";
+import { padToWidth, anchorLine, DEFAULT_ANCHOR } from "@tuicomponents/core";
 import { AXIS_CHARS } from "../core/chars.js";
 import { formatTickValue } from "../core/scaling.js";
-import { renderLegendRow, computeLegendLayout, type LegendItem } from "../core/legend.js";
-import { computeYAxisRow, renderXAxis, type YAxisConfig } from "../core/axis-renderer.js";
+import {
+  renderLegendRow,
+  computeLegendLayout,
+  type LegendItem,
+} from "../core/legend.js";
+import {
+  computeYAxisRow,
+  renderXAxis,
+  type YAxisConfig,
+} from "../core/axis-renderer.js";
 import type { BarChartLayout } from "../layout/bar.js";
 import type { StackedBarChartLayout } from "../layout/stacked-bar.js";
 import type { LineChartLayout } from "../layout/line.js";
 import type { AreaChartLayout } from "../layout/area.js";
 import type { ScatterChartLayout } from "../layout/scatter.js";
 import type { PieChartLayout } from "../layout/pie.js";
-import type { HeatmapChartLayout } from "../layout/heatmap.js";
+import type { HeatmapChartLayout as _HeatmapChartLayout } from "../layout/heatmap.js";
 import type { ChartInputWithDefaults } from "../types.js";
 
 /**
@@ -47,7 +51,7 @@ function wrapInlineCode(text: string, useBackticks: boolean): string {
  */
 export function renderBarChartMarkdown(
   layout: BarChartLayout,
-  options: MarkdownRenderOptions
+  _options: MarkdownRenderOptions
 ): string {
   const lines: string[] = [];
 
@@ -98,9 +102,12 @@ export function renderVerticalBarChartMarkdown(
     // Y-axis label
     let yLabel = " ".repeat(yAxisWidth);
     for (const tick of layout.yScale.ticks) {
-      const tickNorm = (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
+      const tickNorm =
+        (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
       if (Math.abs(tickNorm - rowThreshold) < 0.5 / chartHeight) {
-        yLabel = padToWidth(formatTickValue(tick, format, decimals), yAxisWidth - 1) + " ";
+        yLabel =
+          padToWidth(formatTickValue(tick, format, decimals), yAxisWidth - 1) +
+          " ";
         break;
       }
     }
@@ -119,19 +126,28 @@ export function renderVerticalBarChartMarkdown(
       }
     }
 
-    lines.push(anchorLine(`${yLabel}${axisChar}${segments.join(" ")}`, DEFAULT_ANCHOR));
+    lines.push(
+      anchorLine(`${yLabel}${axisChar}${segments.join(" ")}`, DEFAULT_ANCHOR)
+    );
   }
 
   // X-axis line
   const xAxisLine = AXIS_CHARS.horizontal.repeat(layout.width - yAxisWidth - 1);
-  lines.push(anchorLine(" ".repeat(yAxisWidth) + AXIS_CHARS.origin + xAxisLine, DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(
+      " ".repeat(yAxisWidth) + AXIS_CHARS.origin + xAxisLine,
+      DEFAULT_ANCHOR
+    )
+  );
 
   // X-axis labels
   const xLabels: string[] = [];
   for (const bar of layout.bars) {
     xLabels.push(padToWidth(bar.label, barWidth));
   }
-  lines.push(anchorLine(" ".repeat(yAxisWidth + 1) + xLabels.join(" "), DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(" ".repeat(yAxisWidth + 1) + xLabels.join(" "), DEFAULT_ANCHOR)
+  );
 
   return lines.join("\n");
 }
@@ -151,7 +167,10 @@ export function renderStackedBarChartMarkdown(
   if (isVertical) {
     const chartHeight = layout.barAreaSize;
     const numStacks = layout.stacks.length;
-    const barWidth = Math.max(1, Math.floor((layout.width - 2) / numStacks) - 1);
+    const barWidth = Math.max(
+      1,
+      Math.floor((layout.width - 2) / numStacks) - 1
+    );
     const yAxisWidth = layout.maxValueWidth + 2;
     const format = input.yAxis?.format ?? "number";
     const decimals = input.yAxis?.decimals;
@@ -200,7 +219,9 @@ export function renderStackedBarChartMarkdown(
         }
       }
 
-      lines.push(anchorLine(`${yLabel}${axisChar}${segments.join(" ")}`, DEFAULT_ANCHOR));
+      lines.push(
+        anchorLine(`${yLabel}${axisChar}${segments.join(" ")}`, DEFAULT_ANCHOR)
+      );
     }
 
     // Render X-axis using shared abstraction
@@ -237,11 +258,17 @@ export function renderStackedBarChartMarkdown(
   }
 
   // Add legend
-  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => ({
-    name,
-    symbol: layout.seriesStyles[i]!.char,
-    useBackticks: layout.seriesStyles[i]!.useBackticks,
-  }));
+  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => {
+    const style = layout.seriesStyles[i];
+    if (!style) {
+      throw new Error(`Missing style for series ${String(i)}`);
+    }
+    return {
+      name,
+      symbol: style.char,
+      useBackticks: style.useBackticks,
+    };
+  });
 
   const legendLayout = computeLegendLayout({
     items: legendItems,
@@ -280,32 +307,50 @@ export function renderLineChartMarkdown(
 
     let content = "";
     for (let i = 0; i < row.chars.length; i++) {
-      const char = row.chars[i]!;
-      const useBackticks = row.useBackticks[i]!;
+      const char = row.chars[i];
+      const useBackticks = row.useBackticks[i];
+      if (char === undefined || useBackticks === undefined) {
+        throw new Error(`Missing char or useBackticks at index ${String(i)}`);
+      }
       content += wrapInlineCode(char, useBackticks && char !== " ");
     }
 
-    lines.push(anchorLine(`${yLabel}${AXIS_CHARS.vertical}${content}`, DEFAULT_ANCHOR));
+    lines.push(
+      anchorLine(`${yLabel}${AXIS_CHARS.vertical}${content}`, DEFAULT_ANCHOR)
+    );
   }
 
   // X-axis
   const xAxisLine = AXIS_CHARS.horizontal.repeat(chartWidth);
-  lines.push(anchorLine(" ".repeat(layout.yAxisWidth) + AXIS_CHARS.origin + xAxisLine, DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(
+      " ".repeat(layout.yAxisWidth) + AXIS_CHARS.origin + xAxisLine,
+      DEFAULT_ANCHOR
+    )
+  );
 
   // X-axis labels - position depends on layout style
-  const labelLine: string[] = Array(chartWidth).fill(" ");
+  const labelLine = Array<string>(chartWidth).fill(" ");
   const isBraille = layout.lineStyle === "braille";
   const spacing = isBraille ? 3 : 2; // chars per category
   for (let i = 0; i < layout.categories.length; i++) {
-    const label = layout.categories[i]!;
+    const label = layout.categories[i];
+    if (label === undefined) {
+      throw new Error(`Missing category at index ${String(i)}`);
+    }
     const pos = isBraille
-      ? i * spacing + Math.floor(spacing / 2)  // center for braille
-      : i * spacing;  // even positions for blocks
+      ? i * spacing + Math.floor(spacing / 2) // center for braille
+      : i * spacing; // even positions for blocks
     if (pos < chartWidth) {
       labelLine[pos] = label.charAt(0) || " ";
     }
   }
-  lines.push(anchorLine(" ".repeat(layout.yAxisWidth + 1) + labelLine.join(""), DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(
+      " ".repeat(layout.yAxisWidth + 1) + labelLine.join(""),
+      DEFAULT_ANCHOR
+    )
+  );
 
   // Legend for multi-series
   if (layout.seriesNames.length > 1) {
@@ -352,28 +397,46 @@ export function renderAreaChartMarkdown(
 
     let content = "";
     for (let i = 0; i < row.chars.length; i++) {
-      const char = row.chars[i]!;
-      const useBackticks = row.useBackticks[i]!;
+      const char = row.chars[i];
+      const useBackticks = row.useBackticks[i];
+      if (char === undefined || useBackticks === undefined) {
+        throw new Error(`Missing char or useBackticks at index ${String(i)}`);
+      }
       content += wrapInlineCode(char, useBackticks && char !== " ");
     }
 
-    lines.push(anchorLine(`${yLabel}${AXIS_CHARS.vertical}${content}`, DEFAULT_ANCHOR));
+    lines.push(
+      anchorLine(`${yLabel}${AXIS_CHARS.vertical}${content}`, DEFAULT_ANCHOR)
+    );
   }
 
   // X-axis
   const xAxisLine = AXIS_CHARS.horizontal.repeat(layout.categories.length);
-  lines.push(anchorLine(" ".repeat(layout.yAxisWidth) + AXIS_CHARS.origin + xAxisLine, DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(
+      " ".repeat(layout.yAxisWidth) + AXIS_CHARS.origin + xAxisLine,
+      DEFAULT_ANCHOR
+    )
+  );
 
   // X-axis labels
   const xLabels = layout.categories.map((c) => c.charAt(0) || " ").join("");
-  lines.push(anchorLine(" ".repeat(layout.yAxisWidth + 1) + xLabels, DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(" ".repeat(layout.yAxisWidth + 1) + xLabels, DEFAULT_ANCHOR)
+  );
 
   // Legend
-  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => ({
-    name,
-    symbol: layout.seriesStyles[i]!.char,
-    useBackticks: layout.seriesStyles[i]!.useBackticks,
-  }));
+  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => {
+    const style = layout.seriesStyles[i];
+    if (!style) {
+      throw new Error(`Missing style for series ${String(i)}`);
+    }
+    return {
+      name,
+      symbol: style.char,
+      useBackticks: style.useBackticks,
+    };
+  });
 
   const legendLayout = computeLegendLayout({
     items: legendItems,
@@ -412,9 +475,14 @@ export function renderScatterChartMarkdown(
     const rowBottom = 1 - (rowIndex + 1) / layout.chartHeight;
 
     for (const tick of layout.yScale.ticks) {
-      const tickNorm = (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
+      const tickNorm =
+        (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
       if (tickNorm > rowBottom && tickNorm <= rowTop) {
-        yLabel = padToWidth(formatTickValue(tick, format, decimals), layout.yAxisWidth - 1) + " ";
+        yLabel =
+          padToWidth(
+            formatTickValue(tick, format, decimals),
+            layout.yAxisWidth - 1
+          ) + " ";
         break;
       }
     }
@@ -425,28 +493,43 @@ export function renderScatterChartMarkdown(
       const rowChars = layout.brailleChars[rowIndex] ?? [];
       const rowIndices = layout.brailleSeriesIndices?.[rowIndex] ?? [];
       for (let i = 0; i < rowChars.length; i++) {
-        const char = rowChars[i]!;
+        const char = rowChars[i];
+        if (char === undefined) {
+          throw new Error(`Missing char at index ${String(i)}`);
+        }
         const seriesIdx = rowIndices[i];
-        const useBackticks = seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1;
+        const useBackticks =
+          seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1;
         content += wrapInlineCode(char, useBackticks && char !== " ");
       }
     } else if (layout.grid) {
       const rowChars = layout.grid[rowIndex] ?? [];
       const rowIndices = layout.seriesIndices?.[rowIndex] ?? [];
       for (let i = 0; i < rowChars.length; i++) {
-        const char = rowChars[i]!;
+        const char = rowChars[i];
+        if (char === undefined) {
+          throw new Error(`Missing char at index ${String(i)}`);
+        }
         const seriesIdx = rowIndices[i];
-        const useBackticks = seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1;
+        const useBackticks =
+          seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1;
         content += wrapInlineCode(char, useBackticks && char !== " ");
       }
     }
 
-    lines.push(anchorLine(`${yLabel}${AXIS_CHARS.vertical}${content}`, DEFAULT_ANCHOR));
+    lines.push(
+      anchorLine(`${yLabel}${AXIS_CHARS.vertical}${content}`, DEFAULT_ANCHOR)
+    );
   }
 
   // X-axis
   const xAxisLine = AXIS_CHARS.horizontal.repeat(layout.chartWidth);
-  lines.push(anchorLine(" ".repeat(layout.yAxisWidth) + AXIS_CHARS.origin + xAxisLine, DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(
+      " ".repeat(layout.yAxisWidth) + AXIS_CHARS.origin + xAxisLine,
+      DEFAULT_ANCHOR
+    )
+  );
 
   // X-axis labels
   const xFormat = input.xAxis?.format ?? "number";
@@ -454,30 +537,50 @@ export function renderScatterChartMarkdown(
   const labelPositions: { pos: number; label: string }[] = [];
 
   for (const tick of layout.xScale.ticks) {
-    const norm = (tick - layout.xScale.min) / (layout.xScale.max - layout.xScale.min);
+    const norm =
+      (tick - layout.xScale.min) / (layout.xScale.max - layout.xScale.min);
     const pos = Math.round(norm * (layout.chartWidth - 1));
     const label = formatTickValue(tick, xFormat, xDecimals);
     labelPositions.push({ pos, label });
   }
 
   // Build X-axis label line
-  const labelLine: string[] = Array(layout.chartWidth).fill(" ");
+  const labelLine = Array<string>(layout.chartWidth).fill(" ");
   for (const { pos, label } of labelPositions) {
     const halfLen = Math.floor(label.length / 2);
-    const startPos = Math.max(0, Math.min(layout.chartWidth - label.length, pos - halfLen));
+    const startPos = Math.max(
+      0,
+      Math.min(layout.chartWidth - label.length, pos - halfLen)
+    );
     for (let i = 0; i < label.length && startPos + i < layout.chartWidth; i++) {
-      labelLine[startPos + i] = label[i]!;
+      const char = label[i];
+      if (char === undefined) {
+        throw new Error(`Missing char at index ${String(i)}`);
+      }
+      labelLine[startPos + i] = char;
     }
   }
-  lines.push(anchorLine(" ".repeat(layout.yAxisWidth + 1) + labelLine.join(""), DEFAULT_ANCHOR));
+  lines.push(
+    anchorLine(
+      " ".repeat(layout.yAxisWidth + 1) + labelLine.join(""),
+      DEFAULT_ANCHOR
+    )
+  );
 
   // Legend for multi-series
   if (layout.seriesNames.length > 1) {
-    const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => ({
-      name,
-      symbol: layout.scatterStyle === "braille" ? "⣿" : ["●", "■", "▲", "◆", "+"][i % 5]!,
-      useBackticks: i % 2 === 1,
-    }));
+    const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => {
+      const symbols = ["●", "■", "▲", "◆", "+"];
+      const symbol = layout.scatterStyle === "braille" ? "⣿" : symbols[i % 5];
+      if (!symbol) {
+        throw new Error(`Missing symbol for series ${String(i)}`);
+      }
+      return {
+        name,
+        symbol,
+        useBackticks: i % 2 === 1,
+      };
+    });
 
     const legendLayout = computeLegendLayout({
       items: legendItems,
@@ -519,9 +622,13 @@ export function renderPieChartMarkdown(
 
     let content = "";
     for (let i = 0; i < rowChars.length; i++) {
-      const char = rowChars[i]!;
+      const char = rowChars[i];
+      if (char === undefined) {
+        throw new Error(`Missing char at index ${String(i)}`);
+      }
       const seriesIdx = rowIndices[i];
-      const useBackticks = seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1;
+      const useBackticks =
+        seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1;
       content += wrapInlineCode(char, useBackticks && char !== " ");
     }
 
@@ -534,9 +641,18 @@ export function renderPieChartMarkdown(
       const labelLen = layout.centerLabel.length;
       const startPos = Math.floor((layout.width - labelLen) / 2);
       if (startPos >= 0) {
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread -- intentional string spread for character manipulation
         const contentArray = [...content];
-        for (let i = 0; i < labelLen && startPos + i < contentArray.length; i++) {
-          contentArray[startPos + i] = layout.centerLabel[i]!;
+        for (
+          let i = 0;
+          i < labelLen && startPos + i < contentArray.length;
+          i++
+        ) {
+          const char = layout.centerLabel[i];
+          if (char === undefined) {
+            throw new Error(`Missing centerLabel char at index ${String(i)}`);
+          }
+          contentArray[startPos + i] = char;
         }
         content = contentArray.join("");
       }

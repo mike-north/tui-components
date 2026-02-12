@@ -7,12 +7,10 @@ import {
   type RenderMode,
   getStringWidth,
   getMarkdownRenderedWidth,
-  padToWidth,
   truncateToWidth,
   measureLines,
   registry,
 } from "@tuicomponents/core";
-import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   tableInputSchema,
   type TableInput,
@@ -55,7 +53,10 @@ function colorHeader(text: string, theme: TuiTheme | undefined): string {
  * Markdown formatting markers for each header style.
  * These characters will be consumed (invisible) when rendered.
  */
-const MARKDOWN_HEADER_FORMATS: Record<HeaderStyle, { prefix: string; suffix: string }> = {
+const MARKDOWN_HEADER_FORMATS: Record<
+  HeaderStyle,
+  { prefix: string; suffix: string }
+> = {
   normal: { prefix: "", suffix: "" },
   bold: { prefix: "**", suffix: "**" },
   italic: { prefix: "_", suffix: "_" },
@@ -116,16 +117,6 @@ class TableComponent extends BaseTuiComponent<
 
   readonly schema = tableInputSchema;
 
-  /**
-   * Override getJsonSchema to use a more direct schema generation.
-   */
-  override getJsonSchema(): object {
-    return zodToJsonSchema(this.schema, {
-      name: this.metadata.name,
-      $refStrategy: "none",
-    });
-  }
-
   render(input: TableInput, context: RenderContext): RenderResult {
     // Parse and apply defaults
     const parsed: TableInputWithDefaults = this.schema.parse(input);
@@ -151,13 +142,22 @@ class TableComponent extends BaseTuiComponent<
 
     // Top border
     if (hasBorders) {
-      lines.push(this.buildHorizontalLine(computedColumns, borders, "top", theme));
+      lines.push(
+        this.buildHorizontalLine(computedColumns, borders, "top", theme)
+      );
     }
 
     // Header row
     if (parsed.showHeader) {
       lines.push(
-        this.buildHeaderRow(computedColumns, borders, hasBorders, theme, renderMode, headerStyle)
+        this.buildHeaderRow(
+          computedColumns,
+          borders,
+          hasBorders,
+          theme,
+          renderMode,
+          headerStyle
+        )
       );
 
       // Header separator
@@ -172,7 +172,16 @@ class TableComponent extends BaseTuiComponent<
     for (let i = 0; i < parsed.rows.length; i++) {
       const row = parsed.rows[i];
       if (!row) continue;
-      lines.push(this.buildDataRow(row, computedColumns, borders, hasBorders, theme, renderMode));
+      lines.push(
+        this.buildDataRow(
+          row,
+          computedColumns,
+          borders,
+          hasBorders,
+          theme,
+          renderMode
+        )
+      );
 
       // Row separator (except after last row)
       if (parsed.rowSeparators && hasBorders && i < parsed.rows.length - 1) {
@@ -184,7 +193,9 @@ class TableComponent extends BaseTuiComponent<
 
     // Bottom border
     if (hasBorders) {
-      lines.push(this.buildHorizontalLine(computedColumns, borders, "bottom", theme));
+      lines.push(
+        this.buildHorizontalLine(computedColumns, borders, "bottom", theme)
+      );
     }
 
     const output = lines.join("\n");
@@ -327,9 +338,7 @@ class TableComponent extends BaseTuiComponent<
           ? borders.bottomJoin
           : borders.cross;
 
-    const segments = columns.map((c) =>
-      borders.horizontal.repeat(c.width + 2)
-    );
+    const segments = columns.map((c) => borders.horizontal.repeat(c.width + 2));
 
     const line = left + segments.join(join) + right;
     return colorBorder(line, theme);
@@ -380,7 +389,12 @@ class TableComponent extends BaseTuiComponent<
       }
 
       // ANSI mode: use standard cell formatting with theme color
-      const text = this.formatCell(c.column.header, c.width, c.column.align, renderMode);
+      const text = this.formatCell(
+        c.column.header,
+        c.width,
+        c.column.align,
+        renderMode
+      );
       return colorHeader(` ${text} `, theme);
     });
 

@@ -18,7 +18,9 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
@@ -30,7 +32,12 @@
     "api-report:update": "api-extractor run --local",
     "clean": "rm -rf dist temp"
   },
-  "keywords": ["tui", "terminal", "cli", "table"],
+  "keywords": [
+    "tui",
+    "terminal",
+    "cli",
+    "table"
+  ],
   "license": "UNLICENSED",
   "dependencies": {
     "@tuicomponents/core": "workspace:*",
