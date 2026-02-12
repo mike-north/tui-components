@@ -12,8 +12,8 @@ import {
 } from "@tuicomponents/core";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { chartInputSchema } from "./schema.js";
-import type { ChartInput, ChartInputWithDefaults } from "./types.js";
-import { computeBarLayout, groupBarsByCategory } from "./layout/bar.js";
+import type { ChartInput } from "./types.js";
+import { computeBarLayout } from "./layout/bar.js";
 import { computeStackedBarLayout } from "./layout/stacked-bar.js";
 import { computeLineLayout } from "./layout/line.js";
 import { computeAreaLayout } from "./layout/area.js";
@@ -274,7 +274,7 @@ class ChartComponent extends BaseTuiComponent<
   }
 
   render(input: ChartInput, context: RenderContext): RenderResult {
-    const parsed = this.schema.parse(input) as ChartInputWithDefaults;
+    const parsed = this.schema.parse(input);
 
     if (parsed.series.length === 0 || parsed.series.every((s) => s.data.length === 0)) {
       return { output: "", actualWidth: 0, lineCount: 0 };

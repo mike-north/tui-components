@@ -172,7 +172,8 @@ function computeBlocksLayout(
   const points: LinePoint[][] = [];
 
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
     const seriesPoints: LinePoint[] = [];
 
     for (const point of s.data) {
@@ -198,27 +199,34 @@ function computeBlocksLayout(
   const seriesGrid: (number | null)[][] = [];
 
   for (let row = 0; row < chartHeight; row++) {
-    grid.push(Array(chartWidth).fill(" "));
-    seriesGrid.push(Array(chartWidth).fill(null));
+    grid.push(Array(chartWidth).fill(" ") as string[]);
+    seriesGrid.push(Array(chartWidth).fill(null) as (number | null)[]);
   }
 
   // Draw lines between consecutive points for each series
   for (let seriesIndex = 0; seriesIndex < points.length; seriesIndex++) {
-    const seriesPoints = points[seriesIndex]!;
+    const seriesPoints = points[seriesIndex];
+    if (!seriesPoints) continue;
 
     for (let i = 0; i < seriesPoints.length; i++) {
-      const p = seriesPoints[i]!;
+      const p = seriesPoints[i];
+      if (!p) continue;
       const row = Math.floor((1 - p.normalizedY) * (chartHeight - 0.001));
       const col = p.x;
 
       if (row >= 0 && row < chartHeight && col >= 0 && col < chartWidth) {
+        const gridRow = grid[row];
+        const seriesGridRow = seriesGrid[row];
+        if (!gridRow || !seriesGridRow) continue;
+
         // Draw point marker (unless dots-only mode)
-        grid[row]![col] = lineStyle === "dots" ? "●" : LINE_DRAW.point;
-        seriesGrid[row]![col] = seriesIndex;
+        gridRow[col] = lineStyle === "dots" ? "●" : LINE_DRAW.point;
+        seriesGridRow[col] = seriesIndex;
 
         // Draw connecting line to next point (skip for dots mode)
         if (lineStyle !== "dots" && i < seriesPoints.length - 1) {
-          const nextP = seriesPoints[i + 1]!;
+          const nextP = seriesPoints[i + 1];
+          if (!nextP) continue;
           const nextRow = Math.floor((1 - nextP.normalizedY) * (chartHeight - 0.001));
           const nextCol = nextP.x;
 
@@ -230,15 +238,19 @@ function computeBlocksLayout(
               const t = (c - col) / colDiff;
               const interpRow = Math.round(row + rowDiff * t);
 
-              if (interpRow >= 0 && interpRow < chartHeight && grid[interpRow]![c] === " ") {
+              const interpGridRow = grid[interpRow];
+              const interpSeriesGridRow = seriesGrid[interpRow];
+              if (interpRow >= 0 && interpRow < chartHeight && interpGridRow?.[c] === " ") {
                 if (rowDiff < 0) {
-                  grid[interpRow]![c] = LINE_DRAW.rise;
+                  interpGridRow[c] = LINE_DRAW.rise;
                 } else if (rowDiff > 0) {
-                  grid[interpRow]![c] = LINE_DRAW.fall;
+                  interpGridRow[c] = LINE_DRAW.fall;
                 } else {
-                  grid[interpRow]![c] = LINE_DRAW.horizontal;
+                  interpGridRow[c] = LINE_DRAW.horizontal;
                 }
-                seriesGrid[interpRow]![c] = seriesIndex;
+                if (interpSeriesGridRow) {
+                  interpSeriesGridRow[c] = seriesIndex;
+                }
               }
             }
           }
@@ -266,8 +278,9 @@ function computeBlocksLayout(
       }
     }
 
-    const chars = grid[rowIndex]!;
-    const seriesIndices = seriesGrid[rowIndex]!;
+    const chars = grid[rowIndex];
+    const seriesIndices = seriesGrid[rowIndex];
+    if (!chars || !seriesIndices) continue;
 
     const useBackticks = seriesIndices.map((idx) => {
       if (idx === null) return false;
@@ -317,7 +330,8 @@ function computeBrailleLayout(
   const points: LinePoint[][] = [];
 
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
     const seriesPoints: LinePoint[] = [];
 
     for (const point of s.data) {
@@ -344,10 +358,12 @@ function computeBrailleLayout(
 
   // Draw lines for each series
   for (let seriesIndex = 0; seriesIndex < points.length; seriesIndex++) {
-    const seriesPoints = points[seriesIndex]!;
+    const seriesPoints = points[seriesIndex];
+    if (!seriesPoints) continue;
 
     for (let i = 0; i < seriesPoints.length; i++) {
-      const p = seriesPoints[i]!;
+      const p = seriesPoints[i];
+      if (!p) continue;
 
       // Convert to dot coordinates
       // X: center of the character cell (each char is 2 dots wide)
@@ -357,10 +373,12 @@ function computeBrailleLayout(
 
       // Draw line to next point
       if (i < seriesPoints.length - 1) {
-        const nextP = seriesPoints[i + 1]!;
-        const nextDotX = nextP.x * 2 + 1;
-        const nextDotY = Math.round((1 - nextP.normalizedY) * (chartHeight * 4 - 1));
-        canvas.drawLine(dotX, dotY, nextDotX, nextDotY, seriesIndex);
+        const nextP = seriesPoints[i + 1];
+        if (nextP) {
+          const nextDotX = nextP.x * 2 + 1;
+          const nextDotY = Math.round((1 - nextP.normalizedY) * (chartHeight * 4 - 1));
+          canvas.drawLine(dotX, dotY, nextDotX, nextDotY, seriesIndex);
+        }
       }
 
       // Draw point marker

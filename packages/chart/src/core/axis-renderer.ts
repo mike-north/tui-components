@@ -155,7 +155,8 @@ export function renderXAxis(config: XAxisConfig): XAxisResult {
   // Build label line with centered labels
   let labelLine = "";
   for (let i = 0; i < categories.length; i++) {
-    const label = categories[i]!;
+    const label = categories[i];
+    if (!label) continue;
     const tickPos = Math.floor(barWidth / 2);
     const labelStart = Math.max(0, tickPos - Math.floor(label.length / 2));
     const labelEnd = labelStart + label.length;

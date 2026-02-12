@@ -5,7 +5,7 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { valueToHeatmapChar, SERIES_STYLES } from "../core/chars.js";
+import { valueToHeatmapChar } from "../core/chars.js";
 import type { ChartInputWithDefaults, HeatmapStyle } from "../types.js";
 
 /**
@@ -116,11 +116,13 @@ export function computeHeatmapLayout(input: ChartInputWithDefaults): HeatmapChar
   const cells: HeatmapCell[][] = [];
 
   for (let rowIdx = 0; rowIdx < rowLabels.length; rowIdx++) {
-    const rowLabel = rowLabels[rowIdx]!;
+    const rowLabel = rowLabels[rowIdx];
+    if (!rowLabel) continue;
     const rowCells: HeatmapCell[] = [];
 
     for (let colIdx = 0; colIdx < colLabels.length; colIdx++) {
-      const colLabel = colLabels[colIdx]!;
+      const colLabel = colLabels[colIdx];
+      if (!colLabel) continue;
       const key = `${rowLabel}:${colLabel}`;
       const value = valueMap.get(key) ?? 0;
 

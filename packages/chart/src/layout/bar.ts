@@ -89,14 +89,17 @@ export function computeBarLayout(input: ChartInputWithDefaults): BarChartLayout 
   const formattedValues: string[] = [];
 
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
     const styleIndex = seriesIndex % SERIES_STYLES.length;
-    const styleInfo = SERIES_STYLES[styleIndex]!;
+    const styleInfo = SERIES_STYLES[styleIndex];
+    if (!styleInfo) continue;
     const barChar = s.style ? getBarChar(s.style) : styleInfo.char;
     const useBackticks = s.style ? false : styleInfo.useBackticks;
 
     for (let pointIndex = 0; pointIndex < s.data.length; pointIndex++) {
-      const point = s.data[pointIndex]!;
+      const point = s.data[pointIndex];
+      if (!point) continue;
       const value = point.y;
       const label = point.label ?? String(point.x);
 

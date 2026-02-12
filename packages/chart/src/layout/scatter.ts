@@ -8,8 +8,8 @@
 
 import { getStringWidth } from "@tuicomponents/core";
 import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
-import { BrailleCanvas, SCATTER_MARKER_SEQUENCE, SERIES_STYLES } from "../core/chars.js";
-import type { ChartInputWithDefaults, ScatterStyle, ValueFormat } from "../types.js";
+import { BrailleCanvas, SCATTER_MARKER_SEQUENCE } from "../core/chars.js";
+import type { ChartInputWithDefaults, ScatterStyle } from "../types.js";
 import type { NiceTicksResult } from "../core/scaling.js";
 
 /**
@@ -77,7 +77,7 @@ export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChar
 
   for (const s of series) {
     for (const point of s.data) {
-      const xVal = typeof point.x === "number" ? point.x : parseFloat(String(point.x));
+      const xVal = typeof point.x === "number" ? point.x : parseFloat(point.x);
       if (!isNaN(xVal)) {
         allXValues.push(xVal);
       }
@@ -148,10 +148,11 @@ export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChar
   const points: ScatterPoint[] = [];
 
   for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex++) {
-    const s = series[seriesIndex]!;
+    const s = series[seriesIndex];
+    if (!s) continue;
 
     for (const point of s.data) {
-      const xVal = typeof point.x === "number" ? point.x : parseFloat(String(point.x));
+      const xVal = typeof point.x === "number" ? point.x : parseFloat(point.x);
       if (isNaN(xVal)) continue;
 
       const normalizedX = scaleValue(xVal, xScale.min, xScale.max, 1);
@@ -214,8 +215,8 @@ function computeDotsScatterLayout(
   const seriesIndices: (number | null)[][] = [];
 
   for (let row = 0; row < chartHeight; row++) {
-    grid.push(Array(chartWidth).fill(" "));
-    seriesIndices.push(Array(chartWidth).fill(null));
+    grid.push(Array<string>(chartWidth).fill(" "));
+    seriesIndices.push(Array<number | null>(chartWidth).fill(null));
   }
 
   // Plot points
@@ -228,9 +229,13 @@ function computeDotsScatterLayout(
     ) {
       // Use different markers for different series
       const marker =
-        SCATTER_MARKER_SEQUENCE[point.seriesIndex % SCATTER_MARKER_SEQUENCE.length]!;
-      grid[point.charY]![point.charX] = marker;
-      seriesIndices[point.charY]![point.charX] = point.seriesIndex;
+        SCATTER_MARKER_SEQUENCE[point.seriesIndex % SCATTER_MARKER_SEQUENCE.length];
+      if (!marker) continue;
+      const gridRow = grid[point.charY];
+      const seriesRow = seriesIndices[point.charY];
+      if (!gridRow || !seriesRow) continue;
+      gridRow[point.charX] = marker;
+      seriesRow[point.charX] = point.seriesIndex;
     }
   }
 

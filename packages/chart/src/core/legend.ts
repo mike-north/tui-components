@@ -123,7 +123,7 @@ export function computeLegendLayout(options: LegendOptions): LegendLayout {
   const itemWidths = items.map((item) => getLegendItemWidth(item));
 
   // Separator between items
-  const separator = "  "; // Two spaces
+  const _separator = "  "; // Two spaces
   const separatorWidth = 2;
 
   // Try to fit all items on one row
@@ -132,8 +132,9 @@ export function computeLegendLayout(options: LegendOptions): LegendLayout {
   let currentWidth = 0;
 
   for (let i = 0; i < items.length; i++) {
-    const item = items[i]!;
-    const itemWidth = itemWidths[i]!;
+    const item = items[i];
+    const itemWidth = itemWidths[i];
+    if (!item || itemWidth === undefined) continue;
     const widthWithSeparator = currentRow.length > 0 ? itemWidth + separatorWidth : itemWidth;
 
     if (currentWidth + widthWithSeparator > maxWidth && currentRow.length > 0) {

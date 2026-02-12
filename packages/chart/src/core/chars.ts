@@ -175,13 +175,13 @@ export function valueToHeatmapChar(
   style: "blocks" | "ascii"
 ): string {
   const chars = style === "blocks" ? HEATMAP_BLOCKS : HEATMAP_ASCII;
-  if (normalized <= 0) return chars[0]!;
-  if (normalized >= 1) return chars[chars.length - 1]!;
+  if (normalized <= 0) return chars[0];
+  if (normalized >= 1) return chars[chars.length - 1] ?? " ";
   const index = Math.min(
     chars.length - 1,
     Math.floor(normalized * chars.length)
   );
-  return chars[index]!;
+  return chars[index] ?? " ";
 }
 
 /**
@@ -250,10 +250,14 @@ export class BrailleCanvas {
   /**
    * Set a dot at the given dot coordinates.
    */
-  setDot(dotX: number, dotY: number, seriesIndex: number = 0): void {
+  setDot(dotX: number, dotY: number, seriesIndex = 0): void {
     if (dotX >= 0 && dotX < this.width * 2 && dotY >= 0 && dotY < this.height * 4) {
-      this.dots[dotY]![dotX] = true;
-      this.seriesIndices[dotY]![dotX] = seriesIndex;
+      const dotRow = this.dots[dotY];
+      const seriesRow = this.seriesIndices[dotY];
+      if (dotRow && seriesRow) {
+        dotRow[dotX] = true;
+        seriesRow[dotX] = seriesIndex;
+      }
     }
   }
 
@@ -261,7 +265,7 @@ export class BrailleCanvas {
    * Draw a line between two points using Bresenham's algorithm.
    * Coordinates are in dot space (width*2 x height*4).
    */
-  drawLine(x0: number, y0: number, x1: number, y1: number, seriesIndex: number = 0): void {
+  drawLine(x0: number, y0: number, x1: number, y1: number, seriesIndex = 0): void {
     const dx = Math.abs(x1 - x0);
     const dy = Math.abs(y1 - y0);
     const sx = x0 < x1 ? 1 : -1;
@@ -271,6 +275,7 @@ export class BrailleCanvas {
     let x = x0;
     let y = y0;
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Bresenham's algorithm loop
     while (true) {
       this.setDot(x, y, seriesIndex);
 
@@ -291,7 +296,7 @@ export class BrailleCanvas {
   /**
    * Draw a point marker (fills more dots for visibility).
    */
-  drawPoint(dotX: number, dotY: number, seriesIndex: number = 0): void {
+  drawPoint(dotX: number, dotY: number, seriesIndex = 0): void {
     // Draw a small cluster of dots for the point marker
     for (let dy = -1; dy <= 1; dy++) {
       for (let dx = -1; dx <= 1; dx++) {
@@ -313,7 +318,7 @@ export class BrailleCanvas {
     centerX: number,
     centerY: number,
     radius: number,
-    seriesIndex: number = 0
+    seriesIndex = 0
   ): void {
     if (radius <= 0) return;
 
@@ -360,7 +365,7 @@ export class BrailleCanvas {
     radius: number,
     startAngle: number,
     endAngle: number,
-    seriesIndex: number = 0
+    seriesIndex = 0
   ): void {
     if (radius <= 0) return;
 
@@ -412,8 +417,8 @@ export class BrailleCanvas {
     radius: number,
     startAngle: number,
     endAngle: number,
-    seriesIndex: number = 0,
-    innerRadius: number = 0
+    seriesIndex = 0,
+    innerRadius = 0
   ): void {
     if (radius <= 0) return;
 
@@ -468,14 +473,15 @@ export class BrailleCanvas {
       for (let dx = 0; dx < 2; dx++) {
         const dotX = dotBaseX + dx;
         const dotY = dotBaseY + dy;
+        const dotRow = this.dots[dotY];
         if (
           dotY >= 0 &&
           dotY < this.height * 4 &&
           dotX >= 0 &&
           dotX < this.width * 2 &&
-          this.dots[dotY]![dotX]
+          dotRow?.[dotX]
         ) {
-          const dotNum = BRAILLE_DOT_MAP[`${dx},${dy}`];
+          const dotNum = BRAILLE_DOT_MAP[`${String(dx)},${String(dy)}`];
           if (dotNum) {
             dots.push(dotNum);
           }
@@ -494,7 +500,7 @@ export class BrailleCanvas {
    * Get the dominant series index for a character cell.
    */
   getSeriesIndex(charX: number, charY: number): number | null {
-    const counts: Map<number, number> = new Map();
+    const counts = new Map<number, number>();
     const dotBaseX = charX * 2;
     const dotBaseY = charY * 4;
 
@@ -508,7 +514,8 @@ export class BrailleCanvas {
           dotX >= 0 &&
           dotX < this.width * 2
         ) {
-          const idx = this.seriesIndices[dotY]![dotX];
+          const seriesRow = this.seriesIndices[dotY];
+          const idx = seriesRow?.[dotX];
           if (idx !== null && idx !== undefined) {
             counts.set(idx, (counts.get(idx) ?? 0) + 1);
           }

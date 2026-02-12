@@ -104,7 +104,6 @@ export function renderVerticalBarChartAnsi(
 
     // Y-axis label
     let yLabel = " ".repeat(yAxisWidth);
-    const tickValue = layout.yScale.min + rowThreshold * (layout.yScale.max - layout.yScale.min);
     for (const tick of layout.yScale.ticks) {
       const tickNorm = (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
       if (Math.abs(tickNorm - rowThreshold) < 0.5 / chartHeight) {
@@ -239,11 +238,17 @@ export function renderStackedBarChartAnsi(
   }
 
   // Add legend
-  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => ({
-    name,
-    symbol: layout.seriesStyles[i]!.char,
-    useBackticks: layout.seriesStyles[i]!.useBackticks,
-  }));
+  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => {
+    const style = layout.seriesStyles[i];
+    if (!style) {
+      throw new Error(`Missing series style at index ${String(i)}`);
+    }
+    return {
+      name,
+      symbol: style.char,
+      useBackticks: style.useBackticks,
+    };
+  });
 
   const legendLayout = computeLegendLayout({
     items: legendItems,
@@ -284,8 +289,11 @@ export function renderLineChartAnsi(
     // Build line content with series-based coloring
     let content = "";
     for (let i = 0; i < row.chars.length; i++) {
-      const char = row.chars[i]!;
-      const seriesIdx = row.seriesIndices?.[i];
+      const char = row.chars[i];
+      if (char === undefined) {
+        continue;
+      }
+      const seriesIdx = row.seriesIndices[i];
       if (char !== " " && theme) {
         // Use secondary color for odd-indexed series
         if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
@@ -306,11 +314,14 @@ export function renderLineChartAnsi(
   lines.push(" ".repeat(layout.yAxisWidth) + AXIS_CHARS.origin + xAxisLine);
 
   // X-axis labels - position depends on layout style
-  const labelLine: string[] = Array(chartWidth).fill(" ");
+  const labelLine: string[] = Array<string>(chartWidth).fill(" ");
   const isBraille = layout.lineStyle === "braille";
   const spacing = isBraille ? 3 : 2; // chars per category
   for (let i = 0; i < layout.categories.length; i++) {
-    const label = layout.categories[i]!;
+    const label = layout.categories[i];
+    if (label === undefined) {
+      continue;
+    }
     const pos = isBraille
       ? i * spacing + Math.floor(spacing / 2)  // center for braille
       : i * spacing;  // even positions for blocks
@@ -364,8 +375,7 @@ export function renderAreaChartAnsi(
       : " ".repeat(layout.yAxisWidth);
 
     let content = "";
-    for (let i = 0; i < row.chars.length; i++) {
-      const char = row.chars[i]!;
+    for (const char of row.chars) {
       if (char !== " " && theme) {
         content += theme.semantic.primary(char);
       } else {
@@ -385,11 +395,17 @@ export function renderAreaChartAnsi(
   lines.push(" ".repeat(layout.yAxisWidth + 1) + xLabels);
 
   // Legend
-  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => ({
-    name,
-    symbol: layout.seriesStyles[i]!.char,
-    useBackticks: layout.seriesStyles[i]!.useBackticks,
-  }));
+  const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => {
+    const style = layout.seriesStyles[i];
+    if (!style) {
+      throw new Error(`Missing series style at index ${String(i)}`);
+    }
+    return {
+      name,
+      symbol: style.char,
+      useBackticks: style.useBackticks,
+    };
+  });
 
   const legendLayout = computeLegendLayout({
     items: legendItems,
@@ -441,7 +457,10 @@ export function renderScatterChartAnsi(
       const rowChars = layout.brailleChars[rowIndex] ?? [];
       const rowIndices = layout.brailleSeriesIndices?.[rowIndex] ?? [];
       for (let i = 0; i < rowChars.length; i++) {
-        const char = rowChars[i]!;
+        const char = rowChars[i];
+        if (char === undefined) {
+          continue;
+        }
         const seriesIdx = rowIndices[i];
         if (char !== " " && theme) {
           if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
@@ -457,7 +476,10 @@ export function renderScatterChartAnsi(
       const rowChars = layout.grid[rowIndex] ?? [];
       const rowIndices = layout.seriesIndices?.[rowIndex] ?? [];
       for (let i = 0; i < rowChars.length; i++) {
-        const char = rowChars[i]!;
+        const char = rowChars[i];
+        if (char === undefined) {
+          continue;
+        }
         const seriesIdx = rowIndices[i];
         if (char !== " " && theme) {
           if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
@@ -491,24 +513,34 @@ export function renderScatterChartAnsi(
   }
 
   // Build X-axis label line
-  const labelLine: string[] = Array(layout.chartWidth).fill(" ");
+  const labelLine: string[] = Array<string>(layout.chartWidth).fill(" ");
   for (const { pos, label } of labelPositions) {
     // Try to center label around position
     const halfLen = Math.floor(label.length / 2);
     const startPos = Math.max(0, Math.min(layout.chartWidth - label.length, pos - halfLen));
     for (let i = 0; i < label.length && startPos + i < layout.chartWidth; i++) {
-      labelLine[startPos + i] = label[i]!;
+      const char = label[i];
+      if (char !== undefined) {
+        labelLine[startPos + i] = char;
+      }
     }
   }
   lines.push(" ".repeat(layout.yAxisWidth + 1) + labelLine.join(""));
 
   // Legend for multi-series
   if (layout.seriesNames.length > 1) {
-    const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => ({
-      name,
-      symbol: layout.scatterStyle === "braille" ? "⣿" : ["●", "■", "▲", "◆", "+"][i % 5]!,
-      useBackticks: i % 2 === 1,
-    }));
+    const symbolArray = ["●", "■", "▲", "◆", "+"] as const;
+    const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => {
+      const symbol = layout.scatterStyle === "braille" ? "⣿" : symbolArray[i % 5];
+      if (!symbol) {
+        throw new Error(`Missing symbol at index ${String(i % 5)}`);
+      }
+      return {
+        name,
+        symbol,
+        useBackticks: i % 2 === 1,
+      };
+    });
 
     const legendLayout = computeLegendLayout({
       items: legendItems,
@@ -550,7 +582,10 @@ export function renderPieChartAnsi(
 
     let content = "";
     for (let i = 0; i < rowChars.length; i++) {
-      const char = rowChars[i]!;
+      const char = rowChars[i];
+      if (char === undefined) {
+        continue;
+      }
       const seriesIdx = rowIndices[i];
       if (char !== " " && theme) {
         if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
@@ -573,9 +608,13 @@ export function renderPieChartAnsi(
       const labelLen = layout.centerLabel.length;
       const startPos = Math.floor((layout.width - labelLen) / 2);
       if (startPos >= 0) {
+        // eslint-disable-next-line @typescript-eslint/no-misused-spread -- intentionally decomposing string into chars for overlay
         const contentArray = [...content];
         for (let i = 0; i < labelLen && startPos + i < contentArray.length; i++) {
-          contentArray[startPos + i] = layout.centerLabel[i]!;
+          const char = layout.centerLabel[i];
+          if (char !== undefined) {
+            contentArray[startPos + i] = char;
+          }
         }
         content = contentArray.join("");
       }
@@ -627,7 +666,10 @@ export function renderHeatmapAnsi(
 
   // Data rows
   for (let rowIdx = 0; rowIdx < layout.rowLabels.length; rowIdx++) {
-    const rowLabel = layout.rowLabels[rowIdx]!;
+    const rowLabel = layout.rowLabels[rowIdx];
+    if (rowLabel === undefined) {
+      continue;
+    }
     const rowCells = layout.cells[rowIdx] ?? [];
 
     let row = padToWidth(rowLabel, layout.rowLabelWidth);
@@ -660,8 +702,8 @@ export function renderHeatmapAnsi(
     lines.push("");
     const scaleLabel =
       layout.heatmapStyle === "blocks"
-        ? `Scale: ░ ${layout.valueRange.min} ▒ ▓ █ ${layout.valueRange.max}`
-        : `Scale: . ${layout.valueRange.min} : * # ${layout.valueRange.max}`;
+        ? `Scale: ░ ${String(layout.valueRange.min)} ▒ ▓ █ ${String(layout.valueRange.max)}`
+        : `Scale: . ${String(layout.valueRange.min)} : * # ${String(layout.valueRange.max)}`;
     lines.push(theme ? theme.semantic.secondary(scaleLabel) : scaleLabel);
   }
 

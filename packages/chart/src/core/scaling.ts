@@ -144,8 +144,8 @@ export function computeNiceTicks(options: NiceTicksOptions): NiceTicksResult {
   const niceStep = findNiceStep(rawStep);
 
   // Round boundaries to nice values
-  let niceMin = forceMin !== undefined ? forceMin : floorToStep(effectiveMin, niceStep);
-  let niceMax = forceMax !== undefined ? forceMax : ceilToStep(effectiveMax, niceStep);
+  let niceMin = forceMin ?? floorToStep(effectiveMin, niceStep);
+  let niceMax = forceMax ?? ceilToStep(effectiveMax, niceStep);
 
   // Ensure min/max actually encompass the data
   if (niceMin > dataMin) niceMin -= niceStep;
