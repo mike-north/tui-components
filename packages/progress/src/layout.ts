@@ -60,10 +60,10 @@ export function computeProgressLayout(
   const emptyBar = emptyChar.repeat(emptyCount);
 
   // Format percentage
-  const percentageStr = `${Math.round(percentage)}%`;
+  const percentageStr = `${String(Math.round(percentage))}%`;
 
   // Format value
-  const valueStr = `${input.value}/${input.max}`;
+  const valueStr = `${String(input.value)}/${String(input.max)}`;
 
   return {
     label: input.label ?? "",

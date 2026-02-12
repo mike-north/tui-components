@@ -7,7 +7,6 @@ import {
   type RenderMode,
   getStringWidth,
   getMarkdownRenderedWidth,
-  padToWidth,
   truncateToWidth,
   measureLines,
   registry,

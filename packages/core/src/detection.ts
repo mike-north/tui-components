@@ -25,7 +25,7 @@ export interface EnvironmentDetection {
 /**
  * Known AI assistant patterns to look for in process tree.
  */
-const AI_ASSISTANT_PATTERNS: Array<{ pattern: RegExp; name: string }> = [
+const AI_ASSISTANT_PATTERNS: { pattern: RegExp; name: string }[] = [
   { pattern: /claude-code/i, name: "claude-code" },
   { pattern: /claude$/i, name: "claude" },
   { pattern: /cursor/i, name: "cursor" },
@@ -53,12 +53,12 @@ export function getProcessTree(): ProcessAncestor[] {
   // Walk up to 20 levels (should be more than enough)
   for (let i = 0; i < 20 && pid > 1; i++) {
     try {
-      const output = execSync(`ps -p ${pid} -o ppid=,comm=`, {
+      const output = execSync(`ps -p ${String(pid)} -o ppid=,comm=`, {
         encoding: "utf-8",
         timeout: 1000,
       }).trim();
       const match = /^\s*(\d+)\s+(.+)$/.exec(output);
-      if (!match || !match[1] || !match[2]) break;
+      if (!match?.[1] || !match[2]) break;
       const ppid = parseInt(match[1], 10);
       const command = match[2];
       ancestors.push({ pid, command });
@@ -122,8 +122,8 @@ export function detectEnvironment(): EnvironmentDetection {
   }
 
   // TTY checks
-  const stdoutIsTTY = Boolean(process.stdout.isTTY);
-  const stdinIsTTY = Boolean(process.stdin.isTTY);
+  const stdoutIsTTY = process.stdout.isTTY;
+  const stdinIsTTY = process.stdin.isTTY;
 
   if (!stdoutIsTTY) {
     aiScore += 2;

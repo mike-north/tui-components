@@ -156,7 +156,8 @@ export function computeGraphLayout(
   const nodeLayouts: NodeLayout[] = [];
 
   for (let i = 0; i < input.nodes.length; i++) {
-    const node = input.nodes[i]!;
+    const node = input.nodes[i];
+    if (!node) continue;
     const isLastNode = i === input.nodes.length - 1;
 
     // Determine column for this node
@@ -168,7 +169,8 @@ export function computeGraphLayout(
       nodeColumn = preassigned;
     } else if (node.parents.length > 0) {
       // Check if first parent already has a column assigned
-      const firstParentCol = state.nodeColumns.get(node.parents[0]!);
+      const firstParent = node.parents[0];
+      const firstParentCol = firstParent ? state.nodeColumns.get(firstParent) : undefined;
       if (firstParentCol !== undefined) {
         nodeColumn = firstParentCol;
       } else {
@@ -186,7 +188,8 @@ export function computeGraphLayout(
     // Pre-assign columns to parents
     const parentColumns: number[] = [];
     for (let p = 0; p < node.parents.length; p++) {
-      const parentId = node.parents[p]!;
+      const parentId = node.parents[p];
+      if (!parentId) continue;
       let parentCol = state.nodeColumns.get(parentId);
 
       if (parentCol === undefined) {

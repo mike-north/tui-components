@@ -33,9 +33,6 @@ function renderNodeLineAnsi(
 ): string {
   const { node, graphLine } = nodeLayout;
 
-  // Color the graph portion
-  const coloredGraph = theme ? theme.semantic.border(graphLine) : graphLine;
-
   // Format refs if enabled
   const refsStr = input.showRefs ? formatRefs(node.refs, theme) : "";
 

@@ -89,7 +89,7 @@ function parseJsonL(input: string): BatchInputItem[] {
       items.push({ component: item.component, input: item.input });
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : String(e);
-      throw new Error(`Line ${index + 1}: Invalid JSON-L - ${errorMessage}`);
+      throw new Error(`Line ${String(index + 1)}: Invalid JSON-L - ${errorMessage}`);
     }
   });
 
@@ -183,7 +183,7 @@ export const batchCommand = new Command("batch")
           if (options.format === "json") {
             jsonOutputs.push({ component: item.component, error: errorMsg });
           } else {
-            console.error(`Error on item ${index + 1}: ${errorMsg}`);
+            console.error(`Error on item ${String(index + 1)}: ${errorMsg}`);
           }
           hasError = true;
           if (!options.continueOnError) {
@@ -199,7 +199,7 @@ export const batchCommand = new Command("batch")
           if (options.format === "json") {
             jsonOutputs.push({ component: item.component, error: errorMsg });
           } else {
-            console.error(`Error on item ${index + 1}: ${errorMsg}`);
+            console.error(`Error on item ${String(index + 1)}: ${errorMsg}`);
           }
           hasError = true;
           if (!options.continueOnError) {
@@ -227,7 +227,7 @@ export const batchCommand = new Command("batch")
           if (options.format === "json") {
             jsonOutputs.push({ component: item.component, error: errorMsg });
           } else {
-            console.error(`Error on item ${index + 1}: Render failed - ${errorMsg}`);
+            console.error(`Error on item ${String(index + 1)}: Render failed - ${errorMsg}`);
           }
           hasError = true;
           if (!options.continueOnError) {
