@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/graph",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DAG graph visualization component for TUI (git log style)",
   "type": "module",
   "main": "./dist/index.cjs",

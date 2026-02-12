@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/sparkline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Compact inline sparkline visualization using height blocks",
   "type": "module",
   "main": "./dist/index.cjs",
