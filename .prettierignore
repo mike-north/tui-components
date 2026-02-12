@@ -1,0 +1,9 @@
+# Auto-generated files
+**/api-report/*.api.md
+
+# Build outputs
+**/dist/
+**/temp/
+
+# Dependencies
+**/node_modules/
