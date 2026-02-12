@@ -164,6 +164,9 @@
     "gauge"
   ],
   "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  },
   "dependencies": {
     "@tuicomponents/core": "workspace:*",
     "@tuicomponents/box": "workspace:*",

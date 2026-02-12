@@ -141,7 +141,7 @@ function getProcessTree(): ProcessAncestor[] {
         timeout: 1000,
       }).trim();
       const match = /^\s*(\d+)\s+(.+)$/.exec(output);
-      if (!match) break;
+      if (!match?.[1] || !match[2]) break;
       const ppid = parseInt(match[1], 10);
       const command = match[2];
       ancestors.push({ pid, command });
