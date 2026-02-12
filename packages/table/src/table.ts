@@ -11,7 +11,6 @@ import {
   measureLines,
   registry,
 } from "@tuicomponents/core";
-import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   tableInputSchema,
   type TableInput,
@@ -117,16 +116,6 @@ class TableComponent extends BaseTuiComponent<
   };
 
   readonly schema = tableInputSchema;
-
-  /**
-   * Override getJsonSchema to use a more direct schema generation.
-   */
-  override getJsonSchema(): object {
-    return zodToJsonSchema(this.schema, {
-      name: this.metadata.name,
-      $refStrategy: "none",
-    });
-  }
 
   render(input: TableInput, context: RenderContext): RenderResult {
     // Parse and apply defaults
