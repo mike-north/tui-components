@@ -8,7 +8,15 @@ describe("scatter chart", () => {
     const result = chart.render(
       {
         type: "scatter",
-        series: [{ name: "Data", data: [{ x: 10, y: 20 }, { x: 50, y: 50 }] }],
+        series: [
+          {
+            name: "Data",
+            data: [
+              { x: 10, y: 20 },
+              { x: 50, y: 50 },
+            ],
+          },
+        ],
         height: 6,
         width: 25,
       },
@@ -22,7 +30,15 @@ describe("scatter chart", () => {
     const result = chart.render(
       {
         type: "scatter",
-        series: [{ name: "Data", data: [{ x: 10, y: 20 }, { x: 50, y: 50 }] }],
+        series: [
+          {
+            name: "Data",
+            data: [
+              { x: 10, y: 20 },
+              { x: 50, y: 50 },
+            ],
+          },
+        ],
         height: 6,
         width: 25,
       },

@@ -96,7 +96,9 @@ export function computePieLayout(
       centerX: Math.floor(input.width / 2),
       centerY: Math.floor(input.height / 2),
       innerRadius: 0,
-      ...(input.centerLabel !== undefined && { centerLabel: input.centerLabel }),
+      ...(input.centerLabel !== undefined && {
+        centerLabel: input.centerLabel,
+      }),
       width: input.width,
       height: input.height,
       brailleChars: [],

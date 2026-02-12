@@ -20,6 +20,7 @@ Initial release of TUI Components library
 A comprehensive terminal UI component library for rendering rich text-based visualizations in ANSI and markdown formats.
 
 **Packages included:**
+
 - `@tuicomponents/core` - Core rendering primitives, theming, and component registry
 - `@tuicomponents/box` - Box drawing with borders and padding
 - `@tuicomponents/chart` - Bar, line, area, scatter, pie, donut, and heatmap charts

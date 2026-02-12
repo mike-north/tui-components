@@ -750,8 +750,8 @@ export function renderHeatmapAnsi(
     lines.push("");
     const scaleLabel =
       layout.heatmapStyle === "blocks"
-        ? `Scale: ░ ${layout.valueRange.min} ▒ ▓ █ ${layout.valueRange.max}`
-        : `Scale: . ${layout.valueRange.min} : * # ${layout.valueRange.max}`;
+        ? `Scale: ░ ${String(layout.valueRange.min)} ▒ ▓ █ ${String(layout.valueRange.max)}`
+        : `Scale: . ${String(layout.valueRange.min)} : * # ${String(layout.valueRange.max)}`;
     lines.push(theme ? theme.semantic.secondary(scaleLabel) : scaleLabel);
   }
 

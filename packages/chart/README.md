@@ -148,23 +148,23 @@ console.log(result.output);
 
 ### Chart Input Schema
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `type` | string | required | Chart type (see above) |
-| `series` | array | required | Data series array |
-| `title` | string | - | Chart title |
-| `width` | number | 40 | Width in characters |
-| `height` | number | 10 | Height in lines |
-| `showValues` | boolean | false | Display values on data points |
-| `showAxes` | boolean | true | Display axes |
-| `lineStyle` | string | "blocks" | Line rendering: "blocks", "braille", "dots" |
-| `barStyle` | string | "block" | Bar fill: "block", "shaded", "light", "hash", "equals", "arrow" |
-| `scatterStyle` | string | "dots" | Scatter rendering: "dots", "braille" |
-| `heatmapStyle` | string | "blocks" | Heatmap rendering: "blocks", "ascii", "numeric" |
-| `xAxis` | object | - | X-axis configuration |
-| `yAxis` | object | - | Y-axis configuration |
-| `legend` | object | - | Legend configuration |
-| `grid` | object | - | Grid line configuration |
+| Property       | Type    | Default  | Description                                                     |
+| -------------- | ------- | -------- | --------------------------------------------------------------- |
+| `type`         | string  | required | Chart type (see above)                                          |
+| `series`       | array   | required | Data series array                                               |
+| `title`        | string  | -        | Chart title                                                     |
+| `width`        | number  | 40       | Width in characters                                             |
+| `height`       | number  | 10       | Height in lines                                                 |
+| `showValues`   | boolean | false    | Display values on data points                                   |
+| `showAxes`     | boolean | true     | Display axes                                                    |
+| `lineStyle`    | string  | "blocks" | Line rendering: "blocks", "braille", "dots"                     |
+| `barStyle`     | string  | "block"  | Bar fill: "block", "shaded", "light", "hash", "equals", "arrow" |
+| `scatterStyle` | string  | "dots"   | Scatter rendering: "dots", "braille"                            |
+| `heatmapStyle` | string  | "blocks" | Heatmap rendering: "blocks", "ascii", "numeric"                 |
+| `xAxis`        | object  | -        | X-axis configuration                                            |
+| `yAxis`        | object  | -        | Y-axis configuration                                            |
+| `legend`       | object  | -        | Legend configuration                                            |
+| `grid`         | object  | -        | Grid line configuration                                         |
 
 ### Data Point Schema
 
@@ -221,9 +221,9 @@ chart.render(input, { renderMode: "markdown" });
 
 ```typescript
 interface RenderResult {
-  output: string;      // The rendered chart string
+  output: string; // The rendered chart string
   actualWidth: number; // Actual width in characters
-  lineCount: number;   // Number of lines
+  lineCount: number; // Number of lines
 }
 ```
 
@@ -268,9 +268,11 @@ const rendered = canvas.render();
 ## Character Sets
 
 ### Height Blocks
+
 `▁▂▃▄▅▆▇█` - 8 levels for line/area charts
 
 ### Bar Fill Styles
+
 - block: `████████`
 - shaded: `▓▓▓▓▓▓▓▓`
 - light: `░░░░░░░░`
@@ -279,10 +281,12 @@ const rendered = canvas.render();
 - arrow: `>>>>>>>>`
 
 ### Heatmap Intensity
+
 - blocks: `░▒▓█` (4 levels)
 - ascii: `.:*#` (4 levels, markdown-friendly)
 
 ### Scatter Markers
+
 `● ■ ▲ ◆ +` - 5 distinct markers for multi-series
 
 ## License

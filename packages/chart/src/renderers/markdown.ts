@@ -25,7 +25,7 @@ import type { LineChartLayout } from "../layout/line.js";
 import type { AreaChartLayout } from "../layout/area.js";
 import type { ScatterChartLayout } from "../layout/scatter.js";
 import type { PieChartLayout } from "../layout/pie.js";
-import type { HeatmapChartLayout as _HeatmapChartLayout } from "../layout/heatmap.js";
+import type { HeatmapChartLayout } from "../layout/heatmap.js";
 import type { ChartInputWithDefaults } from "../types.js";
 
 /**
@@ -691,11 +691,11 @@ export function renderHeatmapMarkdown(
   layout: HeatmapChartLayout,
   options: MarkdownRenderOptions
 ): string {
-  const { input } = options;
+  const { input: _input } = options;
   const lines: string[] = [];
 
   // Handle empty chart
-  if (layout.cells.length === 0 || layout.cells[0]!.length === 0) {
+  if (layout.cells.length === 0 || (layout.cells[0]?.length ?? 0) === 0) {
     lines.push(anchorLine("No data", DEFAULT_ANCHOR));
     return lines.join("\n");
   }
@@ -703,14 +703,17 @@ export function renderHeatmapMarkdown(
   // Column header row
   const colHeaderPadding = " ".repeat(layout.rowLabelWidth);
   const colHeaders = layout.colLabels
-    .map((label) => padToWidth(label, layout.colLabelWidth))
+    .map((label: string) => padToWidth(label, layout.colLabelWidth))
     .join("");
   lines.push(anchorLine(`${colHeaderPadding}${colHeaders}`, DEFAULT_ANCHOR));
 
   // Data rows
   for (let rowIdx = 0; rowIdx < layout.rowLabels.length; rowIdx++) {
-    const rowLabel = padToWidth(layout.rowLabels[rowIdx]!, layout.rowLabelWidth);
-    const rowCells = layout.cells[rowIdx]!;
+    const rowLabelText = layout.rowLabels[rowIdx];
+    if (!rowLabelText) continue;
+    const rowLabel = padToWidth(rowLabelText, layout.rowLabelWidth);
+    const rowCells = layout.cells[rowIdx];
+    if (!rowCells) continue;
 
     let rowContent = "";
     for (const cell of rowCells) {
@@ -739,7 +742,9 @@ export function renderHeatmapMarkdown(
     const scaleLabels = ["Low", "", "", "High"];
     let scaleLine = "Scale: ";
     for (let i = 0; i < scaleChars.length; i++) {
-      scaleLine += `${scaleChars[i]} ${scaleLabels[i]}`;
+      const char = scaleChars[i] ?? "";
+      const label = scaleLabels[i] ?? "";
+      scaleLine += `${char} ${label}`;
       if (i < scaleChars.length - 1) scaleLine += " ";
     }
     lines.push(anchorLine(scaleLine, DEFAULT_ANCHOR));

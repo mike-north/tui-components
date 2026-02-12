@@ -5,6 +5,7 @@ This document provides guidance for AI agents generating chart visualizations us
 ## When to Use Charts
 
 Generate charts when users request:
+
 - Data visualization of numeric data
 - Comparisons between categories or time periods
 - Trend analysis over time
@@ -15,16 +16,16 @@ Generate charts when users request:
 
 Choose the appropriate chart type based on the data and intent:
 
-| Data Pattern | Recommended Chart | Why |
-|--------------|-------------------|-----|
-| Categories with single values | `bar` or `bar-vertical` | Clear comparison of discrete categories |
-| Categories with multiple series | `bar-stacked` or `bar-stacked-vertical` | Shows composition within each category |
-| Values over time (single series) | `line` | Shows trends and patterns |
-| Values over time (multiple series) | `line` with multiple series | Compares trends across series |
-| Cumulative values over time | `area-stacked` | Shows how parts contribute to whole over time |
-| Two numeric variables | `scatter` | Shows correlation/distribution |
-| Parts of a whole | `pie` or `donut` | Shows percentage breakdown (use for ≤6 categories) |
-| 2D categorical data with intensity | `heatmap` | Shows patterns in matrix data |
+| Data Pattern                       | Recommended Chart                       | Why                                                |
+| ---------------------------------- | --------------------------------------- | -------------------------------------------------- |
+| Categories with single values      | `bar` or `bar-vertical`                 | Clear comparison of discrete categories            |
+| Categories with multiple series    | `bar-stacked` or `bar-stacked-vertical` | Shows composition within each category             |
+| Values over time (single series)   | `line`                                  | Shows trends and patterns                          |
+| Values over time (multiple series) | `line` with multiple series             | Compares trends across series                      |
+| Cumulative values over time        | `area-stacked`                          | Shows how parts contribute to whole over time      |
+| Two numeric variables              | `scatter`                               | Shows correlation/distribution                     |
+| Parts of a whole                   | `pie` or `donut`                        | Shows percentage breakdown (use for ≤6 categories) |
+| 2D categorical data with intensity | `heatmap`                               | Shows patterns in matrix data                      |
 
 ## Input Schema Reference
 
@@ -72,21 +73,22 @@ Choose the appropriate chart type based on the data and intent:
 
 ## Recommended Dimensions by Chart Type
 
-| Chart Type | Recommended Width | Recommended Height |
-|------------|-------------------|-------------------|
-| `bar` (horizontal) | 40-60 | auto (1 line per bar) |
-| `bar-vertical` | 25-40 | 8-12 |
-| `bar-stacked` | 40-60 | auto |
-| `bar-stacked-vertical` | 30-45 | 10-15 |
-| `line` | 20-40 | 6-10 |
-| `area` | 15-30 | 6-10 |
-| `scatter` | 25-40 | 8-12 |
-| `pie` / `donut` | 25-35 | 8-12 |
-| `heatmap` | auto (based on columns) | auto (based on rows) |
+| Chart Type             | Recommended Width       | Recommended Height    |
+| ---------------------- | ----------------------- | --------------------- |
+| `bar` (horizontal)     | 40-60                   | auto (1 line per bar) |
+| `bar-vertical`         | 25-40                   | 8-12                  |
+| `bar-stacked`          | 40-60                   | auto                  |
+| `bar-stacked-vertical` | 30-45                   | 10-15                 |
+| `line`                 | 20-40                   | 6-10                  |
+| `area`                 | 15-30                   | 6-10                  |
+| `scatter`              | 25-40                   | 8-12                  |
+| `pie` / `donut`        | 25-35                   | 8-12                  |
+| `heatmap`              | auto (based on columns) | auto (based on rows)  |
 
 ## Data Formatting Patterns
 
 ### Bar Charts
+
 ```typescript
 // Single series - categories as x, values as y
 {
@@ -112,6 +114,7 @@ Choose the appropriate chart type based on the data and intent:
 ```
 
 ### Line/Area Charts
+
 ```typescript
 // Time series - x as time labels, y as values
 {
@@ -130,6 +133,7 @@ Choose the appropriate chart type based on the data and intent:
 ```
 
 ### Scatter Plots
+
 ```typescript
 // Both x and y are numeric
 {
@@ -147,6 +151,7 @@ Choose the appropriate chart type based on the data and intent:
 ```
 
 ### Pie/Donut Charts
+
 ```typescript
 // Use label for slice names, y for values
 {
@@ -171,6 +176,7 @@ Choose the appropriate chart type based on the data and intent:
 ```
 
 ### Heatmaps
+
 ```typescript
 // x = column, label = row, y = intensity value
 {
@@ -202,11 +208,13 @@ Choose the appropriate chart type based on the data and intent:
 ### When to Use Braille Styles
 
 Use `lineStyle: "braille"` or `scatterStyle: "braille"` when:
+
 - You need smoother curves or more precise point positioning
 - The data has many points that would overlap with character markers
 - Visual precision is more important than compatibility
 
 Use block/dot styles when:
+
 - Terminal font may not render braille characters well
 - You need maximum compatibility
 - Data is sparse
@@ -214,18 +222,18 @@ Use block/dot styles when:
 ### Heatmap Style Selection
 
 - `blocks` (░▒▓█): Best visual impact, may not render in all fonts
-- `ascii` (.:*#): Maximum compatibility, works everywhere
+- `ascii` (.:\*#): Maximum compatibility, works everywhere
 - `numeric`: When actual values matter more than visual pattern
 
 ## Error Handling
 
 The chart component validates input with Zod schemas. Common validation errors:
 
-| Error | Cause | Fix |
-|-------|-------|-----|
-| "series must have at least 1 element" | Empty series array | Ensure at least one series with data |
-| "Invalid enum value" | Unknown chart type or style | Check spelling of type/style values |
-| "Expected number, received string" | String value for y | Ensure y values are numbers |
+| Error                                 | Cause                       | Fix                                  |
+| ------------------------------------- | --------------------------- | ------------------------------------ |
+| "series must have at least 1 element" | Empty series array          | Ensure at least one series with data |
+| "Invalid enum value"                  | Unknown chart type or style | Check spelling of type/style values  |
+| "Expected number, received string"    | String value for y          | Ensure y values are numbers          |
 
 ## Performance Considerations
 
@@ -253,14 +261,14 @@ const result = chart.render(
           { x: "Q1", y: 150 },
           { x: "Q2", y: 180 },
           { x: "Q3", y: 165 },
-          { x: "Q4", y: 210 }
-        ]
-      }
+          { x: "Q4", y: 210 },
+        ],
+      },
     ],
     height: 10,
     width: 30,
     yAxis: { format: "compact" },
-    legend: { position: "bottom" }
+    legend: { position: "bottom" },
   },
   { renderMode: "ansi" }
 );

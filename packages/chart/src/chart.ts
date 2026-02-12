@@ -466,14 +466,17 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderHeatmapMarkdown(layout, { input: parsed })
-            : renderHeatmapAnsi(layout, { theme: context.theme, input: parsed });
+            : renderHeatmapAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 
       default: {
         // Exhaustiveness check - TypeScript will error if a case is missing
         const _exhaustiveCheck: never = parsed.type;
-        throw new Error(`Unknown chart type: ${_exhaustiveCheck}`);
+        throw new Error(`Unknown chart type: ${String(_exhaustiveCheck)}`);
       }
     }
 
