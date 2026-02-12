@@ -115,6 +115,9 @@ importers:
       commander:
         specifier: ^14.0.0
         version: 14.0.3
+      is-agentic-tui:
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@types/node':
         specifier: ^22.0.0
@@ -1433,6 +1436,10 @@ packages:
   irregular-plurals@3.5.0:
     resolution: {integrity: sha512-1ANGLZ+Nkv1ptFb2pa8oG8Lem4krflKuX/gINiHJHjJUKaJHk/SXk5x6K3J+39/p0h1RQ2saROclJJ+QLvETCQ==}
     engines: {node: '>=8'}
+
+  is-agentic-tui@0.1.0:
+    resolution: {integrity: sha512-RVOugsMChufAs+7K6wP2CjkpqSGhZiqDQp/MilofBSNt5iobATQEn9l+Tqle+RcVWwYoV7AGxF0iwSrDh61IWQ==}
+    engines: {node: '>=20'}
 
   is-arrayish@0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}
@@ -3378,6 +3385,8 @@ snapshots:
   indent-string@4.0.0: {}
 
   irregular-plurals@3.5.0: {}
+
+  is-agentic-tui@0.1.0: {}
 
   is-arrayish@0.2.1: {}
 

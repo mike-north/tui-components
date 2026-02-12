@@ -662,7 +662,7 @@ export function renderHeatmapAnsi(
       layout.heatmapStyle === "blocks"
         ? `Scale: ░ ${layout.valueRange.min} ▒ ▓ █ ${layout.valueRange.max}`
         : `Scale: . ${layout.valueRange.min} : * # ${layout.valueRange.max}`;
-    lines.push(theme ? theme.semantic.muted(scaleLabel) : scaleLabel);
+    lines.push(theme ? theme.semantic.secondary(scaleLabel) : scaleLabel);
   }
 
   return lines.join("\n");

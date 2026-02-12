@@ -714,9 +714,6 @@ export function computeDualAxisLayout(options: DualAxisLayoutOptions): DualAxisL
 export function computeGridLayout(options: GridOptions): GridLayout;
 
 // @public
-export function computeHeatmapLayout(input: ChartInputWithDefaults): HeatmapChartLayout;
-
-// @public
 export function computeLegendLayout(options: LegendOptions): LegendLayout;
 
 // @public
@@ -724,12 +721,6 @@ export function computeLineLayout(input: ChartInputWithDefaults): LineChartLayou
 
 // @public
 export function computeNiceTicks(options: NiceTicksOptions): NiceTicksResult;
-
-// @public
-export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout;
-
-// @public
-export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChartLayout;
 
 // @public
 export function computeStackedBarLayout(input: ChartInputWithDefaults): StackedBarChartLayout;
@@ -884,44 +875,6 @@ export interface GridOptions {
 export function groupBarsByCategory(layout: BarChartLayout): Map<string, BarLayout[]>;
 
 // @public
-export const HEATMAP_ASCII: readonly [" ", ".", ":", "*", "#"];
-
-// @public
-export const HEATMAP_BLOCKS: readonly [" ", "░", "▒", "▓", "█"];
-
-// @public
-export interface HeatmapCell {
-    col: number;
-    displayChar: string;
-    normalizedValue: number;
-    row: number;
-    value: number;
-}
-
-// @public
-export interface HeatmapChartLayout {
-    cells: HeatmapCell[][];
-    cellWidth: number;
-    colLabels: string[];
-    heatmapStyle: HeatmapStyle;
-    height: number;
-    rowLabels: string[];
-    rowLabelWidth: number;
-    type: "heatmap";
-    valueRange: {
-        min: number;
-        max: number;
-    };
-    width: number;
-}
-
-// @public
-export type HeatmapStyle = z.infer<typeof heatmapStyleSchema>;
-
-// @public
-export const heatmapStyleSchema: z.ZodEnum<["blocks", "ascii", "numeric"]>;
-
-// @public
 export const HEIGHT_BLOCKS: readonly ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"];
 
 // @public
@@ -1055,38 +1008,6 @@ export interface NiceTicksResult {
 }
 
 // @public
-export interface PieChartLayout {
-    brailleChars: string[][];
-    brailleSeriesIndices: (number | null)[][];
-    centerLabel?: string;
-    centerX: number;
-    centerY: number;
-    height: number;
-    innerRadius: number;
-    radius: number;
-    seriesStyles: readonly {
-        char: string;
-        useBackticks: boolean;
-    }[];
-    slices: PieSlice[];
-    total: number;
-    type: "pie" | "donut";
-    width: number;
-}
-
-// @public
-export interface PieSlice {
-    barChar: string;
-    endAngle: number;
-    label: string;
-    percentage: number;
-    seriesIndex: number;
-    startAngle: number;
-    useBackticks: boolean;
-    value: number;
-}
-
-// @public
 export function renderAreaChartAnsi(layout: AreaChartLayout, options: AnsiRenderOptions): string;
 
 // @public
@@ -1099,12 +1020,6 @@ export function renderBarChartAnsi(layout: BarChartLayout, options: AnsiRenderOp
 export function renderBarChartMarkdown(layout: BarChartLayout, options: MarkdownRenderOptions): string;
 
 // @public
-export function renderHeatmapAnsi(layout: HeatmapChartLayout, options: AnsiRenderOptions): string;
-
-// @public
-export function renderHeatmapMarkdown(layout: HeatmapChartLayout, options: MarkdownRenderOptions): string;
-
-// @public
 export function renderLegendRow(row: LegendRow, forMarkdown: boolean): string;
 
 // @public
@@ -1112,18 +1027,6 @@ export function renderLineChartAnsi(layout: LineChartLayout, options: AnsiRender
 
 // @public
 export function renderLineChartMarkdown(layout: LineChartLayout, options: MarkdownRenderOptions): string;
-
-// @public
-export function renderPieChartAnsi(layout: PieChartLayout, options: AnsiRenderOptions): string;
-
-// @public
-export function renderPieChartMarkdown(layout: PieChartLayout, options: MarkdownRenderOptions): string;
-
-// @public
-export function renderScatterChartAnsi(layout: ScatterChartLayout, options: AnsiRenderOptions): string;
-
-// @public
-export function renderScatterChartMarkdown(layout: ScatterChartLayout, options: MarkdownRenderOptions): string;
 
 // @public
 export function renderStackedBarChartAnsi(layout: StackedBarChartLayout, options: AnsiRenderOptions): string;
@@ -1142,58 +1045,6 @@ export function renderXAxis(config: XAxisConfig): XAxisResult;
 
 // @public
 export function scaleValue(value: number, min: number, max: number, size: number): number;
-
-// @public
-export const SCATTER_MARKER_SEQUENCE: readonly ["●", "■", "▲", "◆", "+"];
-
-// @public
-export const SCATTER_MARKERS: {
-    readonly circle: "●";
-    readonly square: "■";
-    readonly triangle: "▲";
-    readonly diamond: "◆";
-    readonly plus: "+";
-};
-
-// @public
-export interface ScatterChartLayout {
-    brailleChars?: string[][];
-    brailleSeriesIndices?: (number | null)[][];
-    chartHeight: number;
-    chartWidth: number;
-    grid?: string[][];
-    height: number;
-    points: ScatterPoint[];
-    scatterStyle: ScatterStyle;
-    seriesIndices?: (number | null)[][];
-    seriesNames: string[];
-    type: "scatter";
-    width: number;
-    xScale: NiceTicksResult;
-    yAxisWidth: number;
-    yScale: NiceTicksResult;
-}
-
-// @public
-export type ScatterMarker = z.infer<typeof scatterMarkerSchema>;
-
-// @public
-export const scatterMarkerSchema: z.ZodEnum<["circle", "square", "triangle", "diamond", "plus"]>;
-
-// @public
-export interface ScatterPoint {
-    charX: number;
-    charY: number;
-    dataX: number;
-    dataY: number;
-    seriesIndex: number;
-}
-
-// @public
-export type ScatterStyle = z.infer<typeof scatterStyleSchema>;
-
-// @public
-export const scatterStyleSchema: z.ZodEnum<["dots", "braille"]>;
 
 // @public
 export const SERIES_STYLES: readonly [{
@@ -1250,9 +1101,6 @@ export const valueFormatSchema: z.ZodEnum<["number", "percent", "compact", "curr
 
 // @public
 export function valueToBlock(normalized: number): string;
-
-// @public
-export function valueToHeatmapChar(normalized: number, style: "blocks" | "ascii"): string;
 
 // @public
 export interface XAxisConfig {
