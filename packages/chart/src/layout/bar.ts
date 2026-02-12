@@ -3,7 +3,11 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { getBarChar, SERIES_STYLES } from "../core/chars.js";
 import type { ChartInputWithDefaults, BarLayout } from "../types.js";
 import type { AxisLayout } from "../core/axis.js";
@@ -41,7 +45,9 @@ export interface BarChartLayout {
  * @param input - Chart input with defaults
  * @returns Computed bar chart layout
  */
-export function computeBarLayout(input: ChartInputWithDefaults): BarChartLayout {
+export function computeBarLayout(
+  input: ChartInputWithDefaults
+): BarChartLayout {
   const isVertical = input.type === "bar-vertical";
   const series = input.series;
 
@@ -104,7 +110,12 @@ export function computeBarLayout(input: ChartInputWithDefaults): BarChartLayout 
       const label = point.label ?? String(point.x);
 
       // Scale value to bar length
-      const normalizedValue = scaleValue(value, yScale.min, yScale.max, barAreaSize);
+      const normalizedValue = scaleValue(
+        value,
+        yScale.min,
+        yScale.max,
+        barAreaSize
+      );
       const length = Math.max(0, Math.round(normalizedValue));
 
       // Format value
@@ -114,9 +125,10 @@ export function computeBarLayout(input: ChartInputWithDefaults): BarChartLayout 
       formattedValues.push(formattedValue);
 
       // Calculate percentage
-      const percentage = yScale.max !== yScale.min
-        ? ((value - yScale.min) / (yScale.max - yScale.min)) * 100
-        : 0;
+      const percentage =
+        yScale.max !== yScale.min
+          ? ((value - yScale.min) / (yScale.max - yScale.min)) * 100
+          : 0;
 
       bars.push({
         seriesIndex,

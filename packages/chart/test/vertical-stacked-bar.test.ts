@@ -38,7 +38,10 @@ describe("Vertical Stacked Bar Chart", () => {
 
   describe("Y-axis rendering", () => {
     it("should render Y-axis tick marks (┤) at label positions", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find lines with numeric labels - they should have tick marks
@@ -47,7 +50,10 @@ describe("Vertical Stacked Bar Chart", () => {
     });
 
     it("should render vertical bars (│) on rows without tick labels", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find lines without numeric labels but with vertical bar
@@ -58,7 +64,10 @@ describe("Vertical Stacked Bar Chart", () => {
     });
 
     it("should place zero label on the X-axis line with origin character", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find the X-axis line (contains └)
@@ -70,7 +79,10 @@ describe("Vertical Stacked Bar Chart", () => {
 
   describe("X-axis rendering", () => {
     it("should render X-axis tick marks (┬) under each category", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find the X-axis line
@@ -83,7 +95,10 @@ describe("Vertical Stacked Bar Chart", () => {
     });
 
     it("should center category labels under tick marks", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find the X-axis line and the label line
@@ -104,7 +119,10 @@ describe("Vertical Stacked Bar Chart", () => {
 
   describe("markdown mode", () => {
     it("should render Y-axis tick marks in markdown mode", () => {
-      const result = chart.render(defaultInput, { renderMode: "markdown", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "markdown",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find lines with tick marks (accounting for anchor character)
@@ -113,7 +131,10 @@ describe("Vertical Stacked Bar Chart", () => {
     });
 
     it("should render X-axis tick marks in markdown mode", () => {
-      const result = chart.render(defaultInput, { renderMode: "markdown", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "markdown",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find the X-axis line
@@ -123,7 +144,10 @@ describe("Vertical Stacked Bar Chart", () => {
     });
 
     it("should use backticks for second series in markdown mode", () => {
-      const result = chart.render(defaultInput, { renderMode: "markdown", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "markdown",
+        width: 80,
+      });
 
       // Legend should show backticks for Product B
       expect(result.output).toContain("`█`");
@@ -133,7 +157,10 @@ describe("Vertical Stacked Bar Chart", () => {
 
   describe("stacking order", () => {
     it("should stack segments from bottom to top", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       const lines = result.output.split("\n");
 
       // Find data rows (those with bar characters)
@@ -149,7 +176,10 @@ describe("Vertical Stacked Bar Chart", () => {
     });
 
     it("should render all three series in the legend", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
 
       expect(result.output).toContain("Product A");
       expect(result.output).toContain("Product B");
@@ -169,7 +199,10 @@ describe("Vertical Stacked Bar Chart", () => {
         width: 30,
       };
 
-      const result = chart.render(twoSeriesInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(twoSeriesInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       expect(result.output).toContain("█");
     });
 
@@ -184,7 +217,10 @@ describe("Vertical Stacked Bar Chart", () => {
         width: 30,
       };
 
-      const result = chart.render(twoSeriesInput, { renderMode: "markdown", width: 80 });
+      const result = chart.render(twoSeriesInput, {
+        renderMode: "markdown",
+        width: 80,
+      });
 
       // First series: plain block in legend
       expect(result.output).toMatch(/█ Revenue/);
@@ -193,7 +229,10 @@ describe("Vertical Stacked Bar Chart", () => {
     });
 
     it("should use shaded block for third series", () => {
-      const result = chart.render(defaultInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(defaultInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
 
       // Third series uses ▓ character
       expect(result.output).toContain("▓");
@@ -213,7 +252,10 @@ describe("Vertical Stacked Bar Chart", () => {
         width: 25,
       };
 
-      const result = chart.render(singleCategoryInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(singleCategoryInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       expect(result.output).toContain("Only");
       expect(result.output).toContain("└");
       // Should have exactly one tick mark
@@ -237,7 +279,10 @@ describe("Vertical Stacked Bar Chart", () => {
         width: 40,
       };
 
-      const result = chart.render(longLabelInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(longLabelInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       expect(result.output).toContain("January");
       expect(result.output).toContain("February");
     });
@@ -246,14 +291,29 @@ describe("Vertical Stacked Bar Chart", () => {
       const zeroValueInput = {
         type: "bar-stacked-vertical" as const,
         series: [
-          { name: "A", data: [{ x: "Q1", y: 0 }, { x: "Q2", y: 50 }] },
-          { name: "B", data: [{ x: "Q1", y: 100 }, { x: "Q2", y: 0 }] },
+          {
+            name: "A",
+            data: [
+              { x: "Q1", y: 0 },
+              { x: "Q2", y: 50 },
+            ],
+          },
+          {
+            name: "B",
+            data: [
+              { x: "Q1", y: 100 },
+              { x: "Q2", y: 0 },
+            ],
+          },
         ],
         height: 8,
         width: 30,
       };
 
-      const result = chart.render(zeroValueInput, { renderMode: "ansi", width: 80 });
+      const result = chart.render(zeroValueInput, {
+        renderMode: "ansi",
+        width: 80,
+      });
       expect(result.output).toContain("Q1");
       expect(result.output).toContain("Q2");
       // Should still render without errors

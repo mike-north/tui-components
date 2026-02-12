@@ -7,8 +7,16 @@
 import { padToWidth, type TuiTheme } from "@tuicomponents/core";
 import { AXIS_CHARS } from "../core/chars.js";
 import { formatTickValue } from "../core/scaling.js";
-import { computeLegendLayout, type LegendItem, type LegendRow } from "../core/legend.js";
-import { computeYAxisRow, renderXAxis, type YAxisConfig } from "../core/axis-renderer.js";
+import {
+  computeLegendLayout,
+  type LegendItem,
+  type LegendRow,
+} from "../core/legend.js";
+import {
+  computeYAxisRow,
+  renderXAxis,
+  type YAxisConfig,
+} from "../core/axis-renderer.js";
 import type { BarChartLayout } from "../layout/bar.js";
 import type { StackedBarChartLayout } from "../layout/stacked-bar.js";
 import type { LineChartLayout } from "../layout/line.js";
@@ -25,11 +33,12 @@ import type { ChartInputWithDefaults } from "../types.js";
 function renderLegendRowAnsi(row: LegendRow, theme?: TuiTheme): string {
   return row.items
     .map((item) => {
-      const symbol = item.useBackticks && theme
-        ? theme.semantic.secondary(item.symbol)
-        : theme
-          ? theme.semantic.primary(item.symbol)
-          : item.symbol;
+      const symbol =
+        item.useBackticks && theme
+          ? theme.semantic.secondary(item.symbol)
+          : theme
+            ? theme.semantic.primary(item.symbol)
+            : item.symbol;
       return `${symbol} ${item.name}`;
     })
     .join("  ");
@@ -105,9 +114,12 @@ export function renderVerticalBarChartAnsi(
     // Y-axis label
     let yLabel = " ".repeat(yAxisWidth);
     for (const tick of layout.yScale.ticks) {
-      const tickNorm = (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
+      const tickNorm =
+        (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
       if (Math.abs(tickNorm - rowThreshold) < 0.5 / chartHeight) {
-        yLabel = padToWidth(formatTickValue(tick, format, decimals), yAxisWidth - 1) + " ";
+        yLabel =
+          padToWidth(formatTickValue(tick, format, decimals), yAxisWidth - 1) +
+          " ";
         break;
       }
     }
@@ -159,7 +171,10 @@ export function renderStackedBarChartAnsi(
   if (isVertical) {
     const chartHeight = layout.barAreaSize;
     const numStacks = layout.stacks.length;
-    const barWidth = Math.max(1, Math.floor((layout.width - 2) / numStacks) - 1);
+    const barWidth = Math.max(
+      1,
+      Math.floor((layout.width - 2) / numStacks) - 1
+    );
     const yAxisWidth = layout.maxValueWidth + 2;
     const format = input.yAxis?.format ?? "number";
     const decimals = input.yAxis?.decimals;
@@ -199,7 +214,9 @@ export function renderStackedBarChartAnsi(
 
         if (activeSegment) {
           const barSegment = activeSegment.barChar.repeat(barWidth);
-          segments.push(theme ? theme.semantic.primary(barSegment) : barSegment);
+          segments.push(
+            theme ? theme.semantic.primary(barSegment) : barSegment
+          );
         } else {
           segments.push(" ".repeat(barWidth));
         }
@@ -296,7 +313,11 @@ export function renderLineChartAnsi(
       const seriesIdx = row.seriesIndices[i];
       if (char !== " " && theme) {
         // Use secondary color for odd-indexed series
-        if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
+        if (
+          seriesIdx !== null &&
+          seriesIdx !== undefined &&
+          seriesIdx % 2 === 1
+        ) {
           content += theme.semantic.secondary(char);
         } else {
           content += theme.semantic.primary(char);
@@ -323,8 +344,8 @@ export function renderLineChartAnsi(
       continue;
     }
     const pos = isBraille
-      ? i * spacing + Math.floor(spacing / 2)  // center for braille
-      : i * spacing;  // even positions for blocks
+      ? i * spacing + Math.floor(spacing / 2) // center for braille
+      : i * spacing; // even positions for blocks
     if (pos < chartWidth) {
       labelLine[pos] = label.charAt(0) || " ";
     }
@@ -444,9 +465,14 @@ export function renderScatterChartAnsi(
     const rowBottom = 1 - (rowIndex + 1) / layout.chartHeight;
 
     for (const tick of layout.yScale.ticks) {
-      const tickNorm = (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
+      const tickNorm =
+        (tick - layout.yScale.min) / (layout.yScale.max - layout.yScale.min);
       if (tickNorm > rowBottom && tickNorm <= rowTop) {
-        yLabel = padToWidth(formatTickValue(tick, format, decimals), layout.yAxisWidth - 1) + " ";
+        yLabel =
+          padToWidth(
+            formatTickValue(tick, format, decimals),
+            layout.yAxisWidth - 1
+          ) + " ";
         break;
       }
     }
@@ -463,7 +489,11 @@ export function renderScatterChartAnsi(
         }
         const seriesIdx = rowIndices[i];
         if (char !== " " && theme) {
-          if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
+          if (
+            seriesIdx !== null &&
+            seriesIdx !== undefined &&
+            seriesIdx % 2 === 1
+          ) {
             content += theme.semantic.secondary(char);
           } else {
             content += theme.semantic.primary(char);
@@ -482,7 +512,11 @@ export function renderScatterChartAnsi(
         }
         const seriesIdx = rowIndices[i];
         if (char !== " " && theme) {
-          if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
+          if (
+            seriesIdx !== null &&
+            seriesIdx !== undefined &&
+            seriesIdx % 2 === 1
+          ) {
             content += theme.semantic.secondary(char);
           } else {
             content += theme.semantic.primary(char);
@@ -506,7 +540,8 @@ export function renderScatterChartAnsi(
   const labelPositions: { pos: number; label: string }[] = [];
 
   for (const tick of layout.xScale.ticks) {
-    const norm = (tick - layout.xScale.min) / (layout.xScale.max - layout.xScale.min);
+    const norm =
+      (tick - layout.xScale.min) / (layout.xScale.max - layout.xScale.min);
     const pos = Math.round(norm * (layout.chartWidth - 1));
     const label = formatTickValue(tick, xFormat, xDecimals);
     labelPositions.push({ pos, label });
@@ -517,7 +552,10 @@ export function renderScatterChartAnsi(
   for (const { pos, label } of labelPositions) {
     // Try to center label around position
     const halfLen = Math.floor(label.length / 2);
-    const startPos = Math.max(0, Math.min(layout.chartWidth - label.length, pos - halfLen));
+    const startPos = Math.max(
+      0,
+      Math.min(layout.chartWidth - label.length, pos - halfLen)
+    );
     for (let i = 0; i < label.length && startPos + i < layout.chartWidth; i++) {
       const char = label[i];
       if (char !== undefined) {
@@ -531,7 +569,8 @@ export function renderScatterChartAnsi(
   if (layout.seriesNames.length > 1) {
     const symbolArray = ["●", "■", "▲", "◆", "+"] as const;
     const legendItems: LegendItem[] = layout.seriesNames.map((name, i) => {
-      const symbol = layout.scatterStyle === "braille" ? "⣿" : symbolArray[i % 5];
+      const symbol =
+        layout.scatterStyle === "braille" ? "⣿" : symbolArray[i % 5];
       if (!symbol) {
         throw new Error(`Missing symbol at index ${String(i % 5)}`);
       }
@@ -588,7 +627,11 @@ export function renderPieChartAnsi(
       }
       const seriesIdx = rowIndices[i];
       if (char !== " " && theme) {
-        if (seriesIdx !== null && seriesIdx !== undefined && seriesIdx % 2 === 1) {
+        if (
+          seriesIdx !== null &&
+          seriesIdx !== undefined &&
+          seriesIdx % 2 === 1
+        ) {
           content += theme.semantic.secondary(char);
         } else {
           content += theme.semantic.primary(char);
@@ -610,7 +653,11 @@ export function renderPieChartAnsi(
       if (startPos >= 0) {
         // eslint-disable-next-line @typescript-eslint/no-misused-spread -- intentionally decomposing string into chars for overlay
         const contentArray = [...content];
-        for (let i = 0; i < labelLen && startPos + i < contentArray.length; i++) {
+        for (
+          let i = 0;
+          i < labelLen && startPos + i < contentArray.length;
+          i++
+        ) {
           const char = layout.centerLabel[i];
           if (char !== undefined) {
             contentArray[startPos + i] = char;
@@ -660,7 +707,9 @@ export function renderHeatmapAnsi(
   const colLabelRow =
     " ".repeat(layout.rowLabelWidth) +
     layout.colLabels
-      .map((label) => padToWidth(label.substring(0, layout.cellWidth), layout.cellWidth))
+      .map((label) =>
+        padToWidth(label.substring(0, layout.cellWidth), layout.cellWidth)
+      )
       .join(" ");
   lines.push(colLabelRow);
 

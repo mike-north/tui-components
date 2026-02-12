@@ -7,10 +7,7 @@ import {
   registry,
 } from "@tuicomponents/core";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import {
-  graphInputSchema,
-  type GraphInput,
-} from "./schema.js";
+import { graphInputSchema, type GraphInput } from "./schema.js";
 import { getGraphChars } from "./chars.js";
 import { computeGraphLayout } from "./layout.js";
 import { renderGraphAnsi, renderGraphMarkdown } from "./renderers.js";
@@ -45,9 +42,19 @@ class GraphComponent extends BaseTuiComponent<
         input: {
           nodes: [
             { id: "d", label: "latest changes", refs: ["main", "HEAD"] },
-            { id: "c", label: "feat: new feature", parents: ["d"], refs: ["feature-branch"] },
+            {
+              id: "c",
+              label: "feat: new feature",
+              parents: ["d"],
+              refs: ["feature-branch"],
+            },
             { id: "b", label: "fix: bug fix", parents: ["c"] },
-            { id: "a", label: "initial commit", parents: ["b"], refs: ["v1.0.0"] },
+            {
+              id: "a",
+              label: "initial commit",
+              parents: ["b"],
+              refs: ["v1.0.0"],
+            },
           ],
         },
       },
@@ -56,9 +63,19 @@ class GraphComponent extends BaseTuiComponent<
         description: "Branch and merge visualization",
         input: {
           nodes: [
-            { id: "e", label: "Merge branch 'feature'", parents: ["d", "c"], refs: ["main"] },
+            {
+              id: "e",
+              label: "Merge branch 'feature'",
+              parents: ["d", "c"],
+              refs: ["main"],
+            },
             { id: "d", label: "hotfix on main", parents: ["a"] },
-            { id: "c", label: "add new feature", parents: ["b"], refs: ["feature"] },
+            {
+              id: "c",
+              label: "add new feature",
+              parents: ["b"],
+              refs: ["feature"],
+            },
             { id: "b", label: "start feature branch", parents: ["a"] },
             { id: "a", label: "initial commit" },
           ],
@@ -69,7 +86,12 @@ class GraphComponent extends BaseTuiComponent<
         description: "Multiple concurrent branches",
         input: {
           nodes: [
-            { id: "g", label: "Merge all branches", parents: ["f", "e", "d"], refs: ["main"] },
+            {
+              id: "g",
+              label: "Merge all branches",
+              parents: ["f", "e", "d"],
+              refs: ["main"],
+            },
             { id: "f", label: "work on branch 1", parents: ["a"] },
             { id: "e", label: "work on branch 2", parents: ["a"] },
             { id: "d", label: "work on branch 3", parents: ["a"] },

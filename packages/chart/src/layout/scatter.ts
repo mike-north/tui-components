@@ -7,7 +7,11 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { BrailleCanvas, SCATTER_MARKER_SEQUENCE } from "../core/chars.js";
 import type { ChartInputWithDefaults, ScatterStyle } from "../types.js";
 import type { NiceTicksResult } from "../core/scaling.js";
@@ -67,7 +71,9 @@ export interface ScatterChartLayout {
 /**
  * Compute layout for a scatter plot.
  */
-export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChartLayout {
+export function computeScatterLayout(
+  input: ChartInputWithDefaults
+): ScatterChartLayout {
   const series = input.series;
   const scatterStyle = input.scatterStyle;
 
@@ -158,8 +164,12 @@ export function computeScatterLayout(input: ChartInputWithDefaults): ScatterChar
       const normalizedX = scaleValue(xVal, xScale.min, xScale.max, 1);
       const normalizedY = scaleValue(point.y, yScale.min, yScale.max, 1);
 
-      const charX = Math.round(Math.max(0, Math.min(1, normalizedX)) * (chartWidth - 1));
-      const charY = Math.round((1 - Math.max(0, Math.min(1, normalizedY))) * (chartHeight - 1));
+      const charX = Math.round(
+        Math.max(0, Math.min(1, normalizedX)) * (chartWidth - 1)
+      );
+      const charY = Math.round(
+        (1 - Math.max(0, Math.min(1, normalizedY))) * (chartHeight - 1)
+      );
 
       points.push({
         dataX: xVal,
@@ -229,7 +239,9 @@ function computeDotsScatterLayout(
     ) {
       // Use different markers for different series
       const marker =
-        SCATTER_MARKER_SEQUENCE[point.seriesIndex % SCATTER_MARKER_SEQUENCE.length];
+        SCATTER_MARKER_SEQUENCE[
+          point.seriesIndex % SCATTER_MARKER_SEQUENCE.length
+        ];
       if (!marker) continue;
       const gridRow = grid[point.charY];
       const seriesRow = seriesIndices[point.charY];
@@ -279,7 +291,8 @@ function computeBrailleScatterLayout(
       scaleValue(point.dataX, xScale.min, xScale.max, chartWidth * 2 - 1)
     );
     const dotY = Math.round(
-      (1 - scaleValue(point.dataY, yScale.min, yScale.max, 1)) * (chartHeight * 4 - 1)
+      (1 - scaleValue(point.dataY, yScale.min, yScale.max, 1)) *
+        (chartHeight * 4 - 1)
     );
 
     // Draw a small marker

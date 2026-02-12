@@ -1,4 +1,8 @@
-import type { GaugeInputWithDefaults, GaugeZone, GaugeZoneColor } from "./schema.js";
+import type {
+  GaugeInputWithDefaults,
+  GaugeZone,
+  GaugeZoneColor,
+} from "./schema.js";
 import type { GaugeChars } from "./chars.js";
 
 /**
@@ -148,7 +152,9 @@ export function computeGaugeLayout(
   }
 
   // Format value string
-  const valueStr = unit ? `${String(clampedValue)}${unit}` : String(clampedValue);
+  const valueStr = unit
+    ? `${String(clampedValue)}${unit}`
+    : String(clampedValue);
 
   return {
     label: input.label ?? "",

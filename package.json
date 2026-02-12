@@ -20,7 +20,12 @@
     "version": "changeset version",
     "release": "pnpm build && changeset publish"
   },
-  "keywords": ["tui", "terminal", "cli", "components"],
+  "keywords": [
+    "tui",
+    "terminal",
+    "cli",
+    "components"
+  ],
   "author": "",
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.29.2",

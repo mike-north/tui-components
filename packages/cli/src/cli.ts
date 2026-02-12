@@ -5,7 +5,10 @@ import { renderCommand } from "./commands/render.js";
 import { examplesCommand } from "./commands/examples.js";
 import { envDebugCommand } from "./commands/env-debug.js";
 import { batchCommand } from "./commands/batch.js";
-import { isAgentEnvironment, AGENT_INSTRUCTIONS } from "./agent-instructions.js";
+import {
+  isAgentEnvironment,
+  AGENT_INSTRUCTIONS,
+} from "./agent-instructions.js";
 
 // Import components to register them with the registry
 import "@tuicomponents/box";

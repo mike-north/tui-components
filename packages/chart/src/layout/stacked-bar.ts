@@ -3,9 +3,17 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { getBarChar, SERIES_STYLES } from "../core/chars.js";
-import type { ChartInputWithDefaults, BarLayout, StackedBarLayout } from "../types.js";
+import type {
+  ChartInputWithDefaults,
+  BarLayout,
+  StackedBarLayout,
+} from "../types.js";
 
 /**
  * Computed layout for a stacked bar chart.
@@ -123,9 +131,19 @@ export function computeStackedBarLayout(
       const useBackticks = s.style ? false : styleInfo.useBackticks;
 
       // Scale cumulative position
-      const startPos = scaleValue(cumulativeValue, yScale.min, yScale.max, barAreaSize);
+      const startPos = scaleValue(
+        cumulativeValue,
+        yScale.min,
+        yScale.max,
+        barAreaSize
+      );
       cumulativeValue += value;
-      const endPos = scaleValue(cumulativeValue, yScale.min, yScale.max, barAreaSize);
+      const endPos = scaleValue(
+        cumulativeValue,
+        yScale.min,
+        yScale.max,
+        barAreaSize
+      );
       const length = Math.max(1, Math.round(endPos - startPos));
 
       const format = input.yAxis?.format ?? "number";
@@ -169,7 +187,10 @@ export function computeStackedBarLayout(
         useBackticks: s.style ? false : styleInfo.useBackticks,
       };
     })
-    .filter((style): style is { char: string; useBackticks: boolean } => style !== null);
+    .filter(
+      (style): style is { char: string; useBackticks: boolean } =>
+        style !== null
+    );
 
   return {
     type: isVertical ? "bar-stacked-vertical" : "bar-stacked",

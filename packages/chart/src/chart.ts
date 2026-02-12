@@ -47,7 +47,8 @@ class ChartComponent extends BaseTuiComponent<
 > {
   readonly metadata: ComponentMetadata<ChartInput> = {
     name: "chart",
-    description: "Renders various chart types including bar, line, and area charts",
+    description:
+      "Renders various chart types including bar, line, and area charts",
     version: "0.1.0",
     supportedModes: ["ansi", "markdown"],
     examples: [
@@ -276,7 +277,10 @@ class ChartComponent extends BaseTuiComponent<
   render(input: ChartInput, context: RenderContext): RenderResult {
     const parsed = this.schema.parse(input);
 
-    if (parsed.series.length === 0 || parsed.series.every((s) => s.data.length === 0)) {
+    if (
+      parsed.series.length === 0 ||
+      parsed.series.every((s) => s.data.length === 0)
+    ) {
       return { output: "", actualWidth: 0, lineCount: 0 };
     }
 
@@ -288,7 +292,10 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderBarChartMarkdown(layout, { input: parsed })
-            : renderBarChartAnsi(layout, { theme: context.theme, input: parsed });
+            : renderBarChartAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 
@@ -297,7 +304,10 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderVerticalBarChartMarkdown(layout, { input: parsed })
-            : renderVerticalBarChartAnsi(layout, { theme: context.theme, input: parsed });
+            : renderVerticalBarChartAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 
@@ -307,7 +317,10 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderStackedBarChartMarkdown(layout, { input: parsed })
-            : renderStackedBarChartAnsi(layout, { theme: context.theme, input: parsed });
+            : renderStackedBarChartAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 
@@ -316,7 +329,10 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderLineChartMarkdown(layout, { input: parsed })
-            : renderLineChartAnsi(layout, { theme: context.theme, input: parsed });
+            : renderLineChartAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 
@@ -326,7 +342,10 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderAreaChartMarkdown(layout, { input: parsed })
-            : renderAreaChartAnsi(layout, { theme: context.theme, input: parsed });
+            : renderAreaChartAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 
@@ -335,7 +354,10 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderScatterChartMarkdown(layout, { input: parsed })
-            : renderScatterChartAnsi(layout, { theme: context.theme, input: parsed });
+            : renderScatterChartAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 
@@ -345,7 +367,10 @@ class ChartComponent extends BaseTuiComponent<
         output =
           context.renderMode === "markdown"
             ? renderPieChartMarkdown(layout, { input: parsed })
-            : renderPieChartAnsi(layout, { theme: context.theme, input: parsed });
+            : renderPieChartAnsi(layout, {
+                theme: context.theme,
+                input: parsed,
+              });
         break;
       }
 

@@ -1,8 +1,4 @@
-import {
-  type TuiTheme,
-  anchorLine,
-  DEFAULT_ANCHOR,
-} from "@tuicomponents/core";
+import { type TuiTheme, anchorLine, DEFAULT_ANCHOR } from "@tuicomponents/core";
 import type { ProgressLayout } from "./layout.js";
 import type { ProgressInputWithDefaults } from "./schema.js";
 

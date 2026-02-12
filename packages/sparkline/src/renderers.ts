@@ -1,4 +1,8 @@
-import { anchorLine, DEFAULT_ANCHOR, type RenderContext } from "@tuicomponents/core";
+import {
+  anchorLine,
+  DEFAULT_ANCHOR,
+  type RenderContext,
+} from "@tuicomponents/core";
 import type { TuiTheme } from "@tuicomponents/core";
 import type { SparklineLayout } from "./layout.js";
 
@@ -18,7 +22,9 @@ export function renderSparklineAnsi(
   // Apply theme if available
   const styledBlocks = theme ? theme.semantic.primary(blocks) : blocks;
   const styledLabel = label
-    ? (theme ? theme.semantic.header(label) : label)
+    ? theme
+      ? theme.semantic.header(label)
+      : label
     : "";
 
   return styledLabel + styledBlocks;

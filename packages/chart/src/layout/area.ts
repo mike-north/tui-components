@@ -3,7 +3,11 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { valueToBlock, SERIES_STYLES } from "../core/chars.js";
 import type { ChartInputWithDefaults, LineStyle } from "../types.js";
 
@@ -70,7 +74,9 @@ export interface AreaChartLayout {
  * @param input - Chart input with defaults
  * @returns Computed area chart layout
  */
-export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayout {
+export function computeAreaLayout(
+  input: ChartInputWithDefaults
+): AreaChartLayout {
   const isStacked = input.type === "area-stacked";
   const series = input.series;
   const lineStyle = input.lineStyle;
@@ -84,7 +90,10 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
     for (const point of s.data) {
       const category = String(point.x);
       if (!categoryData.has(category)) {
-        categoryData.set(category, new Array(series.length).fill(0) as number[]);
+        categoryData.set(
+          category,
+          new Array(series.length).fill(0) as number[]
+        );
         categories.push(category);
       }
     }
@@ -204,10 +213,17 @@ export function computeAreaLayout(input: ChartInputWithDefaults): AreaChartLayou
       let activeSeriesIndex = -1;
       let fillLevel = 0;
 
-      for (let seriesIndex = column.normalizedHeights.length - 1; seriesIndex >= 0; seriesIndex--) {
+      for (
+        let seriesIndex = column.normalizedHeights.length - 1;
+        seriesIndex >= 0;
+        seriesIndex--
+      ) {
         const height = column.normalizedHeights[seriesIndex];
         if (height === undefined) continue;
-        const prevHeight = seriesIndex > 0 ? (column.normalizedHeights[seriesIndex - 1] ?? 0) : 0;
+        const prevHeight =
+          seriesIndex > 0
+            ? (column.normalizedHeights[seriesIndex - 1] ?? 0)
+            : 0;
 
         if (height > rowBottom && prevHeight < rowTop) {
           activeSeriesIndex = seriesIndex;

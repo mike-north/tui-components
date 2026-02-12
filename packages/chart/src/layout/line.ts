@@ -8,9 +8,17 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, scaleValue } from "../core/scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  scaleValue,
+} from "../core/scaling.js";
 import { BrailleCanvas, SERIES_STYLES } from "../core/chars.js";
-import type { ChartInputWithDefaults, LineStyle, ValueFormat } from "../types.js";
+import type {
+  ChartInputWithDefaults,
+  LineStyle,
+  ValueFormat,
+} from "../types.js";
 
 /**
  * A single point in the line chart.
@@ -84,7 +92,9 @@ const LINE_DRAW = {
 /**
  * Compute layout for a line chart.
  */
-export function computeLineLayout(input: ChartInputWithDefaults): LineChartLayout {
+export function computeLineLayout(
+  input: ChartInputWithDefaults
+): LineChartLayout {
   const series = input.series;
   const lineStyle = input.lineStyle;
 
@@ -141,11 +151,28 @@ export function computeLineLayout(input: ChartInputWithDefaults): LineChartLayou
   // Choose layout based on line style
   if (lineStyle === "braille") {
     return computeBrailleLayout(
-      input, categories, seriesNames, series, yScale, yAxisWidth, chartHeight, format, decimals
+      input,
+      categories,
+      seriesNames,
+      series,
+      yScale,
+      yAxisWidth,
+      chartHeight,
+      format,
+      decimals
     );
   } else {
     return computeBlocksLayout(
-      input, categories, seriesNames, series, yScale, yAxisWidth, chartHeight, format, decimals, lineStyle
+      input,
+      categories,
+      seriesNames,
+      series,
+      yScale,
+      yAxisWidth,
+      chartHeight,
+      format,
+      decimals,
+      lineStyle
     );
   }
 }
@@ -227,7 +254,9 @@ function computeBlocksLayout(
         if (lineStyle !== "dots" && i < seriesPoints.length - 1) {
           const nextP = seriesPoints[i + 1];
           if (!nextP) continue;
-          const nextRow = Math.floor((1 - nextP.normalizedY) * (chartHeight - 0.001));
+          const nextRow = Math.floor(
+            (1 - nextP.normalizedY) * (chartHeight - 0.001)
+          );
           const nextCol = nextP.x;
 
           if (nextCol > col + 1) {
@@ -240,7 +269,11 @@ function computeBlocksLayout(
 
               const interpGridRow = grid[interpRow];
               const interpSeriesGridRow = seriesGrid[interpRow];
-              if (interpRow >= 0 && interpRow < chartHeight && interpGridRow?.[c] === " ") {
+              if (
+                interpRow >= 0 &&
+                interpRow < chartHeight &&
+                interpGridRow?.[c] === " "
+              ) {
                 if (rowDiff < 0) {
                   interpGridRow[c] = LINE_DRAW.rise;
                 } else if (rowDiff > 0) {
@@ -299,7 +332,7 @@ function computeBlocksLayout(
     points,
     rows,
     yScale,
-    maxXLabelWidth: Math.max(...categories.map(c => getStringWidth(c))),
+    maxXLabelWidth: Math.max(...categories.map((c) => getStringWidth(c))),
     yAxisWidth,
     width: input.width,
     height: input.height,
@@ -337,7 +370,8 @@ function computeBrailleLayout(
     for (const point of s.data) {
       const categoryIndex = categories.indexOf(String(point.x));
       // Center point within category area
-      const colPos = categoryIndex * charsPerCategory + Math.floor(charsPerCategory / 2);
+      const colPos =
+        categoryIndex * charsPerCategory + Math.floor(charsPerCategory / 2);
       const normalizedY = scaleValue(point.y, yScale.min, yScale.max, 1);
       const clampedY = Math.max(0, Math.min(1, normalizedY));
 
@@ -376,7 +410,9 @@ function computeBrailleLayout(
         const nextP = seriesPoints[i + 1];
         if (nextP) {
           const nextDotX = nextP.x * 2 + 1;
-          const nextDotY = Math.round((1 - nextP.normalizedY) * (chartHeight * 4 - 1));
+          const nextDotY = Math.round(
+            (1 - nextP.normalizedY) * (chartHeight * 4 - 1)
+          );
           canvas.drawLine(dotX, dotY, nextDotX, nextDotY, seriesIndex);
         }
       }
@@ -428,7 +464,7 @@ function computeBrailleLayout(
     points,
     rows,
     yScale,
-    maxXLabelWidth: Math.max(...categories.map(c => getStringWidth(c))),
+    maxXLabelWidth: Math.max(...categories.map((c) => getStringWidth(c))),
     yAxisWidth,
     width: input.width,
     height: input.height,

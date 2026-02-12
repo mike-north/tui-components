@@ -131,8 +131,7 @@ export type ComponentFactory<
 export abstract class BaseTuiComponent<
   TInput,
   TSchema extends ZodType<TInput, ZodTypeDef, unknown>,
-> implements TuiComponent<TInput, TSchema>
-{
+> implements TuiComponent<TInput, TSchema> {
   abstract readonly metadata: ComponentMetadata<TInput>;
   abstract readonly schema: TSchema;
 

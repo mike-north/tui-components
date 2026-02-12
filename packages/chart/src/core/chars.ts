@@ -251,7 +251,12 @@ export class BrailleCanvas {
    * Set a dot at the given dot coordinates.
    */
   setDot(dotX: number, dotY: number, seriesIndex = 0): void {
-    if (dotX >= 0 && dotX < this.width * 2 && dotY >= 0 && dotY < this.height * 4) {
+    if (
+      dotX >= 0 &&
+      dotX < this.width * 2 &&
+      dotY >= 0 &&
+      dotY < this.height * 4
+    ) {
       const dotRow = this.dots[dotY];
       const seriesRow = this.seriesIndices[dotY];
       if (dotRow && seriesRow) {
@@ -265,7 +270,13 @@ export class BrailleCanvas {
    * Draw a line between two points using Bresenham's algorithm.
    * Coordinates are in dot space (width*2 x height*4).
    */
-  drawLine(x0: number, y0: number, x1: number, y1: number, seriesIndex = 0): void {
+  drawLine(
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number,
+    seriesIndex = 0
+  ): void {
     const dx = Math.abs(x1 - x0);
     const dy = Math.abs(y1 - y0);
     const sx = x0 < x1 ? 1 : -1;

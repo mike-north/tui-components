@@ -16,7 +16,4 @@ export {
 } from "./layout.js";
 
 // Renderer exports (for advanced usage)
-export {
-  renderSparklineAnsi,
-  renderSparklineMarkdown,
-} from "./renderers.js";
+export { renderSparklineAnsi, renderSparklineMarkdown } from "./renderers.js";

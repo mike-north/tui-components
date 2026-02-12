@@ -46,7 +46,9 @@ describe("agent-instructions", () => {
     });
 
     it("should warn against using code blocks", () => {
-      expect(AGENT_INSTRUCTIONS).toContain("NEVER wrap diagram output in markdown code blocks");
+      expect(AGENT_INSTRUCTIONS).toContain(
+        "NEVER wrap diagram output in markdown code blocks"
+      );
     });
 
     it("should mention the padding lines", () => {
@@ -63,8 +65,11 @@ describe("agent-instructions", () => {
     });
 
     it("should have separator lines at start and end", () => {
-      const separator = "═══════════════════════════════════════════════════════════════════════════════";
-      const occurrences = (AGENT_INSTRUCTIONS.match(new RegExp(separator, "g")) || []).length;
+      const separator =
+        "═══════════════════════════════════════════════════════════════════════════════";
+      const occurrences = (
+        AGENT_INSTRUCTIONS.match(new RegExp(separator, "g")) || []
+      ).length;
       expect(occurrences).toBeGreaterThanOrEqual(2);
     });
   });
@@ -106,7 +111,11 @@ describe("agent-instructions", () => {
     });
 
     it("should handle different agent info structures", () => {
-      const mockResult = { name: "cursor-agent", version: "2.0.0", extra: "field" };
+      const mockResult = {
+        name: "cursor-agent",
+        version: "2.0.0",
+        extra: "field",
+      };
       vi.mocked(whichAgenticTui).mockReturnValue(mockResult);
       expect(getAgentInfo()).toEqual(mockResult);
     });

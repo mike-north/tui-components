@@ -3,7 +3,11 @@
  */
 
 import { getStringWidth } from "@tuicomponents/core";
-import { computeNiceTicks, formatTickValue, type NiceTicksResult } from "./scaling.js";
+import {
+  computeNiceTicks,
+  formatTickValue,
+  type NiceTicksResult,
+} from "./scaling.js";
 
 /**
  * Axis orientation.

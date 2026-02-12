@@ -170,7 +170,9 @@ export function computeGraphLayout(
     } else if (node.parents.length > 0) {
       // Check if first parent already has a column assigned
       const firstParent = node.parents[0];
-      const firstParentCol = firstParent ? state.nodeColumns.get(firstParent) : undefined;
+      const firstParentCol = firstParent
+        ? state.nodeColumns.get(firstParent)
+        : undefined;
       if (firstParentCol !== undefined) {
         nodeColumn = firstParentCol;
       } else {
@@ -208,7 +210,7 @@ export function computeGraphLayout(
     // Determine if this is a merge (2+ parents)
     const isMerge = node.parents.length >= 2;
     const mergeFromColumns = isMerge
-      ? parentColumns.filter(c => c !== nodeColumn)
+      ? parentColumns.filter((c) => c !== nodeColumn)
       : [];
 
     // Determine the node character (per-node override > global override > default)

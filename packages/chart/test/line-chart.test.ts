@@ -446,9 +446,7 @@ describe("BrailleCanvas", () => {
 
     const result = canvas.render();
     // Should have non-empty characters along the line
-    const nonEmptyCount = result.chars
-      .flat()
-      .filter((c) => c !== " ").length;
+    const nonEmptyCount = result.chars.flat().filter((c) => c !== " ").length;
     expect(nonEmptyCount).toBeGreaterThan(0);
   });
 
@@ -458,9 +456,7 @@ describe("BrailleCanvas", () => {
 
     const result = canvas.render();
     // Point should create a visible cluster
-    const nonEmptyCount = result.chars
-      .flat()
-      .filter((c) => c !== " ").length;
+    const nonEmptyCount = result.chars.flat().filter((c) => c !== " ").length;
     expect(nonEmptyCount).toBeGreaterThan(0);
   });
 

@@ -14,10 +14,11 @@ const baseNodeSchema = z.object({
  * Schema for a tree node with recursive children.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const treeNodeSchema: z.ZodType<any, z.ZodTypeDef, unknown> = baseNodeSchema.extend({
-  /** Optional children nodes */
-  children: z.lazy(() => z.array(treeNodeSchema)).optional(),
-});
+export const treeNodeSchema: z.ZodType<any, z.ZodTypeDef, unknown> =
+  baseNodeSchema.extend({
+    /** Optional children nodes */
+    children: z.lazy(() => z.array(treeNodeSchema)).optional(),
+  });
 
 /**
  * Tree node type inferred from schema.

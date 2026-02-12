@@ -77,7 +77,11 @@ describe("ListComponent", () => {
 
     it("should render numbered list", () => {
       const input: ListInput = {
-        items: [{ text: "Step one" }, { text: "Step two" }, { text: "Step three" }],
+        items: [
+          { text: "Step one" },
+          { text: "Step two" },
+          { text: "Step three" },
+        ],
         style: "numbered",
       };
 
@@ -103,7 +107,11 @@ describe("ListComponent", () => {
 
     it("should render lettered list", () => {
       const input: ListInput = {
-        items: [{ text: "Option A" }, { text: "Option B" }, { text: "Option C" }],
+        items: [
+          { text: "Option A" },
+          { text: "Option B" },
+          { text: "Option C" },
+        ],
         style: "lettered",
       };
 
@@ -202,7 +210,9 @@ describe("ListComponent", () => {
 
     it("should align numbered list items", () => {
       const input: ListInput = {
-        items: Array.from({ length: 12 }, (_, i) => ({ text: `Item ${i + 1}` })),
+        items: Array.from({ length: 12 }, (_, i) => ({
+          text: `Item ${i + 1}`,
+        })),
         style: "numbered",
       };
 

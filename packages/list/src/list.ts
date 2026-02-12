@@ -30,7 +30,10 @@ function colorMarker(text: string, theme: TuiTheme | undefined): string {
 /**
  * List component for rendering bulleted and numbered lists.
  */
-class ListComponent extends BaseTuiComponent<ListInput, typeof listInputSchema> {
+class ListComponent extends BaseTuiComponent<
+  ListInput,
+  typeof listInputSchema
+> {
   readonly metadata: ComponentMetadata<ListInput> = {
     name: "list",
     description: "Renders bulleted or numbered lists with nesting support",
@@ -66,10 +69,7 @@ class ListComponent extends BaseTuiComponent<ListInput, typeof listInputSchema> 
           items: [
             {
               text: "Parent item",
-              items: [
-                { text: "Child item 1" },
-                { text: "Child item 2" },
-              ],
+              items: [{ text: "Child item 1" }, { text: "Child item 2" }],
             },
             { text: "Another parent" },
           ],
@@ -161,7 +161,9 @@ class ListComponent extends BaseTuiComponent<ListInput, typeof listInputSchema> 
 
       const marker = getMarker(style, i, startNumber);
       const paddedMarker =
-        style === "none" ? "" : colorMarker(marker.padEnd(maxMarkerWidth + 1), theme);
+        style === "none"
+          ? ""
+          : colorMarker(marker.padEnd(maxMarkerWidth + 1), theme);
 
       lines.push(`${prefix}${paddedMarker}${item.text}`);
 

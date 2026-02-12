@@ -64,7 +64,9 @@ export interface PieChartLayout {
 /**
  * Compute layout for a pie or donut chart.
  */
-export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout {
+export function computePieLayout(
+  input: ChartInputWithDefaults
+): PieChartLayout {
   const type = input.type as "pie" | "donut";
   const series = input.series;
 
@@ -94,7 +96,9 @@ export function computePieLayout(input: ChartInputWithDefaults): PieChartLayout 
       centerX: Math.floor(input.width / 2),
       centerY: Math.floor(input.height / 2),
       innerRadius: 0,
-      ...(input.centerLabel !== undefined && { centerLabel: input.centerLabel }),
+      ...(input.centerLabel !== undefined && {
+        centerLabel: input.centerLabel,
+      }),
       width: input.width,
       height: input.height,
       brailleChars: [],

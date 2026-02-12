@@ -53,7 +53,9 @@ export interface HeatmapChartLayout {
 /**
  * Compute layout for a heatmap chart.
  */
-export function computeHeatmapLayout(input: ChartInputWithDefaults): HeatmapChartLayout {
+export function computeHeatmapLayout(
+  input: ChartInputWithDefaults
+): HeatmapChartLayout {
   const series = input.series;
   const heatmapStyle = input.heatmapStyle;
 

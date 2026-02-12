@@ -1,8 +1,4 @@
-import {
-  type TuiTheme,
-  anchorLine,
-  DEFAULT_ANCHOR,
-} from "@tuicomponents/core";
+import { type TuiTheme, anchorLine, DEFAULT_ANCHOR } from "@tuicomponents/core";
 import type { GaugeLayout, GaugeSegment } from "./layout.js";
 import type { GaugeInputWithDefaults, GaugeZoneColor } from "./schema.js";
 
