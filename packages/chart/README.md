@@ -2,6 +2,8 @@
 
 A comprehensive terminal charting library for rendering data visualizations in ANSI and markdown formats.
 
+![Chart Example](../../docs/screenshots/chart/bar-horizontal.png)
+
 ## Features
 
 - **11 chart types**: bar, bar-vertical, bar-stacked, bar-stacked-vertical, line, area, area-stacked, scatter, pie, donut, heatmap

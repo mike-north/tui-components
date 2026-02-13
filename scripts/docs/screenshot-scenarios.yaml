@@ -1,0 +1,472 @@
+# yaml-language-server: $schema=./screenshot-scenarios.schema.json
+# Screenshot Scenarios Configuration
+#
+# This file defines the screenshots to generate for documentation.
+# Each entry creates a PNG screenshot in docs/screenshots/{component}/{name}.png
+#
+# To add a new screenshot:
+# 1. Add an entry under the appropriate component section
+# 2. Run: pnpm docs:screenshots:validate (to check your input)
+# 3. Run: pnpm docs:screenshots (to generate images)
+#
+# Fields:
+#   name: Filename (without extension)
+#   description: Brief description for docs
+#   width: Render width in characters (default: 80)
+#   input: Component input data (YAML object)
+
+# ============================================
+# SPARKLINE
+# ============================================
+sparkline:
+  - name: basic
+    description: Simple sparkline with default settings
+    width: 40
+    input:
+      values: [4, 2, 8, 5, 9, 3, 7, 6, 1, 8]
+
+  - name: cpu-usage
+    description: CPU usage monitoring over time
+    width: 40
+    input:
+      values: [45, 52, 48, 65, 72, 58, 63, 71, 68, 55, 48, 52]
+      min: 0
+      max: 100
+
+  - name: with-label
+    description: Sparkline with label prefix
+    width: 50
+    input:
+      values: [2.1, 2.3, 2.8, 3.2, 3.5, 3.1, 2.9, 3.4, 3.8, 4.1]
+      label: "Memory: "
+
+  - name: stock-trend
+    description: Stock price trend
+    width: 60
+    input:
+      values: [142, 145, 143, 148, 152, 149, 155, 158, 154, 160, 163, 159]
+
+# ============================================
+# CHART
+# ============================================
+chart:
+  - name: bar-horizontal
+    description: Horizontal bar chart
+    width: 50
+    input:
+      type: bar
+      series:
+        - name: Sales
+          data:
+            - { x: "Q1", y: 120 }
+            - { x: "Q2", y: 150 }
+            - { x: "Q3", y: 180 }
+            - { x: "Q4", y: 200 }
+      showValues: true
+
+  - name: bar-vertical
+    description: Vertical bar chart (column chart)
+    width: 50
+    input:
+      type: bar-vertical
+      series:
+        - name: Revenue
+          data:
+            - { x: "Jan", y: 45 }
+            - { x: "Feb", y: 52 }
+            - { x: "Mar", y: 61 }
+            - { x: "Apr", y: 58 }
+      height: 8
+
+  - name: stacked-vertical
+    description: Stacked vertical bar chart
+    width: 45
+    input:
+      type: bar-stacked-vertical
+      series:
+        - name: Revenue
+          data:
+            - { x: "Q1", y: 100 }
+            - { x: "Q2", y: 120 }
+            - { x: "Q3", y: 90 }
+            - { x: "Q4", y: 150 }
+        - name: Costs
+          data:
+            - { x: "Q1", y: 60 }
+            - { x: "Q2", y: 70 }
+            - { x: "Q3", y: 50 }
+            - { x: "Q4", y: 80 }
+        - name: Profit
+          data:
+            - { x: "Q1", y: 40 }
+            - { x: "Q2", y: 50 }
+            - { x: "Q3", y: 40 }
+            - { x: "Q4", y: 70 }
+      height: 10
+
+  - name: line
+    description: Line chart with dots rendering
+    width: 50
+    input:
+      type: line
+      series:
+        - name: Temperature
+          data:
+            - { x: "6am", y: 58 }
+            - { x: "9am", y: 64 }
+            - { x: "12pm", y: 72 }
+            - { x: "3pm", y: 78 }
+            - { x: "6pm", y: 71 }
+            - { x: "9pm", y: 65 }
+      lineStyle: dots
+      height: 8
+
+  - name: pie
+    description: Pie chart with braille rendering
+    width: 50
+    input:
+      type: pie
+      series:
+        - name: Market Share
+          data:
+            - { x: "Chrome", y: 65 }
+            - { x: "Firefox", y: 20 }
+            - { x: "Safari", y: 15 }
+
+  - name: donut
+    description: Donut chart with center label
+    width: 50
+    input:
+      type: donut
+      series:
+        - name: Progress
+          data:
+            - { x: "Complete", y: 75 }
+            - { x: "Remaining", y: 25 }
+      centerLabel: "75%"
+      innerRadius: 0.5
+
+  - name: scatter
+    description: Scatter plot
+    width: 50
+    input:
+      type: scatter
+      series:
+        - name: Data Points
+          data:
+            - { x: 10, y: 20 }
+            - { x: 25, y: 45 }
+            - { x: 40, y: 35 }
+            - { x: 55, y: 60 }
+            - { x: 70, y: 50 }
+      scatterStyle: dots
+      height: 8
+
+  - name: heatmap
+    description: Activity heatmap
+    width: 50
+    input:
+      type: heatmap
+      series:
+        - name: Activity
+          data:
+            - { x: "Mon", y: 10, label: "9am" }
+            - { x: "Tue", y: 50, label: "9am" }
+            - { x: "Wed", y: 90, label: "9am" }
+            - { x: "Mon", y: 30, label: "10am" }
+            - { x: "Tue", y: 70, label: "10am" }
+            - { x: "Wed", y: 40, label: "10am" }
+            - { x: "Mon", y: 60, label: "11am" }
+            - { x: "Tue", y: 80, label: "11am" }
+            - { x: "Wed", y: 20, label: "11am" }
+      heatmapStyle: blocks
+
+# ============================================
+# TABLE
+# ============================================
+table:
+  - name: basic
+    description: Simple data table
+    width: 60
+    input:
+      columns:
+        - { key: "name", header: "Name" }
+        - { key: "role", header: "Role" }
+        - { key: "status", header: "Status" }
+      rows:
+        - { name: "Alice", role: "Admin", status: "Active" }
+        - { name: "Bob", role: "User", status: "Active" }
+        - { name: "Carol", role: "User", status: "Inactive" }
+
+  - name: with-borders
+    description: Table with borders
+    width: 60
+    input:
+      columns:
+        - { key: "id", header: "ID" }
+        - { key: "task", header: "Task" }
+        - { key: "priority", header: "Priority" }
+      rows:
+        - { id: "1", task: "Review PR", priority: "High" }
+        - { id: "2", task: "Update docs", priority: "Medium" }
+        - { id: "3", task: "Fix bug", priority: "High" }
+      borderStyle: single
+
+# ============================================
+# BOX
+# ============================================
+box:
+  - name: simple
+    description: Simple box with content
+    width: 50
+    input:
+      content: "Hello, World!"
+      padding: 1
+
+  - name: with-title
+    description: Box with title
+    width: 50
+    input:
+      content: "System Status: All services operational"
+      title: "Status"
+      padding: 1
+
+  - name: rounded
+    description: Box with rounded corners
+    width: 50
+    input:
+      content: "This box has rounded corners"
+      title: "Info"
+      borderStyle: round
+      padding: 1
+
+# ============================================
+# LIST
+# ============================================
+list:
+  - name: bullet
+    description: Bulleted list
+    input:
+      items:
+        - { text: "First item" }
+        - { text: "Second item" }
+        - { text: "Third item" }
+      style: bullet
+
+  - name: numbered
+    description: Numbered list
+    input:
+      items:
+        - { text: "Step one" }
+        - { text: "Step two" }
+        - { text: "Step three" }
+      style: numbered
+
+  - name: nested
+    description: Nested list with sub-items
+    input:
+      items:
+        - text: "Project setup"
+          items:
+            - { text: "Install dependencies" }
+            - { text: "Configure environment" }
+        - text: "Development"
+          items:
+            - { text: "Write code" }
+            - { text: "Run tests" }
+      style: bullet
+
+# ============================================
+# TREE
+# ============================================
+tree:
+  - name: basic
+    description: Simple tree structure
+    input:
+      root:
+        label: "root"
+        children:
+          - label: "folder1"
+            children:
+              - label: "file1.txt"
+              - label: "file2.txt"
+          - label: "folder2"
+            children:
+              - label: "file3.txt"
+
+  - name: project-structure
+    description: Project directory structure
+    input:
+      root:
+        label: "my-project"
+        children:
+          - label: "src"
+            children:
+              - label: "index.ts"
+              - label: "utils.ts"
+              - label: "types.ts"
+          - label: "tests"
+            children:
+              - label: "index.test.ts"
+          - label: "package.json"
+          - label: "tsconfig.json"
+          - label: "README.md"
+
+# ============================================
+# PROGRESS
+# ============================================
+progress:
+  - name: basic
+    description: Simple progress bar
+    width: 50
+    input:
+      value: 67
+      max: 100
+      width: 40
+
+  - name: with-percentage
+    description: Progress bar with percentage
+    width: 50
+    input:
+      value: 42
+      max: 100
+      showPercentage: true
+      width: 40
+
+  - name: labeled
+    description: Progress bar with label
+    width: 50
+    input:
+      value: 85
+      max: 100
+      label: "Download"
+      showPercentage: true
+      width: 40
+
+# ============================================
+# GAUGE
+# ============================================
+gauge:
+  - name: basic
+    description: Simple gauge
+    width: 40
+    input:
+      value: 65
+      max: 100
+
+  - name: disk-usage
+    description: Disk usage gauge with zones
+    width: 40
+    input:
+      value: 78
+      max: 100
+      label: "Disk"
+      showValue: true
+      unit: "%"
+      zones:
+        - { threshold: 70, color: success }
+        - { threshold: 90, color: warning }
+        - { threshold: 100, color: error }
+
+  - name: memory
+    description: Memory usage gauge
+    width: 40
+    input:
+      value: 45
+      max: 100
+      label: "RAM"
+      showValue: true
+      unit: "%"
+
+# ============================================
+# DIFF
+# ============================================
+diff:
+  - name: basic
+    description: Simple text diff
+    width: 60
+    input:
+      hunks:
+        - lines:
+            - { type: "deletion", content: "Hello World" }
+            - { type: "addition", content: "Hello Universe" }
+
+  - name: config-change
+    description: Configuration file diff
+    width: 60
+    input:
+      oldFile: "config.ini"
+      newFile: "config.ini"
+      showLineNumbers: true
+      hunks:
+        - lines:
+            - { type: "deletion", content: "port=8080" }
+            - { type: "addition", content: "port=3000" }
+            - { type: "context", content: "host=localhost" }
+            - { type: "deletion", content: "debug=false" }
+            - { type: "addition", content: "debug=true" }
+
+  - name: code-diff
+    description: Code change diff
+    width: 70
+    input:
+      oldFile: "greet.js"
+      newFile: "greet.ts"
+      showLineNumbers: true
+      hunks:
+        - lines:
+            - { type: "deletion", content: "function greet(name) {" }
+            - {
+                type: "addition",
+                content: "function greet(name: string): string {",
+              }
+            - { type: "deletion", content: '  return "Hello, " + name;' }
+            - { type: "addition", content: "  return `Hello, ${name}!`;" }
+            - { type: "context", content: "}" }
+
+# ============================================
+# KEYVALUE
+# ============================================
+keyvalue:
+  - name: basic
+    description: Simple key-value pairs
+    width: 50
+    input:
+      pairs:
+        - { key: "Name", value: "John Doe" }
+        - { key: "Email", value: "john@example.com" }
+        - { key: "Role", value: "Developer" }
+
+  - name: system-info
+    description: System information
+    width: 50
+    input:
+      pairs:
+        - { key: "OS", value: "macOS 14.0" }
+        - { key: "Node", value: "v20.10.0" }
+        - { key: "Memory", value: "16 GB" }
+        - { key: "CPU", value: "Apple M2" }
+
+# ============================================
+# GRAPH
+# ============================================
+graph:
+  - name: basic
+    description: Simple commit graph
+    width: 50
+    input:
+      nodes:
+        - { id: "a", label: "Initial commit", parents: [] }
+        - { id: "b", label: "Add feature", parents: ["a"] }
+        - { id: "c", label: "Fix bug", parents: ["b"] }
+
+  - name: branching
+    description: Git graph with branches
+    width: 60
+    input:
+      nodes:
+        - { id: "1", label: "Initial commit", parents: [] }
+        - { id: "2", label: "Add login", parents: ["1"] }
+        - { id: "3", label: "Feature branch", parents: ["2"] }
+        - { id: "4", label: "Main update", parents: ["2"] }
+        - { id: "5", label: "Merge", parents: ["3", "4"] }

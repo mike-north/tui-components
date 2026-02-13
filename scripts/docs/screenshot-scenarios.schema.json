@@ -1,0 +1,839 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tuicomponents.dev/schemas/screenshot-scenarios.json",
+  "title": "TUI Components Screenshot Scenarios",
+  "description": "Schema for defining screenshot scenarios for TUI component documentation. Generated from component Zod schemas.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "array",
+    "description": "Array of scenarios for a component",
+    "items": {
+      "$ref": "#/$defs/scenario"
+    }
+  },
+  "$defs": {
+    "scenario": {
+      "type": "object",
+      "description": "A single screenshot scenario",
+      "required": ["name", "description", "input"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique scenario name (used as filename without extension)",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description for documentation"
+        },
+        "width": {
+          "type": "integer",
+          "description": "Render width in characters",
+          "default": 80,
+          "minimum": 20,
+          "maximum": 200
+        },
+        "input": {
+          "description": "Component input data. See component-specific schemas in $defs for structure."
+        }
+      },
+      "additionalProperties": false
+    },
+    "sparklineInput": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": ["values"],
+      "additionalProperties": false
+    },
+    "boxInput": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "titleAlignment": {
+          "type": "string",
+          "enum": ["left", "center", "right"],
+          "default": "left"
+        },
+        "borderStyle": {
+          "type": "string",
+          "enum": [
+            "single",
+            "double",
+            "round",
+            "bold",
+            "singleDouble",
+            "doubleSingle",
+            "classic",
+            "none"
+          ],
+          "default": "single"
+        },
+        "padding": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "top": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "right": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "bottom": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "left": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          ],
+          "default": 0
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "textAlignment": {
+          "type": "string",
+          "enum": ["left", "center", "right"],
+          "default": "left"
+        },
+        "dimBorder": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": ["content"],
+      "additionalProperties": false
+    },
+    "tableInput": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "header": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "minWidth": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "maxWidth": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "align": {
+                "type": "string",
+                "enum": ["left", "center", "right"],
+                "default": "left"
+              }
+            },
+            "required": ["header", "key"],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "borderStyle": {
+          "type": "string",
+          "enum": ["none", "single", "double", "rounded", "heavy", "ascii"],
+          "default": "single"
+        },
+        "showHeader": {
+          "type": "boolean",
+          "default": true
+        },
+        "rowSeparators": {
+          "type": "boolean",
+          "default": false
+        },
+        "maxWidth": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "headerStyle": {
+          "type": "string",
+          "enum": ["normal", "bold", "italic", "bold-italic"],
+          "default": "bold"
+        }
+      },
+      "required": ["columns", "rows"],
+      "additionalProperties": false
+    },
+    "chartInput": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "bar",
+            "bar-vertical",
+            "bar-stacked",
+            "bar-stacked-vertical",
+            "line",
+            "area",
+            "area-stacked",
+            "scatter",
+            "pie",
+            "donut",
+            "heatmap"
+          ]
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": ["string", "number"]
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["x", "y"],
+                  "additionalProperties": false
+                }
+              },
+              "style": {
+                "type": "string",
+                "enum": ["block", "shaded", "light", "hash", "equals", "arrow"]
+              }
+            },
+            "required": ["name", "data"],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "xAxis": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "tickCount": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 5
+            },
+            "showTicks": {
+              "type": "boolean",
+              "default": true
+            },
+            "format": {
+              "type": "string",
+              "enum": ["number", "percent", "compact", "currency"],
+              "default": "number"
+            },
+            "decimals": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "yAxis": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "tickCount": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 5
+            },
+            "showTicks": {
+              "type": "boolean",
+              "default": true
+            },
+            "format": {
+              "type": "string",
+              "enum": ["number", "percent", "compact", "currency"],
+              "default": "number"
+            },
+            "decimals": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "legend": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "string",
+              "enum": ["none", "top", "bottom", "right", "inline"],
+              "default": "bottom"
+            },
+            "boxed": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "grid": {
+          "type": "object",
+          "properties": {
+            "horizontal": {
+              "type": "boolean",
+              "default": false
+            },
+            "vertical": {
+              "type": "boolean",
+              "default": false
+            },
+            "char": {
+              "type": "string",
+              "default": "·"
+            }
+          },
+          "additionalProperties": false
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 40
+        },
+        "height": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 10
+        },
+        "showValues": {
+          "type": "boolean",
+          "default": false
+        },
+        "showAxes": {
+          "type": "boolean",
+          "default": true
+        },
+        "lineStyle": {
+          "type": "string",
+          "enum": ["blocks", "braille", "dots"],
+          "default": "blocks"
+        },
+        "barStyle": {
+          "type": "string",
+          "enum": ["block", "shaded", "light", "hash", "equals", "arrow"],
+          "default": "block"
+        },
+        "scatterStyle": {
+          "type": "string",
+          "enum": ["dots", "braille"],
+          "default": "dots"
+        },
+        "heatmapStyle": {
+          "type": "string",
+          "enum": ["blocks", "ascii", "numeric"],
+          "default": "blocks"
+        },
+        "centerLabel": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.9,
+          "default": 0.5
+        }
+      },
+      "required": ["type", "series"],
+      "additionalProperties": false
+    },
+    "listInput": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "items": {
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": ["text"],
+            "additionalProperties": false
+          }
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "bullet",
+            "dash",
+            "arrow",
+            "star",
+            "numbered",
+            "lettered",
+            "roman",
+            "none"
+          ],
+          "default": "bullet"
+        },
+        "indent": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 2
+        },
+        "start": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 1
+        }
+      },
+      "required": ["items"],
+      "additionalProperties": false
+    },
+    "treeInput": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "expanded": {
+                  "type": "boolean"
+                },
+                "children": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "required": ["label"],
+              "additionalProperties": false
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "expanded": {
+                    "type": "boolean"
+                  },
+                  "children": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": ["label"],
+                "additionalProperties": false
+              }
+            }
+          ]
+        },
+        "style": {
+          "type": "string",
+          "enum": ["ascii", "unicode", "compact"],
+          "default": "unicode"
+        },
+        "showRoot": {
+          "type": "boolean",
+          "default": true
+        },
+        "indent": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 2
+        }
+      },
+      "required": ["root"],
+      "additionalProperties": false
+    },
+    "progressInput": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 100
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 20
+        },
+        "style": {
+          "type": "string",
+          "enum": ["block", "shaded", "bracket", "arrow", "ascii"],
+          "default": "block"
+        },
+        "filledChar": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "emptyChar": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "showPercentage": {
+          "type": "boolean",
+          "default": true
+        },
+        "showValue": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "gaugeInput": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "min": {
+          "type": "number",
+          "default": 0
+        },
+        "max": {
+          "type": "number",
+          "default": 100
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "threshold": {
+                "type": "number"
+              },
+              "color": {
+                "type": "string",
+                "enum": ["success", "warning", "error"]
+              }
+            },
+            "required": ["threshold"],
+            "additionalProperties": false
+          }
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 20
+        },
+        "style": {
+          "type": "string",
+          "enum": ["bar", "segments", "blocks"],
+          "default": "bar"
+        },
+        "label": {
+          "type": "string"
+        },
+        "showValue": {
+          "type": "boolean",
+          "default": true
+        },
+        "unit": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "diffInput": {
+      "type": "object",
+      "properties": {
+        "hunks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "header": {
+                "type": "object",
+                "properties": {
+                  "oldStart": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "oldCount": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "newStart": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "newCount": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": ["oldStart", "oldCount", "newStart", "newCount"],
+                "additionalProperties": false
+              },
+              "lines": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["addition", "deletion", "context"]
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "oldLineNumber": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    },
+                    "newLineNumber": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": ["type", "content"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": ["lines"],
+            "additionalProperties": false
+          }
+        },
+        "oldFile": {
+          "type": "string"
+        },
+        "newFile": {
+          "type": "string"
+        },
+        "showLineNumbers": {
+          "type": "boolean",
+          "default": false
+        },
+        "markerStyle": {
+          "type": "string",
+          "enum": ["symbol", "word", "none"],
+          "default": "symbol"
+        },
+        "showHunkHeaders": {
+          "type": "boolean",
+          "default": true
+        },
+        "contextLines": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["hunks"],
+      "additionalProperties": false
+    },
+    "keyvalueInput": {
+      "type": "object",
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "type": ["string", "number", "boolean"]
+              }
+            },
+            "required": ["key", "value"],
+            "additionalProperties": false
+          }
+        },
+        "separator": {
+          "type": "string",
+          "enum": ["colon", "equals", "arrow", "dots", "none"],
+          "default": "colon"
+        },
+        "alignKeys": {
+          "type": "boolean",
+          "default": true
+        },
+        "minKeyWidth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        }
+      },
+      "required": ["pairs"],
+      "additionalProperties": false
+    },
+    "graphInput": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "parents": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "highlight": {
+                "type": "boolean"
+              },
+              "nodeChar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1
+              }
+            },
+            "required": ["id", "label"],
+            "additionalProperties": false
+          }
+        },
+        "style": {
+          "type": "string",
+          "enum": ["ascii", "unicode"],
+          "default": "unicode"
+        },
+        "labelWidth": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 50
+        },
+        "showRefs": {
+          "type": "boolean",
+          "default": true
+        },
+        "labelGap": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "nodeChar": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        }
+      },
+      "required": ["nodes"],
+      "additionalProperties": false
+    }
+  }
+}
