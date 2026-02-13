@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { createList, type ListInput } from "../src/index.js";
+import {
+  createList,
+  isTaskItem,
+  isDefinitionItem,
+  isStandardItem,
+  type ListInput,
+} from "../src/index.js";
 import { createStyleFunctions, type RenderContext } from "@tuicomponents/core";
 
 describe("ListComponent", () => {
@@ -268,6 +274,176 @@ describe("ListComponent", () => {
 
       expect(schema).toBeDefined();
       expect(typeof schema).toBe("object");
+    });
+  });
+
+  describe("task lists", () => {
+    it("should render task list with checked items", () => {
+      const input: ListInput = {
+        items: [
+          { text: "Complete task", checked: true },
+          { text: "Pending task", checked: false },
+        ],
+        style: "task",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("[x]");
+      expect(result.output).toContain("Complete task");
+      expect(result.output).toContain("[ ]");
+      expect(result.output).toContain("Pending task");
+      expect(result.lineCount).toBe(2);
+    });
+
+    it("should render task list with partial items", () => {
+      const input: ListInput = {
+        items: [{ text: "Partial task", checked: "partial" }],
+        style: "task",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("[~]");
+      expect(result.output).toContain("Partial task");
+    });
+
+    it("should render mixed checked states", () => {
+      const input: ListInput = {
+        items: [
+          { text: "Done", checked: true },
+          { text: "In progress", checked: "partial" },
+          { text: "Not started", checked: false },
+        ],
+        style: "task",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("[x]");
+      expect(result.output).toContain("[~]");
+      expect(result.output).toContain("[ ]");
+      expect(result.lineCount).toBe(3);
+    });
+
+    it("should handle empty task list", () => {
+      const input: ListInput = {
+        items: [],
+        style: "task",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toBe("");
+    });
+  });
+
+  describe("definition lists", () => {
+    it("should render definition list with aligned terms", () => {
+      const input: ListInput = {
+        items: [
+          { term: "API", definition: "Application Programming Interface" },
+          { term: "CLI", definition: "Command Line Interface" },
+        ],
+        style: "definition",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("API");
+      expect(result.output).toContain("Application Programming Interface");
+      expect(result.output).toContain("CLI");
+      expect(result.output).toContain("Command Line Interface");
+      expect(result.lineCount).toBe(2);
+    });
+
+    it("should auto-calculate term width from longest term", () => {
+      const input: ListInput = {
+        items: [
+          { term: "A", definition: "Short term" },
+          { term: "Longer", definition: "Longer term" },
+        ],
+        style: "definition",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      // Terms should be padded to align definitions
+      // The definition of "A" should start at the same column as "Longer"
+      const lines = result.output.split("\n");
+      // Both lines should have definitions starting after the term width + separator
+      expect(lines[0]).toMatch(/A\s+Short term/);
+      expect(lines[1]).toMatch(/Longer\s+Longer term/);
+    });
+
+    it("should use explicit termWidth when provided", () => {
+      const input: ListInput = {
+        items: [
+          { term: "API", definition: "Application Programming Interface" },
+        ],
+        style: "definition",
+        termWidth: 10,
+      };
+
+      const result = list.render(input, defaultContext);
+
+      // Term should be padded to 10 characters
+      expect(result.output).toContain("API");
+    });
+
+    it("should handle empty definition list", () => {
+      const input: ListInput = {
+        items: [],
+        style: "definition",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toBe("");
+    });
+
+    it("should filter non-definition items in definition style", () => {
+      const input: ListInput = {
+        items: [
+          { term: "Term1", definition: "Definition1" },
+          { text: "This is not a definition" } as unknown as {
+            term: string;
+            definition: string;
+          },
+          { term: "Term2", definition: "Definition2" },
+        ],
+        style: "definition",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("Term1");
+      expect(result.output).toContain("Term2");
+      expect(result.output).not.toContain("This is not a definition");
+      expect(result.lineCount).toBe(2);
+    });
+  });
+
+  describe("type guards", () => {
+    it("should correctly identify task items", () => {
+      expect(isTaskItem({ text: "Task", checked: true })).toBe(true);
+      expect(isTaskItem({ text: "Task", checked: false })).toBe(true);
+      expect(isTaskItem({ text: "Task", checked: "partial" })).toBe(true);
+      expect(isTaskItem({ text: "Not a task" })).toBe(false);
+      expect(isTaskItem({ term: "Term", definition: "Def" })).toBe(false);
+    });
+
+    it("should correctly identify definition items", () => {
+      expect(isDefinitionItem({ term: "Term", definition: "Def" })).toBe(true);
+      expect(isDefinitionItem({ text: "Not a definition" })).toBe(false);
+      expect(isDefinitionItem({ text: "Task", checked: true })).toBe(false);
+    });
+
+    it("should correctly identify standard items", () => {
+      expect(isStandardItem({ text: "Standard item" })).toBe(true);
+      expect(isStandardItem({ text: "With nested", items: [] })).toBe(true);
+      expect(isStandardItem({ text: "Task", checked: true })).toBe(false);
+      expect(isStandardItem({ term: "Term", definition: "Def" })).toBe(false);
     });
   });
 });

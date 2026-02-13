@@ -1,4 +1,4 @@
-import type { ListStyle } from "./schema.js";
+import type { ListStyle, TaskChecked } from "./schema.js";
 
 /**
  * Bullet markers for different styles.
@@ -10,6 +10,24 @@ const bulletMarkers: Record<string, string> = {
   star: "★",
   none: "",
 };
+
+/**
+ * Task markers for different checked states.
+ */
+const taskMarkers: Record<string, string> = {
+  true: "[x]",
+  false: "[ ]",
+  partial: "[~]",
+};
+
+/**
+ * Get the marker for a task item based on its checked state.
+ *
+ * @public
+ */
+export function getTaskMarker(checked: TaskChecked): string {
+  return taskMarkers[String(checked)] ?? "[ ]";
+}
 
 /**
  * Convert number to roman numerals.
@@ -62,6 +80,8 @@ function toLetter(num: number): string {
 
 /**
  * Get the marker for a list item.
+ *
+ * @public
  */
 export function getMarker(
   style: ListStyle,
@@ -85,6 +105,8 @@ export function getMarker(
 /**
  * Get the maximum marker width for numbered styles.
  * This helps align list items properly.
+ *
+ * @public
  */
 export function getMaxMarkerWidth(
   style: ListStyle,
@@ -108,6 +130,12 @@ export function getMaxMarkerWidth(
       return maxRoman.length + 1;
     }
     case "none":
+      return 0;
+    case "task":
+      // Task markers are fixed width: [x], [ ], [~]
+      return 3;
+    case "definition":
+      // Definition lists don't use markers
       return 0;
     default:
       // Bullet styles have fixed width

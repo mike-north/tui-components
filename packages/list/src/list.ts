@@ -6,16 +6,20 @@ import {
   type TuiTheme,
   measureLines,
   registry,
+  getStringWidth,
 } from "@tuicomponents/core";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   listInputSchema,
+  isTaskItem,
+  isDefinitionItem,
+  isStandardItem,
   type ListInput,
   type ListInputWithDefaults,
   type ListItem,
   type ListStyle,
 } from "./schema.js";
-import { getMarker, getMaxMarkerWidth } from "./markers.js";
+import { getMarker, getMaxMarkerWidth, getTaskMarker } from "./markers.js";
 
 /**
  * Apply color to list markers.
@@ -99,6 +103,30 @@ class ListComponent extends BaseTuiComponent<
           style: "lettered",
         },
       },
+      {
+        name: "task-list",
+        description: "Task list with checkboxes",
+        input: {
+          items: [
+            { text: "Complete documentation", checked: true },
+            { text: "Write tests", checked: false },
+            { text: "Review PR", checked: "partial" },
+          ],
+          style: "task",
+        },
+      },
+      {
+        name: "definition-list",
+        description: "Definition list with terms and definitions",
+        input: {
+          items: [
+            { term: "API", definition: "Application Programming Interface" },
+            { term: "CLI", definition: "Command Line Interface" },
+            { term: "TUI", definition: "Terminal User Interface" },
+          ],
+          style: "definition",
+        },
+      },
     ],
   };
 
@@ -120,16 +148,26 @@ class ListComponent extends BaseTuiComponent<
     const theme = context.theme;
     const lines: string[] = [];
 
-    // Render top-level items
-    this.renderItems(
-      parsed.items as ListItem[],
-      lines,
-      "",
-      parsed.style,
-      parsed.indent,
-      parsed.start,
-      theme
-    );
+    // Handle definition lists separately
+    if (parsed.style === "definition") {
+      this.renderDefinitionList(
+        parsed.items as ListItem[],
+        lines,
+        parsed.termWidth,
+        theme
+      );
+    } else {
+      // Render standard, task, or other list styles
+      this.renderItems(
+        parsed.items as ListItem[],
+        lines,
+        "",
+        parsed.style,
+        parsed.indent,
+        parsed.start,
+        theme
+      );
+    }
 
     const output = lines.join("\n");
     const measured = measureLines(output);
@@ -139,6 +177,33 @@ class ListComponent extends BaseTuiComponent<
       actualWidth: measured.maxWidth,
       lineCount: measured.lineCount,
     };
+  }
+
+  /**
+   * Render a definition list.
+   */
+  private renderDefinitionList(
+    items: ListItem[],
+    lines: string[],
+    termWidth: number | undefined,
+    theme: TuiTheme | undefined
+  ): void {
+    // Filter to only definition items
+    const definitionItems = items.filter(isDefinitionItem);
+
+    // Calculate term width if not provided
+    const effectiveTermWidth =
+      termWidth ??
+      Math.max(...definitionItems.map((item) => getStringWidth(item.term)));
+
+    // Render each definition
+    for (const item of definitionItems) {
+      const termPadded = item.term.padEnd(effectiveTermWidth);
+      const coloredTerm = theme
+        ? theme.semantic.secondary(termPadded)
+        : termPadded;
+      lines.push(`${coloredTerm}  ${item.definition}`);
+    }
   }
 
   /**
@@ -159,27 +224,41 @@ class ListComponent extends BaseTuiComponent<
       const item = items[i];
       if (!item) continue;
 
-      const marker = getMarker(style, i, startNumber);
-      const paddedMarker =
-        style === "none"
-          ? ""
-          : colorMarker(marker.padEnd(maxMarkerWidth + 1), theme);
-
-      lines.push(`${prefix}${paddedMarker}${item.text}`);
-
-      // Render nested items if present
-      if (item.items && item.items.length > 0) {
-        const nestedPrefix = prefix + " ".repeat(maxMarkerWidth + 1 + indent);
-        // Nested lists use bullet style by default
-        this.renderItems(
-          item.items,
-          lines,
-          nestedPrefix,
-          style === "none" ? "none" : "bullet",
-          indent,
-          1,
+      // Handle task items
+      if (style === "task" && isTaskItem(item)) {
+        const marker = getTaskMarker(item.checked);
+        const paddedMarker = colorMarker(
+          marker.padEnd(maxMarkerWidth + 1),
           theme
         );
+        lines.push(`${prefix}${paddedMarker}${item.text}`);
+        continue;
+      }
+
+      // Handle standard items
+      if (isStandardItem(item)) {
+        const marker = getMarker(style, i, startNumber);
+        const paddedMarker =
+          style === "none"
+            ? ""
+            : colorMarker(marker.padEnd(maxMarkerWidth + 1), theme);
+
+        lines.push(`${prefix}${paddedMarker}${item.text}`);
+
+        // Render nested items if present
+        if (item.items && item.items.length > 0) {
+          const nestedPrefix = prefix + " ".repeat(maxMarkerWidth + 1 + indent);
+          // Nested lists use bullet style by default
+          this.renderItems(
+            item.items,
+            lines,
+            nestedPrefix,
+            style === "none" ? "none" : "bullet",
+            indent,
+            1,
+            theme
+          );
+        }
       }
     }
   }
@@ -187,6 +266,8 @@ class ListComponent extends BaseTuiComponent<
 
 /**
  * Factory function to create a list component.
+ *
+ * @public
  */
 export function createList(): ListComponent {
   return new ListComponent();
