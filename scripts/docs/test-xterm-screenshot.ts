@@ -33,10 +33,7 @@ const COLOR_TOLERANCE = 5; // Allow slight color variations
  * Crop the image to remove excess background padding.
  * Finds the bounding box of non-background content and crops with padding.
  */
-async function cropToContent(
-  imagePath: string,
-  padding = 12
-): Promise<void> {
+async function cropToContent(imagePath: string, padding = 12): Promise<void> {
   const image = sharp(imagePath);
   const { width, height } = await image.metadata();
 

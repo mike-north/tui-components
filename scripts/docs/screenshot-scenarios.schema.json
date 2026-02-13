@@ -15,11 +15,7 @@
     "scenario": {
       "type": "object",
       "description": "A single screenshot scenario",
-      "required": [
-        "name",
-        "description",
-        "input"
-      ],
+      "required": ["name", "description", "input"],
       "properties": {
         "name": {
           "type": "string",
@@ -67,9 +63,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "values"
-      ],
+      "required": ["values"],
       "additionalProperties": false
     },
     "boxInput": {
@@ -83,11 +77,7 @@
         },
         "titleAlignment": {
           "type": "string",
-          "enum": [
-            "left",
-            "center",
-            "right"
-          ],
+          "enum": ["left", "center", "right"],
           "default": "left"
         },
         "borderStyle": {
@@ -145,11 +135,7 @@
         },
         "textAlignment": {
           "type": "string",
-          "enum": [
-            "left",
-            "center",
-            "right"
-          ],
+          "enum": ["left", "center", "right"],
           "default": "left"
         },
         "dimBorder": {
@@ -157,9 +143,7 @@
           "default": false
         }
       },
-      "required": [
-        "content"
-      ],
+      "required": ["content"],
       "additionalProperties": false
     },
     "tableInput": {
@@ -190,18 +174,11 @@
               },
               "align": {
                 "type": "string",
-                "enum": [
-                  "left",
-                  "center",
-                  "right"
-                ],
+                "enum": ["left", "center", "right"],
                 "default": "left"
               }
             },
-            "required": [
-              "header",
-              "key"
-            ],
+            "required": ["header", "key"],
             "additionalProperties": false
           },
           "minItems": 1
@@ -215,14 +192,7 @@
         },
         "borderStyle": {
           "type": "string",
-          "enum": [
-            "none",
-            "single",
-            "double",
-            "rounded",
-            "heavy",
-            "ascii"
-          ],
+          "enum": ["none", "single", "double", "rounded", "heavy", "ascii"],
           "default": "single"
         },
         "showHeader": {
@@ -239,19 +209,11 @@
         },
         "headerStyle": {
           "type": "string",
-          "enum": [
-            "normal",
-            "bold",
-            "italic",
-            "bold-italic"
-          ],
+          "enum": ["normal", "bold", "italic", "bold-italic"],
           "default": "bold"
         }
       },
-      "required": [
-        "columns",
-        "rows"
-      ],
+      "required": ["columns", "rows"],
       "additionalProperties": false
     },
     "chartInput": {
@@ -287,10 +249,7 @@
                   "type": "object",
                   "properties": {
                     "x": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
+                      "type": ["string", "number"]
                     },
                     "y": {
                       "type": "number"
@@ -299,29 +258,16 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "x",
-                    "y"
-                  ],
+                  "required": ["x", "y"],
                   "additionalProperties": false
                 }
               },
               "style": {
                 "type": "string",
-                "enum": [
-                  "block",
-                  "shaded",
-                  "light",
-                  "hash",
-                  "equals",
-                  "arrow"
-                ]
+                "enum": ["block", "shaded", "light", "hash", "equals", "arrow"]
               }
             },
-            "required": [
-              "name",
-              "data"
-            ],
+            "required": ["name", "data"],
             "additionalProperties": false
           },
           "minItems": 1
@@ -352,12 +298,7 @@
             },
             "format": {
               "type": "string",
-              "enum": [
-                "number",
-                "percent",
-                "compact",
-                "currency"
-              ],
+              "enum": ["number", "percent", "compact", "currency"],
               "default": "number"
             },
             "decimals": {
@@ -390,12 +331,7 @@
             },
             "format": {
               "type": "string",
-              "enum": [
-                "number",
-                "percent",
-                "compact",
-                "currency"
-              ],
+              "enum": ["number", "percent", "compact", "currency"],
               "default": "number"
             },
             "decimals": {
@@ -410,13 +346,7 @@
           "properties": {
             "position": {
               "type": "string",
-              "enum": [
-                "none",
-                "top",
-                "bottom",
-                "right",
-                "inline"
-              ],
+              "enum": ["none", "top", "bottom", "right", "inline"],
               "default": "bottom"
             },
             "boxed": {
@@ -464,40 +394,22 @@
         },
         "lineStyle": {
           "type": "string",
-          "enum": [
-            "blocks",
-            "braille",
-            "dots"
-          ],
+          "enum": ["blocks", "braille", "dots"],
           "default": "blocks"
         },
         "barStyle": {
           "type": "string",
-          "enum": [
-            "block",
-            "shaded",
-            "light",
-            "hash",
-            "equals",
-            "arrow"
-          ],
+          "enum": ["block", "shaded", "light", "hash", "equals", "arrow"],
           "default": "block"
         },
         "scatterStyle": {
           "type": "string",
-          "enum": [
-            "dots",
-            "braille"
-          ],
+          "enum": ["dots", "braille"],
           "default": "dots"
         },
         "heatmapStyle": {
           "type": "string",
-          "enum": [
-            "blocks",
-            "ascii",
-            "numeric"
-          ],
+          "enum": ["blocks", "ascii", "numeric"],
           "default": "blocks"
         },
         "centerLabel": {
@@ -510,10 +422,7 @@
           "default": 0.5
         }
       },
-      "required": [
-        "type",
-        "series"
-      ],
+      "required": ["type", "series"],
       "additionalProperties": false
     },
     "listInput": {
@@ -532,9 +441,7 @@
                 "items": {}
               }
             },
-            "required": [
-              "text"
-            ],
+            "required": ["text"],
             "additionalProperties": false
           }
         },
@@ -563,9 +470,7 @@
           "default": 1
         }
       },
-      "required": [
-        "items"
-      ],
+      "required": ["items"],
       "additionalProperties": false
     },
     "treeInput": {
@@ -587,9 +492,7 @@
                   "items": {}
                 }
               },
-              "required": [
-                "label"
-              ],
+              "required": ["label"],
               "additionalProperties": false
             },
             {
@@ -608,9 +511,7 @@
                     "items": {}
                   }
                 },
-                "required": [
-                  "label"
-                ],
+                "required": ["label"],
                 "additionalProperties": false
               }
             }
@@ -618,11 +519,7 @@
         },
         "style": {
           "type": "string",
-          "enum": [
-            "ascii",
-            "unicode",
-            "compact"
-          ],
+          "enum": ["ascii", "unicode", "compact"],
           "default": "unicode"
         },
         "showRoot": {
@@ -635,9 +532,7 @@
           "default": 2
         }
       },
-      "required": [
-        "root"
-      ],
+      "required": ["root"],
       "additionalProperties": false
     },
     "progressInput": {
@@ -659,13 +554,7 @@
         },
         "style": {
           "type": "string",
-          "enum": [
-            "block",
-            "shaded",
-            "bracket",
-            "arrow",
-            "ascii"
-          ],
+          "enum": ["block", "shaded", "bracket", "arrow", "ascii"],
           "default": "block"
         },
         "filledChar": {
@@ -690,9 +579,7 @@
           "default": false
         }
       },
-      "required": [
-        "value"
-      ],
+      "required": ["value"],
       "additionalProperties": false
     },
     "gaugeInput": {
@@ -719,16 +606,10 @@
               },
               "color": {
                 "type": "string",
-                "enum": [
-                  "success",
-                  "warning",
-                  "error"
-                ]
+                "enum": ["success", "warning", "error"]
               }
             },
-            "required": [
-              "threshold"
-            ],
+            "required": ["threshold"],
             "additionalProperties": false
           }
         },
@@ -739,11 +620,7 @@
         },
         "style": {
           "type": "string",
-          "enum": [
-            "bar",
-            "segments",
-            "blocks"
-          ],
+          "enum": ["bar", "segments", "blocks"],
           "default": "bar"
         },
         "label": {
@@ -758,9 +635,7 @@
           "default": ""
         }
       },
-      "required": [
-        "value"
-      ],
+      "required": ["value"],
       "additionalProperties": false
     },
     "diffInput": {
@@ -791,12 +666,7 @@
                     "minimum": 0
                   }
                 },
-                "required": [
-                  "oldStart",
-                  "oldCount",
-                  "newStart",
-                  "newCount"
-                ],
+                "required": ["oldStart", "oldCount", "newStart", "newCount"],
                 "additionalProperties": false
               },
               "lines": {
@@ -806,11 +676,7 @@
                   "properties": {
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "addition",
-                        "deletion",
-                        "context"
-                      ]
+                      "enum": ["addition", "deletion", "context"]
                     },
                     "content": {
                       "type": "string"
@@ -824,17 +690,12 @@
                       "exclusiveMinimum": 0
                     }
                   },
-                  "required": [
-                    "type",
-                    "content"
-                  ],
+                  "required": ["type", "content"],
                   "additionalProperties": false
                 }
               }
             },
-            "required": [
-              "lines"
-            ],
+            "required": ["lines"],
             "additionalProperties": false
           }
         },
@@ -850,11 +711,7 @@
         },
         "markerStyle": {
           "type": "string",
-          "enum": [
-            "symbol",
-            "word",
-            "none"
-          ],
+          "enum": ["symbol", "word", "none"],
           "default": "symbol"
         },
         "showHunkHeaders": {
@@ -866,9 +723,7 @@
           "minimum": 0
         }
       },
-      "required": [
-        "hunks"
-      ],
+      "required": ["hunks"],
       "additionalProperties": false
     },
     "keyvalueInput": {
@@ -883,29 +738,16 @@
                 "type": "string"
               },
               "value": {
-                "type": [
-                  "string",
-                  "number",
-                  "boolean"
-                ]
+                "type": ["string", "number", "boolean"]
               }
             },
-            "required": [
-              "key",
-              "value"
-            ],
+            "required": ["key", "value"],
             "additionalProperties": false
           }
         },
         "separator": {
           "type": "string",
-          "enum": [
-            "colon",
-            "equals",
-            "arrow",
-            "dots",
-            "none"
-          ],
+          "enum": ["colon", "equals", "arrow", "dots", "none"],
           "default": "colon"
         },
         "alignKeys": {
@@ -922,9 +764,7 @@
           "default": 1
         }
       },
-      "required": [
-        "pairs"
-      ],
+      "required": ["pairs"],
       "additionalProperties": false
     },
     "graphInput": {
@@ -963,19 +803,13 @@
                 "maxLength": 1
               }
             },
-            "required": [
-              "id",
-              "label"
-            ],
+            "required": ["id", "label"],
             "additionalProperties": false
           }
         },
         "style": {
           "type": "string",
-          "enum": [
-            "ascii",
-            "unicode"
-          ],
+          "enum": ["ascii", "unicode"],
           "default": "unicode"
         },
         "labelWidth": {
@@ -998,9 +832,7 @@
           "maxLength": 1
         }
       },
-      "required": [
-        "nodes"
-      ],
+      "required": ["nodes"],
       "additionalProperties": false
     }
   }

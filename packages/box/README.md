@@ -11,16 +11,19 @@ pnpm add @tuicomponents/box
 ## Quick Start
 
 ```typescript
-import { createBox } from '@tuicomponents/box';
-import { createRenderContext } from '@tuicomponents/core';
+import { createBox } from "@tuicomponents/box";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createBox();
 const context = createRenderContext();
 
-const result = component.render({
-  "content": "Hello, World!",
-  "padding": 1
-}, context);
+const result = component.render(
+  {
+    content: "Hello, World!",
+    padding: 1,
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -85,16 +88,16 @@ Box with rounded corners
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `content` | `string` | ✓ | - | - |
-| `title` | `string` |  | - | - |
-| `titleAlignment` | `"left" | "center" | "right"` |  | - | - |
-| `borderStyle` | `"single" | "double" | "round" | "bold" | "singleDouble" | "doubleSingle" | "classic" | "none"` |  | - | - |
-| `padding` | `number | object` |  | - | - |
-| `width` | `number` |  | - | - |
-| `textAlignment` | `"left" | "center" | "right"` |  | - | - |
-| `dimBorder` | `boolean` |  | - | - |
+| Property         | Type      | Required | Default  | Description |
+| ---------------- | --------- | -------- | -------- | ----------- | -------------- | -------------- | --------- | ------- | --- | --- | --- |
+| `content`        | `string`  | ✓        | -        | -           |
+| `title`          | `string`  |          | -        | -           |
+| `titleAlignment` | `"left"   | "center" | "right"` |             | -              | -              |
+| `borderStyle`    | `"single" | "double" | "round"  | "bold"      | "singleDouble" | "doubleSingle" | "classic" | "none"` |     | -   | -   |
+| `padding`        | `number   | object`  |          | -           | -              |
+| `width`          | `number`  |          | -        | -           |
+| `textAlignment`  | `"left"   | "center" | "right"` |             | -              | -              |
+| `dimBorder`      | `boolean` |          | -        | -           |
 
 ## Render Modes
 
@@ -106,13 +109,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API

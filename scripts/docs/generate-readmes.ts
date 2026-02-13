@@ -266,10 +266,7 @@ ${input}
 /**
  * Generate a README.md for a component.
  */
-function generateReadme(
-  componentName: string,
-  scenarios: Scenario[]
-): string {
+function generateReadme(componentName: string, scenarios: Scenario[]): string {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const component = registry.get(componentName);
   if (!component) {

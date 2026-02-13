@@ -11,26 +11,29 @@ pnpm add @tuicomponents/list
 ## Quick Start
 
 ```typescript
-import { createList } from '@tuicomponents/list';
-import { createRenderContext } from '@tuicomponents/core';
+import { createList } from "@tuicomponents/list";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createList();
 const context = createRenderContext();
 
-const result = component.render({
-  "items": [
-    {
-      "text": "First item"
-    },
-    {
-      "text": "Second item"
-    },
-    {
-      "text": "Third item"
-    }
-  ],
-  "style": "bullet"
-}, context);
+const result = component.render(
+  {
+    items: [
+      {
+        text: "First item",
+      },
+      {
+        text: "Second item",
+      },
+      {
+        text: "Third item",
+      },
+    ],
+    style: "bullet",
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -135,12 +138,12 @@ Nested list with sub-items
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `items` | `object[]` | ✓ | - | - |
-| `style` | `"bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none"` |  | - | - |
-| `indent` | `number` |  | - | - |
-| `start` | `number` |  | - | - |
+| Property | Type       | Required | Default | Description |
+| -------- | ---------- | -------- | ------- | ----------- | ---------- | ---------- | ------- | ------- | --- | --- | --- |
+| `items`  | `object[]` | ✓        | -       | -           |
+| `style`  | `"bullet"  | "dash"   | "arrow" | "star"      | "numbered" | "lettered" | "roman" | "none"` |     | -   | -   |
+| `indent` | `number`   |          | -       | -           |
+| `start`  | `number`   |          | -       | -           |
 
 ## Render Modes
 
@@ -152,13 +155,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API

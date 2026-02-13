@@ -11,28 +11,31 @@ pnpm add @tuicomponents/diff
 ## Quick Start
 
 ```typescript
-import { createDiff } from '@tuicomponents/diff';
-import { createRenderContext } from '@tuicomponents/core';
+import { createDiff } from "@tuicomponents/diff";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createDiff();
 const context = createRenderContext();
 
-const result = component.render({
-  "hunks": [
-    {
-      "lines": [
-        {
-          "type": "deletion",
-          "content": "Hello World"
-        },
-        {
-          "type": "addition",
-          "content": "Hello Universe"
-        }
-      ]
-    }
-  ]
-}, context);
+const result = component.render(
+  {
+    hunks: [
+      {
+        lines: [
+          {
+            type: "deletion",
+            content: "Hello World",
+          },
+          {
+            type: "addition",
+            content: "Hello Universe",
+          },
+        ],
+      },
+    ],
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -160,15 +163,15 @@ Code change diff
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `hunks` | `object[]` | ✓ | - | - |
-| `oldFile` | `string` |  | - | - |
-| `newFile` | `string` |  | - | - |
-| `showLineNumbers` | `boolean` |  | - | - |
-| `markerStyle` | `"symbol" | "word" | "none"` |  | - | - |
-| `showHunkHeaders` | `boolean` |  | - | - |
-| `contextLines` | `number` |  | - | - |
+| Property          | Type       | Required | Default | Description |
+| ----------------- | ---------- | -------- | ------- | ----------- | --- | --- |
+| `hunks`           | `object[]` | ✓        | -       | -           |
+| `oldFile`         | `string`   |          | -       | -           |
+| `newFile`         | `string`   |          | -       | -           |
+| `showLineNumbers` | `boolean`  |          | -       | -           |
+| `markerStyle`     | `"symbol"  | "word"   | "none"` |             | -   | -   |
+| `showHunkHeaders` | `boolean`  |          | -       | -           |
+| `contextLines`    | `number`   |          | -       | -           |
 
 ## Render Modes
 
@@ -180,13 +183,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API

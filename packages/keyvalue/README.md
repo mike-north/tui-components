@@ -11,28 +11,31 @@ pnpm add @tuicomponents/keyvalue
 ## Quick Start
 
 ```typescript
-import { createKeyvalue } from '@tuicomponents/keyvalue';
-import { createRenderContext } from '@tuicomponents/core';
+import { createKeyvalue } from "@tuicomponents/keyvalue";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createKeyvalue();
 const context = createRenderContext();
 
-const result = component.render({
-  "pairs": [
-    {
-      "key": "Name",
-      "value": "John Doe"
-    },
-    {
-      "key": "Email",
-      "value": "john@example.com"
-    },
-    {
-      "key": "Role",
-      "value": "Developer"
-    }
-  ]
-}, context);
+const result = component.render(
+  {
+    pairs: [
+      {
+        key: "Name",
+        value: "John Doe",
+      },
+      {
+        key: "Email",
+        value: "john@example.com",
+      },
+      {
+        key: "Role",
+        value: "Developer",
+      },
+    ],
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -104,13 +107,13 @@ System information
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `pairs` | `object[]` | ✓ | - | - |
-| `separator` | `"colon" | "equals" | "arrow" | "dots" | "none"` |  | - | - |
-| `alignKeys` | `boolean` |  | - | - |
-| `minKeyWidth` | `number` |  | - | - |
-| `gap` | `number` |  | - | - |
+| Property      | Type       | Required | Default | Description |
+| ------------- | ---------- | -------- | ------- | ----------- | ------- | --- | --- | --- |
+| `pairs`       | `object[]` | ✓        | -       | -           |
+| `separator`   | `"colon"   | "equals" | "arrow" | "dots"      | "none"` |     | -   | -   |
+| `alignKeys`   | `boolean`  |          | -       | -           |
+| `minKeyWidth` | `number`   |          | -       | -           |
+| `gap`         | `number`   |          | -       | -           |
 
 ## Render Modes
 
@@ -122,13 +125,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API

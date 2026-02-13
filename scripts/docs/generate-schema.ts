@@ -53,10 +53,16 @@ function generateSchema(): object {
           target: "jsonSchema7",
         });
         // Remove $schema from individual component schemas (we add it at top level)
-        const { $schema: _, ...schemaWithoutMeta } = jsonSchema as Record<string, unknown>;
+        const { $schema: _, ...schemaWithoutMeta } = jsonSchema as Record<
+          string,
+          unknown
+        >;
         componentInputSchemas[`${name}Input`] = schemaWithoutMeta;
       } catch (err) {
-        console.warn(`Warning: Could not generate JSON schema for ${name}:`, err);
+        console.warn(
+          `Warning: Could not generate JSON schema for ${name}:`,
+          err
+        );
       }
     }
   }
@@ -121,7 +127,9 @@ function main(): void {
   const args = process.argv.slice(2);
   const checkOnly = args.includes("--check");
 
-  console.log("Generating screenshot scenarios JSON schema from Zod schemas...");
+  console.log(
+    "Generating screenshot scenarios JSON schema from Zod schemas..."
+  );
 
   const schema = generateSchema();
   const schemaJson = JSON.stringify(schema, null, 2) + "\n";
@@ -129,13 +137,17 @@ function main(): void {
   if (checkOnly) {
     // Check mode: compare with existing file
     if (!fs.existsSync(SCHEMA_FILE)) {
-      console.error("Error: Schema file does not exist. Run without --check to generate.");
+      console.error(
+        "Error: Schema file does not exist. Run without --check to generate."
+      );
       process.exit(1);
     }
 
     const existing = fs.readFileSync(SCHEMA_FILE, "utf-8");
     if (existing !== schemaJson) {
-      console.error("Error: Schema is out of date. Run 'pnpm docs:schema' to update.");
+      console.error(
+        "Error: Schema is out of date. Run 'pnpm docs:schema' to update."
+      );
       process.exit(1);
     }
 

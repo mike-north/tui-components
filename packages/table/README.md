@@ -11,45 +11,48 @@ pnpm add @tuicomponents/table
 ## Quick Start
 
 ```typescript
-import { createTable } from '@tuicomponents/table';
-import { createRenderContext } from '@tuicomponents/core';
+import { createTable } from "@tuicomponents/table";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createTable();
 const context = createRenderContext();
 
-const result = component.render({
-  "columns": [
-    {
-      "key": "name",
-      "header": "Name"
-    },
-    {
-      "key": "role",
-      "header": "Role"
-    },
-    {
-      "key": "status",
-      "header": "Status"
-    }
-  ],
-  "rows": [
-    {
-      "name": "Alice",
-      "role": "Admin",
-      "status": "Active"
-    },
-    {
-      "name": "Bob",
-      "role": "User",
-      "status": "Active"
-    },
-    {
-      "name": "Carol",
-      "role": "User",
-      "status": "Inactive"
-    }
-  ]
-}, context);
+const result = component.render(
+  {
+    columns: [
+      {
+        key: "name",
+        header: "Name",
+      },
+      {
+        key: "role",
+        header: "Role",
+      },
+      {
+        key: "status",
+        header: "Status",
+      },
+    ],
+    rows: [
+      {
+        name: "Alice",
+        role: "Admin",
+        status: "Active",
+      },
+      {
+        name: "Bob",
+        role: "User",
+        status: "Active",
+      },
+      {
+        name: "Carol",
+        role: "User",
+        status: "Inactive",
+      },
+    ],
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -152,15 +155,15 @@ Table with borders
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `columns` | `object[]` | ✓ | - | - |
-| `rows` | `unknown[]` | ✓ | - | - |
-| `borderStyle` | `"none" | "single" | "double" | "rounded" | "heavy" | "ascii"` |  | - | - |
-| `showHeader` | `boolean` |  | - | - |
-| `rowSeparators` | `boolean` |  | - | - |
-| `maxWidth` | `number` |  | - | - |
-| `headerStyle` | `"normal" | "bold" | "italic" | "bold-italic"` |  | - | - |
+| Property        | Type        | Required | Default  | Description    |
+| --------------- | ----------- | -------- | -------- | -------------- | ------- | -------- | --- | --- | --- |
+| `columns`       | `object[]`  | ✓        | -        | -              |
+| `rows`          | `unknown[]` | ✓        | -        | -              |
+| `borderStyle`   | `"none"     | "single" | "double" | "rounded"      | "heavy" | "ascii"` |     | -   | -   |
+| `showHeader`    | `boolean`   |          | -        | -              |
+| `rowSeparators` | `boolean`   |          | -        | -              |
+| `maxWidth`      | `number`    |          | -        | -              |
+| `headerStyle`   | `"normal"   | "bold"   | "italic" | "bold-italic"` |         | -        | -   |
 
 ## Render Modes
 
@@ -172,13 +175,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API

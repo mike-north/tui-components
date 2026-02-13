@@ -11,17 +11,20 @@ pnpm add @tuicomponents/progress
 ## Quick Start
 
 ```typescript
-import { createProgress } from '@tuicomponents/progress';
-import { createRenderContext } from '@tuicomponents/core';
+import { createProgress } from "@tuicomponents/progress";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createProgress();
 const context = createRenderContext();
 
-const result = component.render({
-  "value": 67,
-  "max": 100,
-  "width": 40
-}, context);
+const result = component.render(
+  {
+    value: 67,
+    max: 100,
+    width: 40,
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -89,17 +92,17 @@ Progress bar with label
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `value` | `number` | ✓ | - | - |
-| `max` | `number` |  | - | - |
-| `width` | `number` |  | - | - |
-| `style` | `"block" | "shaded" | "bracket" | "arrow" | "ascii"` |  | - | - |
-| `filledChar` | `string` |  | - | - |
-| `emptyChar` | `string` |  | - | - |
-| `label` | `string` |  | - | - |
-| `showPercentage` | `boolean` |  | - | - |
-| `showValue` | `boolean` |  | - | - |
+| Property         | Type      | Required | Default   | Description |
+| ---------------- | --------- | -------- | --------- | ----------- | -------- | --- | --- | --- |
+| `value`          | `number`  | ✓        | -         | -           |
+| `max`            | `number`  |          | -         | -           |
+| `width`          | `number`  |          | -         | -           |
+| `style`          | `"block"  | "shaded" | "bracket" | "arrow"     | "ascii"` |     | -   | -   |
+| `filledChar`     | `string`  |          | -         | -           |
+| `emptyChar`      | `string`  |          | -         | -           |
+| `label`          | `string`  |          | -         | -           |
+| `showPercentage` | `boolean` |          | -         | -           |
+| `showValue`      | `boolean` |          | -         | -           |
 
 ## Render Modes
 
@@ -111,13 +114,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API

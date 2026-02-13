@@ -11,26 +11,18 @@ pnpm add @tuicomponents/sparkline
 ## Quick Start
 
 ```typescript
-import { createSparkline } from '@tuicomponents/sparkline';
-import { createRenderContext } from '@tuicomponents/core';
+import { createSparkline } from "@tuicomponents/sparkline";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createSparkline();
 const context = createRenderContext();
 
-const result = component.render({
-  "values": [
-    4,
-    2,
-    8,
-    5,
-    9,
-    3,
-    7,
-    6,
-    1,
-    8
-  ]
-}, context);
+const result = component.render(
+  {
+    values: [4, 2, 8, 5, 9, 3, 7, 6, 1, 8],
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -47,18 +39,7 @@ Simple sparkline with default settings
 
 ```json
 {
-  "values": [
-    4,
-    2,
-    8,
-    5,
-    9,
-    3,
-    7,
-    6,
-    1,
-    8
-  ]
+  "values": [4, 2, 8, 5, 9, 3, 7, 6, 1, 8]
 }
 ```
 
@@ -75,20 +56,7 @@ CPU usage monitoring over time
 
 ```json
 {
-  "values": [
-    45,
-    52,
-    48,
-    65,
-    72,
-    58,
-    63,
-    71,
-    68,
-    55,
-    48,
-    52
-  ],
+  "values": [45, 52, 48, 65, 72, 58, 63, 71, 68, 55, 48, 52],
   "min": 0,
   "max": 100
 }
@@ -107,18 +75,7 @@ Sparkline with label prefix
 
 ```json
 {
-  "values": [
-    2.1,
-    2.3,
-    2.8,
-    3.2,
-    3.5,
-    3.1,
-    2.9,
-    3.4,
-    3.8,
-    4.1
-  ],
+  "values": [2.1, 2.3, 2.8, 3.2, 3.5, 3.1, 2.9, 3.4, 3.8, 4.1],
   "label": "Memory: "
 }
 ```
@@ -136,20 +93,7 @@ Stock price trend
 
 ```json
 {
-  "values": [
-    142,
-    145,
-    143,
-    148,
-    152,
-    149,
-    155,
-    158,
-    154,
-    160,
-    163,
-    159
-  ]
+  "values": [142, 145, 143, 148, 152, 149, 155, 158, 154, 160, 163, 159]
 }
 ```
 
@@ -157,13 +101,13 @@ Stock price trend
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `values` | `number[]` | ✓ | - | - |
-| `width` | `number` |  | - | - |
-| `min` | `number` |  | - | - |
-| `max` | `number` |  | - | - |
-| `label` | `string` |  | - | - |
+| Property | Type       | Required | Default | Description |
+| -------- | ---------- | -------- | ------- | ----------- |
+| `values` | `number[]` | ✓        | -       | -           |
+| `width`  | `number`   |          | -       | -           |
+| `min`    | `number`   |          | -       | -           |
+| `max`    | `number`   |          | -       | -           |
+| `label`  | `string`   |          | -       | -           |
 
 ## Render Modes
 
@@ -175,13 +119,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API

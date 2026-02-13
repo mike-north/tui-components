@@ -416,7 +416,10 @@ diff:
       hunks:
         - lines:
             - { type: "deletion", content: "function greet(name) {" }
-            - { type: "addition", content: "function greet(name: string): string {" }
+            - {
+                type: "addition",
+                content: "function greet(name: string): string {",
+              }
             - { type: "deletion", content: '  return "Hello, " + name;' }
             - { type: "addition", content: "  return `Hello, ${name}!`;" }
             - { type: "context", content: "}" }

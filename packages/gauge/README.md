@@ -11,16 +11,19 @@ pnpm add @tuicomponents/gauge
 ## Quick Start
 
 ```typescript
-import { createGauge } from '@tuicomponents/gauge';
-import { createRenderContext } from '@tuicomponents/core';
+import { createGauge } from "@tuicomponents/gauge";
+import { createRenderContext } from "@tuicomponents/core";
 
 const component = createGauge();
 const context = createRenderContext();
 
-const result = component.render({
-  "value": 65,
-  "max": 100
-}, context);
+const result = component.render(
+  {
+    value: 65,
+    max: 100,
+  },
+  context
+);
 console.log(result.output);
 ```
 
@@ -102,17 +105,17 @@ Memory usage gauge
 
 ## Configuration Options
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `value` | `number` | ✓ | - | - |
-| `min` | `number` |  | - | - |
-| `max` | `number` |  | - | - |
-| `zones` | `object[]` |  | - | - |
-| `width` | `number` |  | - | - |
-| `style` | `"bar" | "segments" | "blocks"` |  | - | - |
-| `label` | `string` |  | - | - |
-| `showValue` | `boolean` |  | - | - |
-| `unit` | `string` |  | - | - |
+| Property    | Type       | Required   | Default   | Description |
+| ----------- | ---------- | ---------- | --------- | ----------- | --- | --- |
+| `value`     | `number`   | ✓          | -         | -           |
+| `min`       | `number`   |            | -         | -           |
+| `max`       | `number`   |            | -         | -           |
+| `zones`     | `object[]` |            | -         | -           |
+| `width`     | `number`   |            | -         | -           |
+| `style`     | `"bar"     | "segments" | "blocks"` |             | -   | -   |
+| `label`     | `string`   |            | -         | -           |
+| `showValue` | `boolean`  |            | -         | -           |
+| `unit`      | `string`   |            | -         | -           |
 
 ## Render Modes
 
@@ -124,13 +127,13 @@ The component supports two render modes:
 You can specify the render mode when creating the context:
 
 ```typescript
-import { createRenderContext } from '@tuicomponents/core';
+import { createRenderContext } from "@tuicomponents/core";
 
 // ANSI mode (default)
-const ansiContext = createRenderContext({ renderMode: 'ansi' });
+const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
-const mdContext = createRenderContext({ renderMode: 'markdown' });
+const mdContext = createRenderContext({ renderMode: "markdown" });
 ```
 
 ## API
