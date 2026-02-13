@@ -1,11 +1,13 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
+import apiExtractorPlugin from "@api-extractor-tools/eslint-plugin";
 
 export default tseslint.config(
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
+  apiExtractorPlugin.default.configs.recommended,
   eslintConfigPrettier,
   {
     languageOptions: {
