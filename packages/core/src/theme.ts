@@ -36,6 +36,10 @@ export interface SemanticColors {
   removed: ChromatermColor;
   /** Modified content (diffs) */
   modified: ChromatermColor;
+  /** Background for added content (diffs) */
+  addedBackground: ChromatermColor;
+  /** Background for removed content (diffs) */
+  removedBackground: ChromatermColor;
 }
 
 /**
@@ -67,6 +71,8 @@ function createSemanticColors(theme: ChromatermTheme): SemanticColors {
     added: theme.green,
     removed: theme.red,
     modified: theme.yellow,
+    addedBackground: theme.green.darken(0.6),
+    removedBackground: theme.red.darken(0.6),
   };
 }
 

@@ -424,6 +424,20 @@ diff:
             - { type: "addition", content: "  return `Hello, ${name}!`;" }
             - { type: "context", content: "}" }
 
+  - name: gutter-style
+    description: IDE-style diff with gutter and backgrounds
+    width: 80
+    input:
+      displayStyle: gutter
+      backgroundMode: line
+      showLineNumbers: true
+      hunks:
+        - lines:
+            - { type: "context", content: "const config = {", oldLineNumber: 45, newLineNumber: 45 }
+            - { type: "deletion", content: '  debug: false,', oldLineNumber: 46 }
+            - { type: "addition", content: '  debug: true,', newLineNumber: 46 }
+            - { type: "context", content: "};", oldLineNumber: 47, newLineNumber: 47 }
+
 # ============================================
 # KEYVALUE
 # ============================================

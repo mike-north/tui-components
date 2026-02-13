@@ -15,6 +15,7 @@ import {
   type DiffLine,
   type Hunk,
   type MarkerStyle,
+  type BackgroundMode,
 } from "./schema.js";
 
 /**
@@ -98,6 +99,77 @@ function colorHeader(text: string, theme: TuiTheme | undefined): string {
     return text;
   }
   return theme.semantic.secondary(text);
+}
+
+/**
+ * Get the gutter indicator for a line type.
+ */
+function getGutterIndicator(type: DiffLine["type"]): string {
+  switch (type) {
+    case "addition":
+      return "+";
+    case "deletion":
+      return "-";
+    case "context":
+      return " ";
+  }
+}
+
+/**
+ * Apply color with full-width background for gutter style.
+ */
+function colorLineWithBackground(
+  text: string,
+  type: DiffLine["type"],
+  width: number,
+  theme: TuiTheme | undefined,
+  backgroundMode: BackgroundMode
+): string {
+  // Pad to full width for background effect
+  const paddedText = backgroundMode === "line" ? text.padEnd(width) : text;
+
+  if (!theme) {
+    return paddedText;
+  }
+
+  switch (type) {
+    case "addition":
+      if (backgroundMode === "line") {
+        // Bright foreground on green background for contrast
+        return theme.chromaterm.brightWhite.on(theme.semantic.addedBackground)(
+          paddedText
+        );
+      }
+      return theme.semantic.added(paddedText);
+    case "deletion":
+      if (backgroundMode === "line") {
+        // Bright foreground on red background for contrast
+        return theme.chromaterm.brightWhite.on(theme.semantic.removedBackground)(
+          paddedText
+        );
+      }
+      return theme.semantic.removed(paddedText);
+    case "context":
+      if (backgroundMode === "line") {
+        return theme.semantic.secondary(paddedText);
+      }
+      return paddedText;
+  }
+}
+
+/**
+ * Format a single line number for gutter display.
+ */
+function formatGutterLineNumber(
+  line: DiffLine,
+  maxWidth: number
+): string {
+  // For unified gutter, show the most relevant line number
+  const lineNum = line.newLineNumber ?? line.oldLineNumber;
+  if (lineNum !== undefined) {
+    return String(lineNum).padStart(maxWidth, " ");
+  }
+  return " ".repeat(maxWidth);
 }
 
 /**
@@ -207,6 +279,43 @@ class DiffComponent extends BaseTuiComponent<
         },
       },
       {
+        name: "gutter-style",
+        description: "IDE-style diff with gutter and backgrounds",
+        input: {
+          displayStyle: "gutter",
+          backgroundMode: "line",
+          showLineNumbers: true,
+          hunks: [
+            {
+              lines: [
+                {
+                  type: "context",
+                  content: "const config = {",
+                  oldLineNumber: 45,
+                  newLineNumber: 45,
+                },
+                {
+                  type: "deletion",
+                  content: '  debug: false,',
+                  oldLineNumber: 46,
+                },
+                {
+                  type: "addition",
+                  content: '  debug: true,',
+                  newLineNumber: 46,
+                },
+                {
+                  type: "context",
+                  content: "};",
+                  oldLineNumber: 47,
+                  newLineNumber: 47,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
         name: "multiple-hunks",
         description: "Diff with multiple hunks",
         input: {
@@ -267,13 +376,25 @@ class DiffComponent extends BaseTuiComponent<
     }
 
     // Calculate max line number widths for padding
-    const { maxOldWidth, maxNewWidth } = this.calculateLineNumberWidths(
-      parsed.hunks
-    );
+    const { maxOldWidth, maxNewWidth, maxUnifiedWidth } =
+      this.calculateLineNumberWidths(parsed.hunks);
 
-    // Render each hunk
-    for (const hunk of parsed.hunks) {
-      this.renderHunk(hunk, parsed, maxOldWidth, maxNewWidth, lines, theme);
+    // Render each hunk based on display style
+    if (parsed.displayStyle === "gutter") {
+      for (const hunk of parsed.hunks) {
+        this.renderHunkGutter(
+          hunk,
+          parsed,
+          maxUnifiedWidth,
+          lines,
+          theme,
+          context.width
+        );
+      }
+    } else {
+      for (const hunk of parsed.hunks) {
+        this.renderHunk(hunk, parsed, maxOldWidth, maxNewWidth, lines, theme);
+      }
     }
 
     const output = lines.join("\n");
@@ -289,6 +410,7 @@ class DiffComponent extends BaseTuiComponent<
   private calculateLineNumberWidths(hunks: Hunk[]): {
     maxOldWidth: number;
     maxNewWidth: number;
+    maxUnifiedWidth: number;
   } {
     let maxOld = 0;
     let maxNew = 0;
@@ -304,9 +426,12 @@ class DiffComponent extends BaseTuiComponent<
       }
     }
 
+    const maxUnified = Math.max(maxOld, maxNew);
+
     return {
       maxOldWidth: Math.max(1, String(maxOld).length),
       maxNewWidth: Math.max(1, String(maxNew).length),
+      maxUnifiedWidth: Math.max(1, String(maxUnified).length),
     };
   }
 
@@ -366,6 +491,80 @@ class DiffComponent extends BaseTuiComponent<
 
     // Apply color based on line type
     return colorLine(rawLine, line.type, theme);
+  }
+
+  private renderHunkGutter(
+    hunk: Hunk,
+    config: DiffInputWithDefaults,
+    maxLineWidth: number,
+    lines: string[],
+    theme: TuiTheme | undefined,
+    contextWidth: number
+  ): void {
+    // Render hunk header if enabled and header data provided (with muted color)
+    if (config.showHunkHeaders && hunk.header) {
+      const { oldStart, oldCount, newStart, newCount } = hunk.header;
+      const header = `@@ -${String(oldStart)},${String(oldCount)} +${String(newStart)},${String(newCount)} @@`;
+      lines.push(colorHeader(header, theme));
+    }
+
+    // Render each line with gutter style
+    for (const line of hunk.lines) {
+      const renderedLine = this.renderLineGutter(
+        line,
+        config,
+        maxLineWidth,
+        theme,
+        contextWidth
+      );
+      lines.push(renderedLine);
+    }
+  }
+
+  private renderLineGutter(
+    line: DiffLine,
+    config: DiffInputWithDefaults,
+    maxLineWidth: number,
+    theme: TuiTheme | undefined,
+    contextWidth: number
+  ): string {
+    // Format: [line_num] [indicator] [content padded to width]
+    const parts: string[] = [];
+
+    // Add line number if showLineNumbers is enabled
+    if (config.showLineNumbers) {
+      const lineNum = formatGutterLineNumber(line, maxLineWidth);
+      // Apply secondary color to line numbers (gutter area)
+      const coloredLineNum = theme
+        ? theme.semantic.secondary(lineNum)
+        : lineNum;
+      parts.push(coloredLineNum);
+    }
+
+    // Add indicator
+    const indicator = getGutterIndicator(line.type);
+    // Color the indicator based on line type
+    const coloredIndicator = colorLine(indicator, line.type, theme);
+    parts.push(coloredIndicator);
+
+    // Calculate content width (account for gutter)
+    // Gutter = line numbers + space + indicator + space
+    const gutterWidth = config.showLineNumbers
+      ? maxLineWidth + 1 + 1 + 1 // lineNum + space + indicator + space
+      : 1 + 1; // indicator + space
+    const contentWidth = Math.max(1, contextWidth - gutterWidth);
+
+    // Add content with background
+    const coloredContent = colorLineWithBackground(
+      line.content,
+      line.type,
+      contentWidth,
+      theme,
+      config.backgroundMode
+    );
+    parts.push(coloredContent);
+
+    return parts.join(" ");
   }
 }
 

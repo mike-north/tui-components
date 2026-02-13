@@ -74,6 +74,26 @@ export const markerStyleSchema = z.enum([
 export type MarkerStyle = z.infer<typeof markerStyleSchema>;
 
 /**
+ * Display style for the diff.
+ */
+export const displayStyleSchema = z.enum([
+  "inline", // Current behavior - markers inline with content
+  "gutter", // Line numbers + gutter + content with backgrounds
+]);
+
+export type DisplayStyle = z.infer<typeof displayStyleSchema>;
+
+/**
+ * Background color mode.
+ */
+export const backgroundModeSchema = z.enum([
+  "none", // No background colors (current behavior)
+  "line", // Full-width background on changed lines
+]);
+
+export type BackgroundMode = z.infer<typeof backgroundModeSchema>;
+
+/**
  * Schema for diff component input.
  */
 export const diffInputSchema = z.object({
@@ -115,6 +135,22 @@ export const diffInputSchema = z.object({
    * This is informational only - the component renders what you provide.
    */
   contextLines: z.number().int().nonnegative().optional(),
+
+  /**
+   * Display style for the diff.
+   * - "inline": Current behavior with markers inline with content
+   * - "gutter": IDE-style with line numbers in gutter and backgrounds
+   * @default "inline"
+   */
+  displayStyle: displayStyleSchema.default("inline"),
+
+  /**
+   * Background color mode.
+   * - "none": No background colors
+   * - "line": Full-width background on changed lines
+   * @default "none"
+   */
+  backgroundMode: backgroundModeSchema.default("none"),
 });
 
 export type DiffInput = z.input<typeof diffInputSchema>;
