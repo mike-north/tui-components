@@ -27,6 +27,7 @@ import { createProgress } from '@tuicomponents/progress';
 import { createSparkline } from '@tuicomponents/sparkline';
 import { createTable } from '@tuicomponents/table';
 import { createTree } from '@tuicomponents/tree';
+import { createVerticalLayout } from '@tuicomponents/layout';
 import { DataPoint } from '@tuicomponents/chart';
 import { DataSeries } from '@tuicomponents/chart';
 import { DiffComponent } from '@tuicomponents/diff';
@@ -80,6 +81,10 @@ import { TreeNode } from '@tuicomponents/tree';
 import { TreeStyle } from '@tuicomponents/tree';
 import { truncateToWidth } from '@tuicomponents/core';
 import { TuiComponent } from '@tuicomponents/core';
+import { VerticalAlign } from '@tuicomponents/layout';
+import { VerticalLayoutComponent } from '@tuicomponents/layout';
+import { VerticalLayoutInput } from '@tuicomponents/layout';
+import { verticalLayoutInputSchema } from '@tuicomponents/layout';
 import { wrapText } from '@tuicomponents/core';
 
 export { AxisConfig }
@@ -127,6 +132,8 @@ export { createSparkline }
 export { createTable }
 
 export { createTree }
+
+export { createVerticalLayout }
 
 export { DataPoint }
 
@@ -233,6 +240,14 @@ export { TreeStyle }
 export { truncateToWidth }
 
 export { TuiComponent }
+
+export { VerticalAlign }
+
+export { VerticalLayoutComponent }
+
+export { VerticalLayoutInput }
+
+export { verticalLayoutInputSchema }
 
 export { wrapText }
 

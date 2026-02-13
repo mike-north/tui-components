@@ -15,6 +15,7 @@ export default defineConfig({
     "src/table.ts",
     "src/tree.ts",
     "src/core.ts",
+    "src/layout.ts",
   ],
   format: ["cjs", "esm"],
   dts: true,

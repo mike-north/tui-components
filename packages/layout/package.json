@@ -1,0 +1,52 @@
+{
+  "name": "@tuicomponents/layout",
+  "version": "0.1.0",
+  "description": "Layout components for composing TUI elements",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "api-report": "api-extractor run",
+    "api-report:update": "api-extractor run --local",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "tui",
+    "terminal",
+    "layout",
+    "vertical",
+    "horizontal",
+    "grid",
+    "composition"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@tuicomponents/core": "workspace:*",
+    "zod": "^3.25.56",
+    "zod-to-json-schema": "^3.24.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}
