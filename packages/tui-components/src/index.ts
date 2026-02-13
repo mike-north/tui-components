@@ -29,6 +29,7 @@ export {
   createVerticalLayout,
   VerticalLayoutComponent,
 } from "@tuicomponents/layout";
+export { createCallout, CalloutComponent } from "@tuicomponents/callout";
 
 // Re-export core utilities
 export {
@@ -75,6 +76,7 @@ export type { SparklineInput } from "@tuicomponents/sparkline";
 export type { TableInput, Column } from "@tuicomponents/table";
 export type { TreeInput, TreeNode, TreeStyle } from "@tuicomponents/tree";
 export type { VerticalLayoutInput, VerticalAlign } from "@tuicomponents/layout";
+export type { CalloutInput, CalloutType } from "@tuicomponents/callout";
 
 // Re-export schemas for validation
 export { boxInputSchema } from "@tuicomponents/box";
@@ -89,3 +91,4 @@ export { sparklineInputSchema } from "@tuicomponents/sparkline";
 export { tableInputSchema } from "@tuicomponents/table";
 export { treeInputSchema } from "@tuicomponents/tree";
 export { verticalLayoutInputSchema } from "@tuicomponents/layout";
+export { calloutInputSchema } from "@tuicomponents/callout";

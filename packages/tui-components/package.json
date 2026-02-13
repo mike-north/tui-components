@@ -146,6 +146,16 @@
         "types": "./dist/layout.d.cts",
         "default": "./dist/layout.cjs"
       }
+    },
+    "./callout": {
+      "import": {
+        "types": "./dist/callout.d.ts",
+        "default": "./dist/callout.js"
+      },
+      "require": {
+        "types": "./dist/callout.d.cts",
+        "default": "./dist/callout.cjs"
+      }
     }
   },
   "files": [
@@ -174,7 +184,8 @@
     "sparkline",
     "progress",
     "gauge",
-    "layout"
+    "layout",
+    "callout"
   ],
   "license": "UNLICENSED",
   "devDependencies": {
@@ -193,6 +204,7 @@
     "@tuicomponents/sparkline": "workspace:*",
     "@tuicomponents/table": "workspace:*",
     "@tuicomponents/tree": "workspace:*",
-    "@tuicomponents/layout": "workspace:*"
+    "@tuicomponents/layout": "workspace:*",
+    "@tuicomponents/callout": "workspace:*"
   }
 }

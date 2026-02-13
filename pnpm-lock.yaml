@@ -99,6 +99,22 @@ importers:
         specifier: ^22.0.0
         version: 22.19.11
 
+  packages/callout:
+    dependencies:
+      "@tuicomponents/core":
+        specifier: workspace:*
+        version: link:../core
+      zod:
+        specifier: ^3.25.56
+        version: 3.25.76
+      zod-to-json-schema:
+        specifier: ^3.24.5
+        version: 3.25.1(zod@3.25.76)
+    devDependencies:
+      "@types/node":
+        specifier: ^22.0.0
+        version: 22.19.11
+
   packages/chart:
     dependencies:
       "@tuicomponents/core":
@@ -360,6 +376,9 @@ importers:
       "@tuicomponents/box":
         specifier: workspace:*
         version: link:../box
+      "@tuicomponents/callout":
+        specifier: workspace:*
+        version: link:../callout
       "@tuicomponents/chart":
         specifier: workspace:*
         version: link:../chart
