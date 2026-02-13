@@ -45,7 +45,7 @@ Create data visualizations with multiple chart types: bar, line, scatter, pie, d
 - **11 component types**: chart, table, tree, list, progress, gauge, sparkline, diff, keyvalue, graph, box
 - **Dual rendering modes**: ANSI (colored terminal) and Markdown (for AI assistants)
 - **TypeScript-first**: Full type safety with Zod schema validation
-- **Zero runtime dependencies**: Lightweight and fast
+- **Minimal runtime dependencies**: Designed to stay lightweight and fast
 - **Composable**: Nest components within boxes and layouts
 
 ## Installation
@@ -92,7 +92,7 @@ console.log(result.output);
 
 ## Render Modes
 
-All components support two rendering modes:
+Components support two rendering modes via the render context:
 
 ### ANSI Mode
 
@@ -134,13 +134,19 @@ Render components directly from the command line:
 
 ```bash
 # Using npx
-npx @tuicomponents/cli render chart --json '{"type":"bar","series":[{"name":"Data","data":[{"x":"A","y":10},{"x":"B","y":20}]}]}'
+npx @tuicomponents/cli tui render chart --json '{"type":"bar","series":[{"name":"Data","data":[{"x":"A","y":10},{"x":"B","y":20}]}]}'
 
 # List available components
-npx @tuicomponents/cli list
+npx @tuicomponents/cli tui list
 
 # View component schema
-npx @tuicomponents/cli schema chart
+npx @tuicomponents/cli tui schema chart
+```
+
+If installed globally or in a project:
+
+```bash
+tui render chart --json '{"type":"bar","series":[{"name":"Data","data":[{"x":"A","y":10},{"x":"B","y":20}]}]}'
 ```
 
 ## License
