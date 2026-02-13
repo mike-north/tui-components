@@ -67,6 +67,13 @@ export const progressInputSchema = z.object({
    * @default false
    */
   showValue: z.boolean().default(false),
+
+  /**
+   * Whether to auto-fit the progress bar to the available width.
+   * When true, the bar expands to fill context.width minus label and percentage.
+   * @default false
+   */
+  fit: z.boolean().default(false),
 });
 
 export type ProgressInput = z.input<typeof progressInputSchema>;
