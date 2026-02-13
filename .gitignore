@@ -165,3 +165,7 @@ vite.config.ts.timestamp-*
 !AGENTS.md
 # Claude Code local configuration (auto-added)
 .claude/*.local.*
+
+# Temp directories
+scratch
+tmp
