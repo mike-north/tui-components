@@ -63,6 +63,15 @@ export class SparklineComponent extends BaseTuiComponent<
           max: 100,
         },
       },
+      {
+        name: "fit-to-width",
+        description: "Sparkline that compresses to fit available width",
+        input: {
+          values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+          fit: true,
+          label: "Data: ",
+        },
+      },
     ],
   };
 
@@ -72,8 +81,8 @@ export class SparklineComponent extends BaseTuiComponent<
     // Parse input (applies defaults)
     const parsed = this.schema.parse(input);
 
-    // Compute layout
-    const layout = computeSparklineLayout(parsed);
+    // Compute layout (pass context.width for fit mode)
+    const layout = computeSparklineLayout(parsed, context.width);
 
     // Render based on mode
     const output =

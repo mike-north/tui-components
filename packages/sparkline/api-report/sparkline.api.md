@@ -13,7 +13,7 @@ import { z } from 'zod';
 import * as zod from 'zod';
 
 // @public
-export function computeSparklineLayout(input: SparklineInputWithDefaults): SparklineLayout;
+export function computeSparklineLayout(input: SparklineInputWithDefaults, availableWidth?: number): SparklineLayout;
 
 // @public
 export function createSparkline(): SparklineComponent;
@@ -40,8 +40,10 @@ export class SparklineComponent extends BaseTuiComponent<SparklineInput, typeof 
         min: zod.ZodOptional<zod.ZodNumber>;
         max: zod.ZodOptional<zod.ZodNumber>;
         label: zod.ZodOptional<zod.ZodString>;
+        fit: zod.ZodDefault<zod.ZodBoolean>;
     }, "strip", zod.ZodTypeAny, {
         values: number[];
+        fit: boolean;
         width?: number | undefined;
         min?: number | undefined;
         max?: number | undefined;
@@ -52,6 +54,7 @@ export class SparklineComponent extends BaseTuiComponent<SparklineInput, typeof 
         min?: number | undefined;
         max?: number | undefined;
         label?: string | undefined;
+        fit?: boolean | undefined;
     }>;
 }
 
@@ -65,8 +68,10 @@ export const sparklineInputSchema: z.ZodObject<{
     min: z.ZodOptional<z.ZodNumber>;
     max: z.ZodOptional<z.ZodNumber>;
     label: z.ZodOptional<z.ZodString>;
+    fit: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     values: number[];
+    fit: boolean;
     width?: number | undefined;
     min?: number | undefined;
     max?: number | undefined;
@@ -77,6 +82,7 @@ export const sparklineInputSchema: z.ZodObject<{
     min?: number | undefined;
     max?: number | undefined;
     label?: string | undefined;
+    fit?: boolean | undefined;
 }>;
 
 // @public
