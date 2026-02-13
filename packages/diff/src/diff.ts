@@ -150,9 +150,7 @@ function colorLineWithBackground(
       }
       return theme.semantic.removed(paddedText);
     case "context":
-      if (backgroundMode === "line") {
-        return theme.semantic.secondary(paddedText);
-      }
+      // Context lines remain unstyled - only changed lines get backgrounds
       return paddedText;
   }
 }

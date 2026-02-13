@@ -11,6 +11,12 @@ import { RenderResult } from '@tuicomponents/core';
 import { z } from 'zod';
 import * as zod from 'zod';
 
+// @public (undocumented)
+export type BackgroundMode = z.infer<typeof backgroundModeSchema>;
+
+// @public
+export const backgroundModeSchema: z.ZodEnum<["none", "line"]>;
+
 // @public
 export function createDiff(): DiffComponent;
 
@@ -284,6 +290,12 @@ export const diffLineSchema: z.ZodObject<{
     oldLineNumber?: number | undefined;
     newLineNumber?: number | undefined;
 }>;
+
+// @public (undocumented)
+export type DisplayStyle = z.infer<typeof displayStyleSchema>;
+
+// @public
+export const displayStyleSchema: z.ZodEnum<["inline", "gutter"]>;
 
 // @public (undocumented)
 export type Hunk = z.infer<typeof hunkSchema>;

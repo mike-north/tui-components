@@ -674,6 +674,8 @@ describe("DiffComponent", () => {
       expect(result.output).toContain("10");
       expect(result.output).toContain("6");
       expect(result.output).toContain("11");
+      // oldLineNumber 5 should NOT appear since newLineNumber 10 is preferred
+      expect(result.output).not.toContain("5");
     });
   });
 });
