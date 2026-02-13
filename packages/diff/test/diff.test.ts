@@ -599,9 +599,7 @@ describe("DiffComponent", () => {
         showLineNumbers: true,
         hunks: [
           {
-            lines: [
-              { type: "addition", content: "short", newLineNumber: 1 },
-            ],
+            lines: [{ type: "addition", content: "short", newLineNumber: 1 }],
           },
         ],
       };

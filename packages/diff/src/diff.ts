@@ -144,9 +144,9 @@ function colorLineWithBackground(
     case "deletion":
       if (backgroundMode === "line") {
         // Bright foreground on red background for contrast
-        return theme.chromaterm.brightWhite.on(theme.semantic.removedBackground)(
-          paddedText
-        );
+        return theme.chromaterm.brightWhite.on(
+          theme.semantic.removedBackground
+        )(paddedText);
       }
       return theme.semantic.removed(paddedText);
     case "context":
@@ -160,10 +160,7 @@ function colorLineWithBackground(
 /**
  * Format a single line number for gutter display.
  */
-function formatGutterLineNumber(
-  line: DiffLine,
-  maxWidth: number
-): string {
+function formatGutterLineNumber(line: DiffLine, maxWidth: number): string {
   // For unified gutter, show the most relevant line number
   const lineNum = line.newLineNumber ?? line.oldLineNumber;
   if (lineNum !== undefined) {
@@ -296,12 +293,12 @@ class DiffComponent extends BaseTuiComponent<
                 },
                 {
                   type: "deletion",
-                  content: '  debug: false,',
+                  content: "  debug: false,",
                   oldLineNumber: 46,
                 },
                 {
                   type: "addition",
-                  content: '  debug: true,',
+                  content: "  debug: true,",
                   newLineNumber: 46,
                 },
                 {
