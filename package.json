@@ -19,6 +19,8 @@
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
+    "docs:schema": "tsx scripts/docs/generate-schema.ts",
+    "docs:schema:check": "tsx scripts/docs/generate-schema.ts --check",
     "docs:screenshots": "tsx scripts/docs/generate-screenshots.ts",
     "docs:screenshots:validate": "tsx scripts/docs/generate-screenshots.ts --validate",
     "docs:screenshots:docker": "tsx scripts/docs/generate-screenshots.ts --docker",
@@ -61,6 +63,7 @@
     "typescript-eslint": "^8.32.0",
     "vitest": "^3.1.3",
     "yaml": "^2.8.2",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "zod-to-json-schema": "^3.25.1"
   }
 }

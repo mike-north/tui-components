@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://tuicomponents.dev/schemas/screenshot-scenarios.json",
   "title": "TUI Components Screenshot Scenarios",
-  "description": "Schema for defining screenshot scenarios for TUI component documentation",
+  "description": "Schema for defining screenshot scenarios for TUI component documentation. Generated from component Zod schemas.",
   "type": "object",
   "additionalProperties": {
     "type": "array",
@@ -15,7 +15,11 @@
     "scenario": {
       "type": "object",
       "description": "A single screenshot scenario",
-      "required": ["name", "description", "input"],
+      "required": [
+        "name",
+        "description",
+        "input"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -34,39 +38,224 @@
           "maximum": 200
         },
         "input": {
-          "description": "Component input data (validated against component's Zod schema at runtime)"
+          "description": "Component input data. See component-specific schemas in $defs for structure."
         }
       },
       "additionalProperties": false
     },
     "sparklineInput": {
       "type": "object",
-      "description": "Sparkline component input",
-      "required": ["data"],
       "properties": {
-        "data": {
+        "values": {
           "type": "array",
-          "items": { "type": "number" },
-          "description": "Array of numeric values to visualize"
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0
         },
         "min": {
-          "type": "number",
-          "description": "Minimum value for scaling"
+          "type": "number"
         },
         "max": {
-          "type": "number",
-          "description": "Maximum value for scaling"
+          "type": "number"
         },
-        "showMinMax": {
-          "type": "boolean",
-          "description": "Show min/max labels"
+        "label": {
+          "type": "string"
         }
-      }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "boxInput": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "titleAlignment": {
+          "type": "string",
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ],
+          "default": "left"
+        },
+        "borderStyle": {
+          "type": "string",
+          "enum": [
+            "single",
+            "double",
+            "round",
+            "bold",
+            "singleDouble",
+            "doubleSingle",
+            "classic",
+            "none"
+          ],
+          "default": "single"
+        },
+        "padding": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "object",
+              "properties": {
+                "top": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "right": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "bottom": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "left": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          ],
+          "default": 0
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "textAlignment": {
+          "type": "string",
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ],
+          "default": "left"
+        },
+        "dimBorder": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "tableInput": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "header": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "minWidth": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "maxWidth": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "align": {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "center",
+                  "right"
+                ],
+                "default": "left"
+              }
+            },
+            "required": [
+              "header",
+              "key"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "borderStyle": {
+          "type": "string",
+          "enum": [
+            "none",
+            "single",
+            "double",
+            "rounded",
+            "heavy",
+            "ascii"
+          ],
+          "default": "single"
+        },
+        "showHeader": {
+          "type": "boolean",
+          "default": true
+        },
+        "rowSeparators": {
+          "type": "boolean",
+          "default": false
+        },
+        "maxWidth": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "headerStyle": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "bold",
+            "italic",
+            "bold-italic"
+          ],
+          "default": "bold"
+        }
+      },
+      "required": [
+        "columns",
+        "rows"
+      ],
+      "additionalProperties": false
     },
     "chartInput": {
       "type": "object",
-      "description": "Chart component input",
-      "required": ["type", "series"],
       "properties": {
         "type": {
           "type": "string",
@@ -82,234 +271,737 @@
             "pie",
             "donut",
             "heatmap"
-          ],
-          "description": "Chart type"
+          ]
         },
         "series": {
           "type": "array",
-          "description": "Data series"
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": [
+                        "string",
+                        "number"
+                      ]
+                    },
+                    "y": {
+                      "type": "number"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "style": {
+                "type": "string",
+                "enum": [
+                  "block",
+                  "shaded",
+                  "light",
+                  "hash",
+                  "equals",
+                  "arrow"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "data"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
         },
         "title": {
-          "type": "string",
-          "description": "Chart title"
-        },
-        "height": {
-          "type": "integer",
-          "description": "Chart height in lines"
-        },
-        "showValues": {
-          "type": "boolean",
-          "description": "Show values on data points"
-        },
-        "showAxes": {
-          "type": "boolean",
-          "description": "Show axes"
-        },
-        "lineStyle": {
-          "type": "string",
-          "enum": ["blocks", "braille", "dots"],
-          "description": "Line rendering style"
-        },
-        "barStyle": {
-          "type": "string",
-          "enum": ["block", "shaded", "light", "hash", "equals", "arrow"],
-          "description": "Bar fill style"
-        },
-        "scatterStyle": {
-          "type": "string",
-          "enum": ["dots", "braille"],
-          "description": "Scatter rendering style"
-        },
-        "heatmapStyle": {
-          "type": "string",
-          "enum": ["blocks", "ascii", "numeric"],
-          "description": "Heatmap rendering style"
-        },
-        "centerLabel": {
-          "type": "string",
-          "description": "Center label for donut charts"
-        },
-        "innerRadius": {
-          "type": "number",
-          "description": "Inner radius for donut charts (0-0.9)"
+          "type": "string"
         },
         "xAxis": {
           "type": "object",
-          "description": "X-axis configuration"
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "tickCount": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 5
+            },
+            "showTicks": {
+              "type": "boolean",
+              "default": true
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "number",
+                "percent",
+                "compact",
+                "currency"
+              ],
+              "default": "number"
+            },
+            "decimals": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
         },
         "yAxis": {
           "type": "object",
-          "description": "Y-axis configuration"
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "tickCount": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 5
+            },
+            "showTicks": {
+              "type": "boolean",
+              "default": true
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "number",
+                "percent",
+                "compact",
+                "currency"
+              ],
+              "default": "number"
+            },
+            "decimals": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
         },
         "legend": {
           "type": "object",
-          "description": "Legend configuration"
-        }
-      }
-    },
-    "tableInput": {
-      "type": "object",
-      "description": "Table component input",
-      "required": ["columns", "data"],
-      "properties": {
-        "columns": {
-          "type": "array",
-          "description": "Column definitions"
+          "properties": {
+            "position": {
+              "type": "string",
+              "enum": [
+                "none",
+                "top",
+                "bottom",
+                "right",
+                "inline"
+              ],
+              "default": "bottom"
+            },
+            "boxed": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
         },
-        "data": {
-          "type": "array",
-          "description": "Table row data"
-        },
-        "style": {
-          "type": "string",
-          "description": "Table style"
-        }
-      }
-    },
-    "boxInput": {
-      "type": "object",
-      "description": "Box component input",
-      "required": ["content"],
-      "properties": {
-        "content": {
-          "type": "string",
-          "description": "Box content"
-        },
-        "title": {
-          "type": "string",
-          "description": "Box title"
-        },
-        "style": {
-          "type": "string",
-          "description": "Box border style"
-        },
-        "padding": {
-          "type": "integer",
-          "description": "Inner padding"
-        }
-      }
-    },
-    "listInput": {
-      "type": "object",
-      "description": "List component input",
-      "required": ["items"],
-      "properties": {
-        "items": {
-          "type": "array",
-          "description": "List items"
-        },
-        "style": {
-          "type": "string",
-          "enum": ["bullet", "numbered", "checkbox"],
-          "description": "List style"
-        }
-      }
-    },
-    "treeInput": {
-      "type": "object",
-      "description": "Tree component input",
-      "required": ["label"],
-      "properties": {
-        "label": {
-          "type": "string",
-          "description": "Node label"
-        },
-        "children": {
-          "type": "array",
-          "description": "Child nodes"
-        }
-      }
-    },
-    "progressInput": {
-      "type": "object",
-      "description": "Progress component input",
-      "required": ["value"],
-      "properties": {
-        "value": {
-          "type": "number",
-          "description": "Current value"
-        },
-        "max": {
-          "type": "number",
-          "description": "Maximum value"
+        "grid": {
+          "type": "object",
+          "properties": {
+            "horizontal": {
+              "type": "boolean",
+              "default": false
+            },
+            "vertical": {
+              "type": "boolean",
+              "default": false
+            },
+            "char": {
+              "type": "string",
+              "default": "·"
+            }
+          },
+          "additionalProperties": false
         },
         "width": {
           "type": "integer",
-          "description": "Bar width"
+          "exclusiveMinimum": 0,
+          "default": 40
         },
-        "label": {
-          "type": "string",
-          "description": "Progress label"
+        "height": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 10
         },
-        "showPercentage": {
+        "showValues": {
           "type": "boolean",
-          "description": "Show percentage"
-        }
-      }
-    },
-    "gaugeInput": {
-      "type": "object",
-      "description": "Gauge component input",
-      "required": ["value"],
-      "properties": {
-        "value": {
-          "type": "number",
-          "description": "Current value"
+          "default": false
         },
-        "max": {
-          "type": "number",
-          "description": "Maximum value"
-        },
-        "label": {
-          "type": "string",
-          "description": "Gauge label"
-        },
-        "showValue": {
+        "showAxes": {
           "type": "boolean",
-          "description": "Show value"
-        }
-      }
-    },
-    "diffInput": {
-      "type": "object",
-      "description": "Diff component input",
-      "required": ["oldText", "newText"],
-      "properties": {
-        "oldText": {
-          "type": "string",
-          "description": "Original text"
+          "default": true
         },
-        "newText": {
+        "lineStyle": {
           "type": "string",
-          "description": "Modified text"
+          "enum": [
+            "blocks",
+            "braille",
+            "dots"
+          ],
+          "default": "blocks"
+        },
+        "barStyle": {
+          "type": "string",
+          "enum": [
+            "block",
+            "shaded",
+            "light",
+            "hash",
+            "equals",
+            "arrow"
+          ],
+          "default": "block"
+        },
+        "scatterStyle": {
+          "type": "string",
+          "enum": [
+            "dots",
+            "braille"
+          ],
+          "default": "dots"
+        },
+        "heatmapStyle": {
+          "type": "string",
+          "enum": [
+            "blocks",
+            "ascii",
+            "numeric"
+          ],
+          "default": "blocks"
+        },
+        "centerLabel": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.9,
+          "default": 0.5
         }
-      }
+      },
+      "required": [
+        "type",
+        "series"
+      ],
+      "additionalProperties": false
     },
-    "keyvalueInput": {
+    "listInput": {
       "type": "object",
-      "description": "Key-value component input",
-      "required": ["items"],
       "properties": {
         "items": {
           "type": "array",
-          "description": "Key-value pairs"
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "items": {
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "bullet",
+            "dash",
+            "arrow",
+            "star",
+            "numbered",
+            "lettered",
+            "roman",
+            "none"
+          ],
+          "default": "bullet"
+        },
+        "indent": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 2
+        },
+        "start": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 1
         }
-      }
+      },
+      "required": [
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "treeInput": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "expanded": {
+                  "type": "boolean"
+                },
+                "children": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "required": [
+                "label"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "expanded": {
+                    "type": "boolean"
+                  },
+                  "children": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "ascii",
+            "unicode",
+            "compact"
+          ],
+          "default": "unicode"
+        },
+        "showRoot": {
+          "type": "boolean",
+          "default": true
+        },
+        "indent": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 2
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "additionalProperties": false
+    },
+    "progressInput": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 100
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 20
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "block",
+            "shaded",
+            "bracket",
+            "arrow",
+            "ascii"
+          ],
+          "default": "block"
+        },
+        "filledChar": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "emptyChar": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "label": {
+          "type": "string"
+        },
+        "showPercentage": {
+          "type": "boolean",
+          "default": true
+        },
+        "showValue": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "gaugeInput": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "min": {
+          "type": "number",
+          "default": 0
+        },
+        "max": {
+          "type": "number",
+          "default": 100
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "threshold": {
+                "type": "number"
+              },
+              "color": {
+                "type": "string",
+                "enum": [
+                  "success",
+                  "warning",
+                  "error"
+                ]
+              }
+            },
+            "required": [
+              "threshold"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 20
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "bar",
+            "segments",
+            "blocks"
+          ],
+          "default": "bar"
+        },
+        "label": {
+          "type": "string"
+        },
+        "showValue": {
+          "type": "boolean",
+          "default": true
+        },
+        "unit": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "diffInput": {
+      "type": "object",
+      "properties": {
+        "hunks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "header": {
+                "type": "object",
+                "properties": {
+                  "oldStart": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "oldCount": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "newStart": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "newCount": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "oldStart",
+                  "oldCount",
+                  "newStart",
+                  "newCount"
+                ],
+                "additionalProperties": false
+              },
+              "lines": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "addition",
+                        "deletion",
+                        "context"
+                      ]
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "oldLineNumber": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    },
+                    "newLineNumber": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "content"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "lines"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "oldFile": {
+          "type": "string"
+        },
+        "newFile": {
+          "type": "string"
+        },
+        "showLineNumbers": {
+          "type": "boolean",
+          "default": false
+        },
+        "markerStyle": {
+          "type": "string",
+          "enum": [
+            "symbol",
+            "word",
+            "none"
+          ],
+          "default": "symbol"
+        },
+        "showHunkHeaders": {
+          "type": "boolean",
+          "default": true
+        },
+        "contextLines": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "hunks"
+      ],
+      "additionalProperties": false
+    },
+    "keyvalueInput": {
+      "type": "object",
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              }
+            },
+            "required": [
+              "key",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "separator": {
+          "type": "string",
+          "enum": [
+            "colon",
+            "equals",
+            "arrow",
+            "dots",
+            "none"
+          ],
+          "default": "colon"
+        },
+        "alignKeys": {
+          "type": "boolean",
+          "default": true
+        },
+        "minKeyWidth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        }
+      },
+      "required": [
+        "pairs"
+      ],
+      "additionalProperties": false
     },
     "graphInput": {
       "type": "object",
-      "description": "Graph component input",
-      "required": ["nodes", "edges"],
       "properties": {
         "nodes": {
           "type": "array",
-          "description": "Graph nodes"
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "parents": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "highlight": {
+                "type": "boolean"
+              },
+              "nodeChar": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1
+              }
+            },
+            "required": [
+              "id",
+              "label"
+            ],
+            "additionalProperties": false
+          }
         },
-        "edges": {
-          "type": "array",
-          "description": "Graph edges"
+        "style": {
+          "type": "string",
+          "enum": [
+            "ascii",
+            "unicode"
+          ],
+          "default": "unicode"
+        },
+        "labelWidth": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "default": 50
+        },
+        "showRefs": {
+          "type": "boolean",
+          "default": true
+        },
+        "labelGap": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "nodeChar": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
         }
-      }
+      },
+      "required": [
+        "nodes"
+      ],
+      "additionalProperties": false
     }
   }
 }
