@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/chart",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Unified charting system for TUI with multiple chart types",
   "type": "module",
   "main": "./dist/index.cjs",

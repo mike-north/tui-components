@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/table",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Table component for terminal UI",
   "type": "module",
   "main": "./dist/index.cjs",

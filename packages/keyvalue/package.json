@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/keyvalue",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Key-value component for TUI - renders labeled data pairs",
   "type": "module",
   "main": "./dist/index.cjs",

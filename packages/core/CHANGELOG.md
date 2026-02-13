@@ -1,5 +1,16 @@
 # @tuicomponents/core
 
+## 0.1.2
+
+### Patch Changes
+
+- 5a1bb86: Add IDE-style rendering options to diff component
+  - `displayStyle: "gutter"` - Line numbers in left gutter with +/- indicators
+  - `backgroundMode: "line"` - Full-width colored backgrounds on changed lines
+  - Added `addedBackground` and `removedBackground` to theme semantic colors
+
+  Both options are opt-in with backward-compatible defaults (`displayStyle: "inline"`, `backgroundMode: "none"`).
+
 ## 0.1.1
 
 ### Patch Changes
