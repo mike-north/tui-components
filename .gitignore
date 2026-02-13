@@ -1,6 +1,9 @@
 # macOS
 .DS_Store
 
+# Generated temp files
+scripts/docs/temp-terminal.html
+
 # Build outputs
 dist/
 

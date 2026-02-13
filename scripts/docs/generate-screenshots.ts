@@ -30,7 +30,7 @@ import YAML from "yaml";
 import { z, ZodError } from "zod";
 import {
   createRenderContext,
-  createTestTheme,
+  createThemeSync,
   registry,
   type TuiComponent,
 } from "@tuicomponents/core";
@@ -383,7 +383,7 @@ function renderComponent(
   const context = createRenderContext({
     width,
     renderMode: "ansi",
-    theme: createTestTheme(),
+    theme: createThemeSync(),
   });
 
   const result = component.render(input, context);

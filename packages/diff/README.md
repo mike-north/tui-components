@@ -2,6 +2,8 @@
 
 Renders unified diff format with additions and deletions
 
+![Diff Example](../../docs/screenshots/diff/code-diff.png)
+
 ## Installation
 
 ```bash

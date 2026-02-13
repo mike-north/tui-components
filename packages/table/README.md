@@ -2,6 +2,8 @@
 
 Renders tabular data with customizable borders and alignment
 
+![Table Example](../../docs/screenshots/table/basic.png)
+
 ## Installation
 
 ```bash

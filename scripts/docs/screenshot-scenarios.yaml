@@ -104,8 +104,8 @@ chart:
             - { x: "Q4", y: 70 }
       height: 10
 
-  - name: line-braille
-    description: Line chart with braille rendering
+  - name: line
+    description: Line chart with dots rendering
     width: 50
     input:
       type: line
@@ -118,7 +118,7 @@ chart:
             - { x: "3pm", y: 78 }
             - { x: "6pm", y: 71 }
             - { x: "9pm", y: 65 }
-      lineStyle: braille
+      lineStyle: dots
       height: 8
 
   - name: pie
@@ -159,7 +159,7 @@ chart:
             - { x: 40, y: 35 }
             - { x: 55, y: 60 }
             - { x: 70, y: 50 }
-      scatterStyle: braille
+      scatterStyle: dots
       height: 8
 
   - name: heatmap

@@ -2,6 +2,8 @@
 
 Renders DAG visualizations similar to git log --graph
 
+![Graph Example](../../docs/screenshots/graph/branching.png)
+
 ## Installation
 
 ```bash

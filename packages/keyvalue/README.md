@@ -2,6 +2,8 @@
 
 Renders key-value pairs in an aligned format
 
+![Key-Value Example](../../docs/screenshots/keyvalue/system-info.png)
+
 ## Installation
 
 ```bash

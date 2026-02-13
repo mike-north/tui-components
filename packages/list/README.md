@@ -2,6 +2,8 @@
 
 Renders bulleted or numbered lists with nesting support
 
+![List Example](../../docs/screenshots/list/nested.png)
+
 ## Installation
 
 ```bash

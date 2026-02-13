@@ -2,6 +2,8 @@
 
 Compact inline sparkline visualization using height block characters (▁▂▃▄▅▆▇)
 
+![Sparkline Example](../../docs/screenshots/sparkline/basic.png)
+
 ## Installation
 
 ```bash

@@ -2,6 +2,8 @@
 
 Renders hierarchical data as an ASCII/Unicode tree
 
+![Tree Example](../../docs/screenshots/tree/project-structure.png)
+
 ## Installation
 
 ```bash

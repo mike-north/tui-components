@@ -2,6 +2,8 @@
 
 Renders content in a bordered box/panel
 
+![Box Example](../../docs/screenshots/box/rounded.png)
+
 ## Installation
 
 ```bash

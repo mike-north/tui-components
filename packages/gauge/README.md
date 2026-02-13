@@ -2,6 +2,8 @@
 
 Renders meters with threshold zones for status display
 
+![Gauge Example](../../docs/screenshots/gauge/disk-usage.png)
+
 ## Installation
 
 ```bash

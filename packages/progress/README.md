@@ -2,6 +2,8 @@
 
 Renders horizontal progress bars for task completion
 
+![Progress Example](../../docs/screenshots/progress/labeled.png)
+
 ## Installation
 
 ```bash
