@@ -1,5 +1,12 @@
 # @tuicomponents/chart
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [5a1bb86]
+  - @tuicomponents/core@0.1.2
+
 ## 0.2.0
 
 ### Minor Changes
