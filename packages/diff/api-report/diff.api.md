@@ -11,6 +11,12 @@ import { RenderResult } from '@tuicomponents/core';
 import { z } from 'zod';
 import * as zod from 'zod';
 
+// @public (undocumented)
+export type BackgroundMode = z.infer<typeof backgroundModeSchema>;
+
+// @public
+export const backgroundModeSchema: z.ZodEnum<["none", "line"]>;
+
 // @public
 export function createDiff(): DiffComponent;
 
@@ -89,6 +95,8 @@ export class DiffComponent extends BaseTuiComponent<DiffInput, typeof diffInputS
         markerStyle: zod.ZodDefault<zod.ZodEnum<["symbol", "word", "none"]>>;
         showHunkHeaders: zod.ZodDefault<zod.ZodBoolean>;
         contextLines: zod.ZodOptional<zod.ZodNumber>;
+        displayStyle: zod.ZodDefault<zod.ZodEnum<["inline", "gutter"]>>;
+        backgroundMode: zod.ZodDefault<zod.ZodEnum<["none", "line"]>>;
     }, "strip", zod.ZodTypeAny, {
         hunks: {
             lines: {
@@ -107,6 +115,8 @@ export class DiffComponent extends BaseTuiComponent<DiffInput, typeof diffInputS
         showLineNumbers: boolean;
         markerStyle: "symbol" | "word" | "none";
         showHunkHeaders: boolean;
+        displayStyle: "inline" | "gutter";
+        backgroundMode: "none" | "line";
         oldFile?: string | undefined;
         newFile?: string | undefined;
         contextLines?: number | undefined;
@@ -131,6 +141,8 @@ export class DiffComponent extends BaseTuiComponent<DiffInput, typeof diffInputS
         markerStyle?: "symbol" | "word" | "none" | undefined;
         showHunkHeaders?: boolean | undefined;
         contextLines?: number | undefined;
+        displayStyle?: "inline" | "gutter" | undefined;
+        backgroundMode?: "none" | "line" | undefined;
     }>;
 }
 
@@ -205,6 +217,8 @@ export const diffInputSchema: z.ZodObject<{
     markerStyle: z.ZodDefault<z.ZodEnum<["symbol", "word", "none"]>>;
     showHunkHeaders: z.ZodDefault<z.ZodBoolean>;
     contextLines: z.ZodOptional<z.ZodNumber>;
+    displayStyle: z.ZodDefault<z.ZodEnum<["inline", "gutter"]>>;
+    backgroundMode: z.ZodDefault<z.ZodEnum<["none", "line"]>>;
 }, "strip", z.ZodTypeAny, {
     hunks: {
         lines: {
@@ -223,6 +237,8 @@ export const diffInputSchema: z.ZodObject<{
     showLineNumbers: boolean;
     markerStyle: "symbol" | "word" | "none";
     showHunkHeaders: boolean;
+    displayStyle: "inline" | "gutter";
+    backgroundMode: "none" | "line";
     oldFile?: string | undefined;
     newFile?: string | undefined;
     contextLines?: number | undefined;
@@ -247,6 +263,8 @@ export const diffInputSchema: z.ZodObject<{
     markerStyle?: "symbol" | "word" | "none" | undefined;
     showHunkHeaders?: boolean | undefined;
     contextLines?: number | undefined;
+    displayStyle?: "inline" | "gutter" | undefined;
+    backgroundMode?: "none" | "line" | undefined;
 }>;
 
 // @public (undocumented)
@@ -272,6 +290,12 @@ export const diffLineSchema: z.ZodObject<{
     oldLineNumber?: number | undefined;
     newLineNumber?: number | undefined;
 }>;
+
+// @public (undocumented)
+export type DisplayStyle = z.infer<typeof displayStyleSchema>;
+
+// @public
+export const displayStyleSchema: z.ZodEnum<["inline", "gutter"]>;
 
 // @public (undocumented)
 export type Hunk = z.infer<typeof hunkSchema>;
