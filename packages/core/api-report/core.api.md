@@ -202,6 +202,7 @@ export interface RenderResult {
 // @public
 export interface SemanticColors {
     added: ChromatermColor;
+    addedBackground: ChromatermColor;
     border: ChromatermColor;
     error: ChromatermColor;
     header: ChromatermColor;
@@ -209,6 +210,7 @@ export interface SemanticColors {
     modified: ChromatermColor;
     primary: ChromatermColor;
     removed: ChromatermColor;
+    removedBackground: ChromatermColor;
     secondary: ChromatermColor;
     success: ChromatermColor;
     warning: ChromatermColor;
