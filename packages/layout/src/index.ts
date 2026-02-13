@@ -1,3 +1,4 @@
+// Vertical layout exports
 export {
   createVerticalLayout,
   VerticalLayoutComponent,
@@ -21,3 +22,33 @@ export {
   renderVerticalLayoutAnsi,
   renderVerticalLayoutMarkdown,
 } from "./renderers.js";
+
+// Horizontal layout exports
+export {
+  createHorizontalLayout,
+  HorizontalLayoutComponent,
+} from "./horizontal.js";
+export {
+  horizontalLayoutInputSchema,
+  horizontalVerticalAlignSchema,
+  widthModeSchema,
+  widthSpecSchema,
+  overflowBehaviorSchema,
+  type HorizontalLayoutInput,
+  type HorizontalLayoutInputWithDefaults,
+  type HorizontalVerticalAlign,
+  type WidthMode,
+  type WidthSpec,
+  type OverflowBehavior,
+} from "./horizontal-schema.js";
+export {
+  type HorizontalLayoutComputed,
+  computeHorizontalLayout,
+  padLinesVertically,
+  fitLineToWidth,
+  measureHorizontalOutput,
+} from "./horizontal-layout.js";
+export {
+  renderHorizontalLayoutAnsi,
+  renderHorizontalLayoutMarkdown,
+} from "./horizontal-renderers.js";

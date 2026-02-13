@@ -15,16 +15,139 @@ import * as zod from 'zod';
 export function alignLine(line: string, lineWidth: number, targetWidth: number, align: VerticalAlign): string;
 
 // @public
+export function computeHorizontalLayout(input: HorizontalLayoutInputWithDefaults, contextWidth?: number): HorizontalLayoutComputed;
+
+// @public
 export function computeVerticalLayout(input: VerticalLayoutInputWithDefaults): VerticalLayoutComputed;
 
 // @public
+export function createHorizontalLayout(): HorizontalLayoutComponent;
+
+// @public
 export function createVerticalLayout(): VerticalLayoutComponent;
+
+// @public
+export function fitLineToWidth(line: string, targetWidth: number): string;
+
+// @public
+export class HorizontalLayoutComponent extends BaseTuiComponent<HorizontalLayoutInput, typeof horizontalLayoutInputSchema> {
+    getJsonSchema(): object;
+    // (undocumented)
+    readonly metadata: ComponentMetadata<HorizontalLayoutInput>;
+    // (undocumented)
+    render(input: HorizontalLayoutInput, context: RenderContext): RenderResult;
+    // (undocumented)
+    readonly schema: zod.ZodObject<{
+        items: zod.ZodArray<zod.ZodString, "many">;
+        widthMode: zod.ZodDefault<zod.ZodEnum<["equal", "auto", "manual"]>>;
+        widths: zod.ZodOptional<zod.ZodArray<zod.ZodUnion<[zod.ZodNumber, zod.ZodLiteral<"fill">, zod.ZodLiteral<"auto">]>, "many">>;
+        gap: zod.ZodDefault<zod.ZodNumber>;
+        width: zod.ZodOptional<zod.ZodNumber>;
+        verticalAlign: zod.ZodDefault<zod.ZodEnum<["top", "middle", "bottom"]>>;
+        overflow: zod.ZodDefault<zod.ZodEnum<["truncate", "stack"]>>;
+        minItemWidth: zod.ZodDefault<zod.ZodNumber>;
+    }, "strip", zod.ZodTypeAny, {
+        items: string[];
+        gap: number;
+        widthMode: "equal" | "auto" | "manual";
+        verticalAlign: "top" | "middle" | "bottom";
+        overflow: "truncate" | "stack";
+        minItemWidth: number;
+        width?: number | undefined;
+        widths?: (number | "fill" | "auto")[] | undefined;
+    }, {
+        items: string[];
+        gap?: number | undefined;
+        width?: number | undefined;
+        widthMode?: "equal" | "auto" | "manual" | undefined;
+        widths?: (number | "fill" | "auto")[] | undefined;
+        verticalAlign?: "top" | "middle" | "bottom" | undefined;
+        overflow?: "truncate" | "stack" | undefined;
+        minItemWidth?: number | undefined;
+    }>;
+}
+
+// @public
+export interface HorizontalLayoutComputed {
+    gap: number;
+    itemAllocatedWidths: number[];
+    itemHeights: number[];
+    itemLines: string[][];
+    itemNaturalWidths: number[];
+    layoutWidth: number;
+    maxHeight: number;
+    shouldStack: boolean;
+    verticalAlign: HorizontalVerticalAlign;
+}
+
+// @public (undocumented)
+export type HorizontalLayoutInput = z.input<typeof horizontalLayoutInputSchema>;
+
+// @public
+export const horizontalLayoutInputSchema: z.ZodObject<{
+    items: z.ZodArray<z.ZodString, "many">;
+    widthMode: z.ZodDefault<z.ZodEnum<["equal", "auto", "manual"]>>;
+    widths: z.ZodOptional<z.ZodArray<z.ZodUnion<[z.ZodNumber, z.ZodLiteral<"fill">, z.ZodLiteral<"auto">]>, "many">>;
+    gap: z.ZodDefault<z.ZodNumber>;
+    width: z.ZodOptional<z.ZodNumber>;
+    verticalAlign: z.ZodDefault<z.ZodEnum<["top", "middle", "bottom"]>>;
+    overflow: z.ZodDefault<z.ZodEnum<["truncate", "stack"]>>;
+    minItemWidth: z.ZodDefault<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    items: string[];
+    gap: number;
+    widthMode: "equal" | "auto" | "manual";
+    verticalAlign: "top" | "middle" | "bottom";
+    overflow: "truncate" | "stack";
+    minItemWidth: number;
+    width?: number | undefined;
+    widths?: (number | "fill" | "auto")[] | undefined;
+}, {
+    items: string[];
+    gap?: number | undefined;
+    width?: number | undefined;
+    widthMode?: "equal" | "auto" | "manual" | undefined;
+    widths?: (number | "fill" | "auto")[] | undefined;
+    verticalAlign?: "top" | "middle" | "bottom" | undefined;
+    overflow?: "truncate" | "stack" | undefined;
+    minItemWidth?: number | undefined;
+}>;
+
+// @public (undocumented)
+export type HorizontalLayoutInputWithDefaults = z.output<typeof horizontalLayoutInputSchema>;
+
+// @public (undocumented)
+export type HorizontalVerticalAlign = z.infer<typeof horizontalVerticalAlignSchema>;
+
+// @public
+export const horizontalVerticalAlignSchema: z.ZodEnum<["top", "middle", "bottom"]>;
+
+// @public
+export function measureHorizontalOutput(layout: HorizontalLayoutComputed): {
+    width: number;
+    lineCount: number;
+};
 
 // @public
 export function measureVerticalOutput(layout: VerticalLayoutComputed): {
     width: number;
     lineCount: number;
 };
+
+// @public (undocumented)
+export type OverflowBehavior = z.infer<typeof overflowBehaviorSchema>;
+
+// @public
+export const overflowBehaviorSchema: z.ZodEnum<["truncate", "stack"]>;
+
+// @public
+export function padLinesVertically(lines: string[], targetHeight: number, align: HorizontalVerticalAlign): string[];
+
+// @public
+export function renderHorizontalLayoutAnsi(layout: HorizontalLayoutComputed): string;
+
+// @public
+export function renderHorizontalLayoutMarkdown(layout: HorizontalLayoutComputed): string;
 
 // @public
 export function renderVerticalLayoutAnsi(layout: VerticalLayoutComputed): string;
@@ -102,6 +225,18 @@ export type VerticalLayoutItem = z.infer<typeof verticalLayoutItemSchema>;
 
 // @public
 export const verticalLayoutItemSchema: z.ZodString;
+
+// @public (undocumented)
+export type WidthMode = z.infer<typeof widthModeSchema>;
+
+// @public
+export const widthModeSchema: z.ZodEnum<["equal", "auto", "manual"]>;
+
+// @public (undocumented)
+export type WidthSpec = z.infer<typeof widthSpecSchema>;
+
+// @public
+export const widthSpecSchema: z.ZodUnion<[z.ZodNumber, z.ZodLiteral<"fill">, z.ZodLiteral<"auto">]>;
 
 // (No @packageDocumentation comment for this package)
 
