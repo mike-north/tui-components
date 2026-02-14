@@ -40,6 +40,8 @@ This is what the user sees when you write text directly in your response, **outs
 - May have different styling capabilities than command output
 - Is where markdown tricks (backticks, bold) are most likely to work
 
+**IMPORTANT:** When displaying patterns in chat context, paste them **verbatim** into your response. Do NOT wrap them in fenced code blocks (triple backticks). If you wrap the pattern in a code block, the markdown will display literally instead of being rendered, which defeats the purpose of this test.
+
 **You must test BOTH contexts for each test.** Some assistants show full ANSI colors in command output but strip them in chat. Others render markdown beautifully in chat but not in terminal blocks.
 
 ## How This Works
@@ -188,13 +190,30 @@ Ask: **"In the command output above, what do you see?"** with the options.
 
 ### Step 3: Display in Chat Context
 
-Take the same pattern output and display it directly in your response text (NOT in a code block).
+**CRITICAL: Do NOT wrap the output in a fenced code block.**
 
-Say something like:
+Take the pattern output and paste it **verbatim** into your response text. The output must appear as regular chat text, not inside triple backticks or any code formatting.
 
-> Here's the same pattern in chat context:
->
-> [paste the pattern output here, raw, no code block]
+**WRONG** (defeats the test):
+
+````
+Here's the pattern:
+```
+│Progress: `████████` ░░░░░░░░░░░░ 40%
+```
+````
+
+**CORRECT** (verbatim in chat):
+
+```
+Here's the pattern in chat context:
+
+│Progress: `████████` ░░░░░░░░░░░░ 40%
+
+What do you see?
+```
+
+The pattern text above should appear directly in your message, allowing the markdown renderer to process it. If you wrap it in a code block, the backticks will display literally instead of being rendered as highlighting.
 
 Ask: **"In the chat text above, what do you see?"** with the same options.
 
