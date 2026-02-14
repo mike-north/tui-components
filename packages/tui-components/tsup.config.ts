@@ -16,6 +16,7 @@ export default defineConfig({
     "src/tree.ts",
     "src/core.ts",
     "src/layout.ts",
+    "src/callout.ts",
   ],
   format: ["cjs", "esm"],
   dts: true,

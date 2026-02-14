@@ -10,6 +10,10 @@ import { BaseTuiComponent } from '@tuicomponents/core';
 import { BoxComponent } from '@tuicomponents/box';
 import { BoxInput } from '@tuicomponents/box';
 import { boxInputSchema } from '@tuicomponents/box';
+import { CalloutComponent } from '@tuicomponents/callout';
+import { CalloutInput } from '@tuicomponents/callout';
+import { calloutInputSchema } from '@tuicomponents/callout';
+import { CalloutType } from '@tuicomponents/callout';
 import { ChartComponent } from '@tuicomponents/chart';
 import { ChartInput } from '@tuicomponents/chart';
 import { chartInputSchema } from '@tuicomponents/chart';
@@ -17,6 +21,7 @@ import { ChartType } from '@tuicomponents/chart';
 import { Column } from '@tuicomponents/table';
 import { ComponentMetadata } from '@tuicomponents/core';
 import { createBox } from '@tuicomponents/box';
+import { createCallout } from '@tuicomponents/callout';
 import { createChart } from '@tuicomponents/chart';
 import { createDiff } from '@tuicomponents/diff';
 import { createGauge } from '@tuicomponents/gauge';
@@ -99,6 +104,14 @@ export { BoxInput }
 
 export { boxInputSchema }
 
+export { CalloutComponent }
+
+export { CalloutInput }
+
+export { calloutInputSchema }
+
+export { CalloutType }
+
 export { ChartComponent }
 
 export { ChartInput }
@@ -112,6 +125,8 @@ export { Column }
 export { ComponentMetadata }
 
 export { createBox }
+
+export { createCallout }
 
 export { createChart }
 

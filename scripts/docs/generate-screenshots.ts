@@ -47,6 +47,7 @@ import "@tuicomponents/gauge";
 import "@tuicomponents/diff";
 import "@tuicomponents/keyvalue";
 import "@tuicomponents/graph";
+import "@tuicomponents/callout";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.join(__dirname, "../..");
