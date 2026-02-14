@@ -13,7 +13,7 @@ import { z } from 'zod';
 import * as zod from 'zod';
 
 // @public
-export function computeProgressLayout(input: ProgressInputWithDefaults, chars: ProgressChars): ProgressLayout;
+export function computeProgressLayout(input: ProgressInputWithDefaults, chars: ProgressChars, availableWidth?: number): ProgressLayout;
 
 // @public
 export function createProgress(): ProgressComponent;
@@ -47,6 +47,7 @@ export class ProgressComponent extends BaseTuiComponent<ProgressInput, typeof pr
         label: zod.ZodOptional<zod.ZodString>;
         showPercentage: zod.ZodDefault<zod.ZodBoolean>;
         showValue: zod.ZodDefault<zod.ZodBoolean>;
+        fit: zod.ZodDefault<zod.ZodBoolean>;
     }, "strip", zod.ZodTypeAny, {
         value: number;
         max: number;
@@ -54,6 +55,7 @@ export class ProgressComponent extends BaseTuiComponent<ProgressInput, typeof pr
         style: "block" | "shaded" | "bracket" | "arrow" | "ascii";
         showPercentage: boolean;
         showValue: boolean;
+        fit: boolean;
         filledChar?: string | undefined;
         emptyChar?: string | undefined;
         label?: string | undefined;
@@ -67,6 +69,7 @@ export class ProgressComponent extends BaseTuiComponent<ProgressInput, typeof pr
         label?: string | undefined;
         showPercentage?: boolean | undefined;
         showValue?: boolean | undefined;
+        fit?: boolean | undefined;
     }>;
 }
 
@@ -84,6 +87,7 @@ export const progressInputSchema: z.ZodObject<{
     label: z.ZodOptional<z.ZodString>;
     showPercentage: z.ZodDefault<z.ZodBoolean>;
     showValue: z.ZodDefault<z.ZodBoolean>;
+    fit: z.ZodDefault<z.ZodBoolean>;
 }, "strip", z.ZodTypeAny, {
     value: number;
     max: number;
@@ -91,6 +95,7 @@ export const progressInputSchema: z.ZodObject<{
     style: "block" | "shaded" | "bracket" | "arrow" | "ascii";
     showPercentage: boolean;
     showValue: boolean;
+    fit: boolean;
     filledChar?: string | undefined;
     emptyChar?: string | undefined;
     label?: string | undefined;
@@ -104,6 +109,7 @@ export const progressInputSchema: z.ZodObject<{
     label?: string | undefined;
     showPercentage?: boolean | undefined;
     showValue?: boolean | undefined;
+    fit?: boolean | undefined;
 }>;
 
 // @public (undocumented)

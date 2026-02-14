@@ -117,6 +117,16 @@ class ProgressComponent extends BaseTuiComponent<
           label: "Processing:",
         },
       },
+      {
+        name: "fit-to-width",
+        description: "Progress bar that fits to available width",
+        input: {
+          value: 60,
+          max: 100,
+          fit: true,
+          label: "Downloading:",
+        },
+      },
     ],
   };
 
@@ -139,7 +149,8 @@ class ProgressComponent extends BaseTuiComponent<
     const chars = getProgressChars(parsed.style);
 
     // Compute layout once, share between renderers
-    const layout = computeProgressLayout(parsed, chars);
+    // Pass context.width for fit mode calculation
+    const layout = computeProgressLayout(parsed, chars, context.width);
 
     // Choose renderer based on render mode
     const output =

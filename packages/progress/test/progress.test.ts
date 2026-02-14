@@ -348,6 +348,148 @@ describe("ProgressComponent", () => {
     });
   });
 
+  describe("render - fit mode", () => {
+    it("should fit bar to available width when fit is true", () => {
+      const input: ProgressInput = {
+        value: 50,
+        max: 100,
+        fit: true,
+        showPercentage: true,
+      };
+
+      // Context width is 80
+      const result = progress.render(input, defaultContext);
+
+      // Without label, brackets, the bar should take most of the width
+      // Format: [bar] [percentage]
+      // 80 - space(1) - "50%"(3) = 76 chars for bar
+      expect(result.actualWidth).toBe(80);
+    });
+
+    it("should account for label width in fit mode", () => {
+      const input: ProgressInput = {
+        value: 50,
+        max: 100,
+        fit: true,
+        label: "Loading:",
+        showPercentage: true,
+      };
+
+      const result = progress.render(input, defaultContext);
+
+      // Format: "Loading:" [bar] 50%
+      // Should fit to context width (80)
+      expect(result.output).toContain("Loading:");
+      expect(result.actualWidth).toBe(80);
+    });
+
+    it("should account for brackets in fit mode", () => {
+      const input: ProgressInput = {
+        value: 50,
+        max: 100,
+        fit: true,
+        style: "bracket",
+        showPercentage: true,
+      };
+
+      const result = progress.render(input, defaultContext);
+
+      expect(result.output).toContain("[");
+      expect(result.output).toContain("]");
+      expect(result.actualWidth).toBe(80);
+    });
+
+    it("should account for value suffix in fit mode", () => {
+      const input: ProgressInput = {
+        value: 50,
+        max: 100,
+        fit: true,
+        showPercentage: true,
+        showValue: true,
+      };
+
+      const result = progress.render(input, defaultContext);
+
+      expect(result.output).toContain("50%");
+      expect(result.output).toContain("50/100");
+      expect(result.actualWidth).toBe(80);
+    });
+
+    it("should enforce minimum bar width in fit mode", () => {
+      const input: ProgressInput = {
+        value: 99,
+        max: 100,
+        fit: true,
+        label: "A very long label that takes up most of the space",
+        showPercentage: true,
+        showValue: true,
+      };
+
+      // Very narrow context
+      const narrowContext: RenderContext = {
+        ...defaultContext,
+        width: 60,
+      };
+
+      const result = progress.render(input, narrowContext);
+
+      // Bar should still have minimum width (5 chars)
+      expect(result.output).toContain("█");
+      expect(result.lineCount).toBe(1);
+    });
+
+    it("should use explicit width when fit is false", () => {
+      const input: ProgressInput = {
+        value: 50,
+        max: 100,
+        width: 10,
+        fit: false,
+      };
+
+      const result = progress.render(input, defaultContext);
+
+      // Should use explicit width of 10, not fit to 80
+      // Total width: 10 (bar) + 1 (space) + 3 (50%) = 14
+      expect(result.actualWidth).toBeLessThan(80);
+    });
+
+    it("should fit without percentage when showPercentage is false", () => {
+      const input: ProgressInput = {
+        value: 50,
+        max: 100,
+        fit: true,
+        showPercentage: false,
+      };
+
+      const result = progress.render(input, defaultContext);
+
+      // Bar should fill entire width (no suffix)
+      expect(result.output).not.toContain("%");
+      expect(result.actualWidth).toBe(80);
+    });
+
+    it("should work in markdown mode with fit", () => {
+      const input: ProgressInput = {
+        value: 50,
+        max: 100,
+        fit: true,
+        label: "Progress:",
+      };
+
+      const markdownContext: RenderContext = {
+        ...defaultContext,
+        renderMode: "markdown",
+      };
+
+      const result = progress.render(input, markdownContext);
+
+      expect(result.output).toContain("│"); // anchor
+      expect(result.output).toContain("Progress:");
+      // Should fit to context width (80) + anchor
+      expect(result.actualWidth).toBe(81); // 80 + anchor char
+    });
+  });
+
   describe("schema validation", () => {
     it("should validate correct input", () => {
       const input = {
@@ -370,6 +512,7 @@ describe("ProgressComponent", () => {
       expect(parsed.style).toBe("block");
       expect(parsed.showPercentage).toBe(true);
       expect(parsed.showValue).toBe(false);
+      expect(parsed.fit).toBe(false);
     });
 
     it("should reject negative value", () => {
