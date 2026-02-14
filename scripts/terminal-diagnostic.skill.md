@@ -168,6 +168,46 @@ The diagnostic includes four categories:
 3. **Unicode** (2 tests) - Block characters and box drawing
 4. **TUI Patterns** (7 tests) - The specific markdown tricks used by tui-components
 
+## Test Optimization (Short-Circuit Logic)
+
+To save time, skip tests that are guaranteed to fail based on earlier results:
+
+### ANSI Tests
+
+Run tests in this order: `ansi.fg.basic` → `ansi.fg.bright` → `ansi.bg.basic` → `ansi.256` → `ansi.truecolor` → `ansi.styles`
+
+**Short-circuit rules:**
+
+- If `ansi.fg.basic` = "none" in a context → skip `ansi.fg.bright`, `ansi.bg.basic`, `ansi.256`, `ansi.truecolor` for that context (record as "none")
+- Still test `ansi.styles` separately (bold/italic may work even without colors)
+
+### Markdown Tests
+
+Run tests in this order: `md.backtick` → `md.bold` → `md.whitespace` → `md.anchor`
+
+**Short-circuit rules:**
+
+- These are largely independent, so run all of them
+- `md.backtick` result is critical for TUI patterns
+
+### Unicode Tests
+
+Run both `unicode.blocks` and `unicode.box` - they use different character sets and may have different support.
+
+### TUI Pattern Tests
+
+**Short-circuit rules:**
+
+- If `md.backtick` = "none" in chat context → TUI patterns will likely show "partial" or "none" (no two-color distinction), but still test at least `tui.progress` to confirm
+- If `md.anchor` = "none" → alignment will be broken, but highlighting may still work
+
+### Recording Skipped Tests
+
+When skipping a test due to short-circuit logic, record the result as "none" with a note that it was skipped:
+
+- The test was not run
+- The result is inferred from the prerequisite test failure
+
 ## Running Each Test
 
 For each test, follow this pattern:
