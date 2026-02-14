@@ -256,6 +256,22 @@ importers:
         specifier: ^22.0.0
         version: 22.19.11
 
+  packages/layout:
+    dependencies:
+      "@tuicomponents/core":
+        specifier: workspace:*
+        version: link:../core
+      zod:
+        specifier: ^3.25.56
+        version: 3.25.76
+      zod-to-json-schema:
+        specifier: ^3.24.5
+        version: 3.25.1(zod@3.25.76)
+    devDependencies:
+      "@types/node":
+        specifier: ^22.0.0
+        version: 22.19.11
+
   packages/list:
     dependencies:
       "@tuicomponents/core":
@@ -362,6 +378,9 @@ importers:
       "@tuicomponents/keyvalue":
         specifier: workspace:*
         version: link:../keyvalue
+      "@tuicomponents/layout":
+        specifier: workspace:*
+        version: link:../layout
       "@tuicomponents/list":
         specifier: workspace:*
         version: link:../list

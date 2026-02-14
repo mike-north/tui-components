@@ -25,6 +25,10 @@ export { createProgress, ProgressComponent } from "@tuicomponents/progress";
 export { createSparkline, SparklineComponent } from "@tuicomponents/sparkline";
 export { createTable, TableComponent } from "@tuicomponents/table";
 export { createTree, TreeComponent } from "@tuicomponents/tree";
+export {
+  createVerticalLayout,
+  VerticalLayoutComponent,
+} from "@tuicomponents/layout";
 
 // Re-export core utilities
 export {
@@ -70,6 +74,7 @@ export type { ProgressInput, ProgressStyle } from "@tuicomponents/progress";
 export type { SparklineInput } from "@tuicomponents/sparkline";
 export type { TableInput, Column } from "@tuicomponents/table";
 export type { TreeInput, TreeNode, TreeStyle } from "@tuicomponents/tree";
+export type { VerticalLayoutInput, VerticalAlign } from "@tuicomponents/layout";
 
 // Re-export schemas for validation
 export { boxInputSchema } from "@tuicomponents/box";
@@ -83,3 +88,4 @@ export { progressInputSchema } from "@tuicomponents/progress";
 export { sparklineInputSchema } from "@tuicomponents/sparkline";
 export { tableInputSchema } from "@tuicomponents/table";
 export { treeInputSchema } from "@tuicomponents/tree";
+export { verticalLayoutInputSchema } from "@tuicomponents/layout";

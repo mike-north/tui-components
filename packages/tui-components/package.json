@@ -136,6 +136,16 @@
         "types": "./dist/core.d.cts",
         "default": "./dist/core.cjs"
       }
+    },
+    "./layout": {
+      "import": {
+        "types": "./dist/layout.d.ts",
+        "default": "./dist/layout.js"
+      },
+      "require": {
+        "types": "./dist/layout.d.cts",
+        "default": "./dist/layout.cjs"
+      }
     }
   },
   "files": [
@@ -163,7 +173,8 @@
     "keyvalue",
     "sparkline",
     "progress",
-    "gauge"
+    "gauge",
+    "layout"
   ],
   "license": "UNLICENSED",
   "devDependencies": {
@@ -181,6 +192,7 @@
     "@tuicomponents/progress": "workspace:*",
     "@tuicomponents/sparkline": "workspace:*",
     "@tuicomponents/table": "workspace:*",
-    "@tuicomponents/tree": "workspace:*"
+    "@tuicomponents/tree": "workspace:*",
+    "@tuicomponents/layout": "workspace:*"
   }
 }
