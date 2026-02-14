@@ -80,6 +80,51 @@ Ask the user which AI assistant they're using:
 - OpenCode
 - Other (specify)
 
+## Agent Self-Identification Test
+
+**Before running the rendering tests**, test whether you can identify yourself to CLI commands.
+
+### Why This Matters
+
+If AI agents can reliably set environment variables when calling CLI tools, the `tui-components` library can automatically detect which renderer to use. This is more reliable than environment detection.
+
+### How to Test
+
+Run this command with the `TUI_AGENT` environment variable set to your assistant name (use lowercase with hyphens, e.g., `claude-code`, `cursor`, `kiro-cli`):
+
+```bash
+TUI_AGENT=<your-name> npx tsx scripts/terminal-diagnostic.ts --identify <your-name>
+```
+
+For example, if you are Claude Code:
+
+```bash
+TUI_AGENT=claude-code npx tsx scripts/terminal-diagnostic.ts --identify claude-code
+```
+
+The output will be JSON indicating whether the identification was detected:
+
+```json
+{
+  "detected": true,
+  "value": "claude-code",
+  "expected": "claude-code"
+}
+```
+
+### Recording the Result
+
+Record in the report:
+
+- `agentIdentification.canSetEnvVar`: true if `detected` is true and `value` matches `expected`
+- `agentIdentification.detectedValue`: the value that was detected (or null)
+
+If you cannot set environment variables when running commands, record `canSetEnvVar: false`.
+
+### Future Use
+
+If this test succeeds, the `tui-components` library can include per-agent instructions in each agent's skill folder telling it to always set `TUI_AGENT=<agent-name>` when calling CLI tools. This enables automatic renderer selection without user interaction.
+
 ## Test Categories
 
 The diagnostic includes four categories:
@@ -170,6 +215,10 @@ After all tests, generate a JSON report with BOTH contexts recorded:
   "assistant": "<name from setup>",
   "timestamp": "<current ISO timestamp>",
   "environment": "<output from --env command>",
+  "agentIdentification": {
+    "canSetEnvVar": "<true|false>",
+    "detectedValue": "<value or null>"
+  },
   "results": {
     "ansi.fg.basic": {
       "command": "<full|partial|none>",

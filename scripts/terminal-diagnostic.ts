@@ -610,6 +610,7 @@ interface EnvInfo {
   noColor: boolean;
   forceColor: string | undefined;
   ciDetected: boolean;
+  tuiAgent: string | undefined;
 }
 
 function detectEnv(): EnvInfo {
@@ -624,6 +625,28 @@ function detectEnv(): EnvInfo {
     ciDetected:
       process.env["CI"] !== undefined ||
       process.env["GITHUB_ACTIONS"] !== undefined,
+    tuiAgent: process.env["TUI_AGENT"],
+  };
+}
+
+/**
+ * Agent self-identification test.
+ *
+ * This tests whether an AI agent can be instructed to identify itself
+ * by setting the TUI_AGENT environment variable when calling CLI commands.
+ */
+interface AgentIdentification {
+  detected: boolean;
+  value: string | undefined;
+  expected: string | undefined;
+}
+
+function checkAgentIdentification(expected?: string): AgentIdentification {
+  const value = process.env["TUI_AGENT"];
+  return {
+    detected: value !== undefined && value.length > 0,
+    value,
+    expected,
   };
 }
 
@@ -641,13 +664,22 @@ Usage:
   npx tsx scripts/terminal-diagnostic.ts --list-category <cat>  List tests in category
   npx tsx scripts/terminal-diagnostic.ts --info <id>      Get test metadata as JSON
   npx tsx scripts/terminal-diagnostic.ts --env            Show environment info
+  npx tsx scripts/terminal-diagnostic.ts --identify [expected]  Check agent self-identification
   npx tsx scripts/terminal-diagnostic.ts --help           Show this help
 
 Categories: ansi, markdown, unicode, tui-pattern
 
+Environment Variables:
+  TUI_AGENT   AI agent should set this to its name (e.g., "claude-code", "cursor")
+
 This utility is designed to be called by AI assistants following the
 terminal-diagnostic skill. The skill guides the conversational flow.
 `);
+}
+
+function showIdentify(expected?: string): void {
+  const result = checkAgentIdentification(expected);
+  console.log(JSON.stringify(result, null, 2));
 }
 
 function listTests(category?: string): void {
@@ -721,6 +753,14 @@ function main(): void {
 
   if (args.includes("--env")) {
     showEnv();
+    return;
+  }
+
+  const identifyIdx = args.indexOf("--identify");
+  if (identifyIdx !== -1) {
+    // Optional expected value
+    const expected = args[identifyIdx + 1];
+    showIdentify(expected);
     return;
   }
 
