@@ -340,12 +340,23 @@ Compare: \`inline code\` vs regular text
       "-removed line (should be red)\n" +
       " another unchanged line\n" +
       "```\n",
-    expected:
-      "Lines starting with + are green, lines starting with - are red",
+    expected: "Lines starting with + are green, lines starting with - are red",
     options: [
-      { label: "A", description: "Green and red coloring visible", level: "full" },
-      { label: "B", description: "Code block visible but no colors", level: "partial" },
-      { label: "C", description: "Raw markdown visible (```diff)", level: "none" },
+      {
+        label: "A",
+        description: "Green and red coloring visible",
+        level: "full",
+      },
+      {
+        label: "B",
+        description: "Code block visible but no colors",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "Raw markdown visible (```diff)",
+        level: "none",
+      },
     ],
   },
 
@@ -395,9 +406,21 @@ No leading spaces here
     expected:
       'Each line starts with a visible "│" character (box drawing light vertical)',
     options: [
-      { label: "A", description: "│ characters visible on each line", level: "full" },
-      { label: "B", description: "Some other character or garbled", level: "partial" },
-      { label: "C", description: "No leading character visible", level: "none" },
+      {
+        label: "A",
+        description: "│ characters visible on each line",
+        level: "full",
+      },
+      {
+        label: "B",
+        description: "Some other character or garbled",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "No leading character visible",
+        level: "none",
+      },
     ],
   },
 
@@ -453,8 +476,7 @@ No leading spaces here
   │  └───┴───┘      │
   └─────────────────┘
 `,
-    expected:
-      "A nested box structure with clean corners and straight lines",
+    expected: "A nested box structure with clean corners and straight lines",
     options: [
       {
         label: "A",
@@ -509,7 +531,11 @@ function detectEnv(): EnvInfo {
 // UI Helpers
 // ============================================================================
 
-function formatTestHeader(testNum: number, totalTests: number, name: string): string {
+function formatTestHeader(
+  testNum: number,
+  totalTests: number,
+  name: string
+): string {
   const bar = "═".repeat(63);
   return `
 ╔${bar}╗
@@ -535,17 +561,27 @@ function formatPrompt(test: Test): string {
     }
   }
 
-  lines.push("│                                                               │");
-  lines.push("│ What do you see?                                              │");
+  lines.push(
+    "│                                                               │"
+  );
+  lines.push(
+    "│ What do you see?                                              │"
+  );
 
   for (const opt of test.options) {
     const optLine = `  (${opt.label}) ${opt.description}`;
     lines.push(`│${optLine.padEnd(63)}│`);
   }
 
-  lines.push("│                                                               │");
-  lines.push(`│ Reply with just the letter (${test.options.map((o) => o.label).join("/")}):${"".padEnd(63 - 32 - test.options.length * 2)}│`);
-  lines.push("└───────────────────────────────────────────────────────────────┘");
+  lines.push(
+    "│                                                               │"
+  );
+  lines.push(
+    `│ Reply with just the letter (${test.options.map((o) => o.label).join("/")}):${"".padEnd(63 - 32 - test.options.length * 2)}│`
+  );
+  lines.push(
+    "└───────────────────────────────────────────────────────────────┘"
+  );
 
   return lines.join("\n");
 }
@@ -567,7 +603,9 @@ interface DiagnosticReport {
   };
 }
 
-function computeSummary(results: Record<string, CapabilityLevel>): DiagnosticReport["summary"] {
+function computeSummary(
+  results: Record<string, CapabilityLevel>
+): DiagnosticReport["summary"] {
   // Determine ANSI support level
   let ansiSupport: "none" | "basic" | "256" | "truecolor" = "none";
   if (results["ansi.truecolor"] === "full") {
@@ -593,8 +631,7 @@ function computeSummary(results: Record<string, CapabilityLevel>): DiagnosticRep
 
   // Unicode support
   const unicodeSupport =
-    results["unicode.blocks"] === "full" ||
-    results["unicode.box"] === "full";
+    results["unicode.blocks"] === "full" || results["unicode.box"] === "full";
 
   return {
     ansiSupport,
