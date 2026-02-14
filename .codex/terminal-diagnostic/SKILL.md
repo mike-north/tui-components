@@ -1,0 +1,1 @@
+../../scripts/terminal-diagnostic.skill.md
