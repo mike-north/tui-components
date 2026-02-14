@@ -85,20 +85,49 @@ function bucketValues(values: number[], targetWidth: number): number[] {
 }
 
 /**
+ * Minimum sparkline width when fit mode is enabled.
+ * A sparkline narrower than 5 characters provides insufficient visual information.
+ */
+const MIN_FIT_SPARKLINE_WIDTH = 5;
+
+/**
  * Compute the layout for a sparkline.
  *
  * @param input - Validated sparkline input
+ * @param availableWidth - Available width for fit mode (from context.width)
  * @returns Layout information
  */
 export function computeSparklineLayout(
-  input: SparklineInputWithDefaults
+  input: SparklineInputWithDefaults,
+  availableWidth?: number
 ): SparklineLayout {
-  const { values, width, min: explicitMin, max: explicitMax, label } = input;
+  const {
+    values,
+    width,
+    min: explicitMin,
+    max: explicitMax,
+    label,
+    fit,
+  } = input;
+
+  // Determine effective width for compression
+  let effectiveWidth: number | undefined = width;
+
+  if (fit && availableWidth !== undefined) {
+    // Calculate sparkline width from available space
+    const labelWidth = label?.length ?? 0;
+    const sparklineWidth = Math.max(
+      MIN_FIT_SPARKLINE_WIDTH,
+      availableWidth - labelWidth
+    );
+    effectiveWidth = sparklineWidth;
+  }
 
   // Apply width compression if needed
+  // bucketValues returns original values if targetWidth >= values.length
   const displayValues =
-    width !== undefined && width < values.length
-      ? bucketValues(values, width)
+    effectiveWidth !== undefined
+      ? bucketValues(values, effectiveWidth)
       : values;
 
   // Determine min/max for scaling

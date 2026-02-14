@@ -14,6 +14,13 @@ export const sparklineInputSchema = z.object({
   max: z.number().optional(),
   /** Optional label prefix (e.g., "CPU: ") */
   label: z.string().optional(),
+  /**
+   * Whether to auto-fit the sparkline to the available width.
+   * When true, the sparkline compresses the data to fit the available width
+   * (context.width minus label), but does not expand beyond the data length.
+   * @default false
+   */
+  fit: z.boolean().default(false),
 });
 
 /**

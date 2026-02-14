@@ -327,6 +327,123 @@ describe("SparklineComponent", () => {
     });
   });
 
+  describe("fit mode", () => {
+    it("should compress data when fit is true and values exceed available width", () => {
+      const input: SparklineInput = {
+        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], // 15 values
+        fit: true,
+      };
+
+      // With 15 values and available width of 80, bucketValues doesn't expand
+      // beyond the original data length, so the sparkline output is 15 characters.
+      const result = sparkline.render(input, defaultContext);
+
+      expect(result.output.length).toBe(15);
+    });
+
+    it("should compress data to fit available width minus label", () => {
+      const input: SparklineInput = {
+        values: Array.from({ length: 100 }, (_, i) => i + 1), // 100 values
+        fit: true,
+        label: "CPU: ", // 5 chars
+      };
+
+      // Context width 80 - label 5 = 75 chars for sparkline
+      // 100 values should be compressed to 75
+      const result = sparkline.render(input, defaultContext);
+
+      // Output: label (5) + compressed sparkline (75) = 80
+      expect(result.output).toContain("CPU: ");
+      expect(result.actualWidth).toBe(80);
+    });
+
+    it("should not expand data beyond values.length", () => {
+      const input: SparklineInput = {
+        values: [1, 2, 3, 4, 5], // 5 values
+        fit: true,
+      };
+
+      // Context width is 80, but we only have 5 values
+      // bucketValues doesn't create data, so output is 5 chars
+      const result = sparkline.render(input, defaultContext);
+
+      expect(result.output.length).toBe(5);
+    });
+
+    it("should enforce minimum sparkline width when space is constrained", () => {
+      const input: SparklineInput = {
+        values: Array.from({ length: 50 }, (_, i) => i + 1),
+        fit: true,
+        label: "A very long label that takes up most of the space: ", // 52 chars
+      };
+
+      // Context width is 80, label is ~52 chars
+      // Available for sparkline: 80 - 52 = 28 chars
+      // Since 28 > 5 (the minimum), the sparkline will be 28 chars
+      const result = sparkline.render(input, defaultContext);
+
+      // The sparkline portion should exist
+      expect(result.output).toContain("A very long label");
+    });
+
+    it("should use minimum width when label is very long", () => {
+      const input: SparklineInput = {
+        values: Array.from({ length: 50 }, (_, i) => i + 1),
+        fit: true,
+        label:
+          "This label is extremely long and leaves almost no space for the sparkline: ",
+      };
+
+      // Very narrow context
+      const narrowContext: RenderContext = {
+        ...defaultContext,
+        width: 80, // label is ~77 chars, leaving only 3
+      };
+
+      const result = sparkline.render(input, narrowContext);
+
+      // Minimum sparkline width is 5
+      expect(result.lineCount).toBe(1);
+    });
+
+    it("should prefer fit calculation when both fit and width are provided", () => {
+      const input: SparklineInput = {
+        values: Array.from({ length: 100 }, (_, i) => i + 1),
+        fit: true,
+        width: 10, // This will be overridden by fit
+      };
+
+      const result = sparkline.render(input, defaultContext);
+
+      // fit=true overrides explicit width
+      // Context width 80, no label, so 100 values compressed to 80
+      expect(result.output.length).toBe(80);
+    });
+
+    it("should work in markdown mode with fit", () => {
+      const input: SparklineInput = {
+        values: Array.from({ length: 100 }, (_, i) => i + 1),
+        fit: true,
+        label: "Data: ",
+      };
+
+      const result = sparkline.render(input, markdownContext);
+
+      expect(result.output).toContain("Data: ");
+      expect(result.output.startsWith(DEFAULT_ANCHOR)).toBe(true);
+    });
+
+    it("should default fit to false", () => {
+      const input: SparklineInput = {
+        values: [1, 2, 3],
+      };
+
+      const parsed = sparkline.schema.parse(input);
+
+      expect(parsed.fit).toBe(false);
+    });
+  });
+
   describe("schema", () => {
     it("should validate correct input", () => {
       const input: SparklineInput = {
