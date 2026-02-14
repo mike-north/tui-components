@@ -153,6 +153,20 @@ After all 12 tests, generate a JSON report:
 
 - **unicodeSupport**: true if unicode.blocks or unicode.box is "full"
 
+## Saving the Report
+
+After generating the JSON report, write it to a file:
+
+```
+.terminal-diagnostic-results/<assistant-name>.json
+```
+
+For example: `.terminal-diagnostic-results/claude-code.json`
+
+Create the directory if it doesn't exist. This allows results from different assistants to be collected and compared.
+
+**Important:** Show the user the report contents AND confirm the file was written successfully.
+
 ## Starting the Diagnostic
 
 Begin by saying:
