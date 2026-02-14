@@ -121,6 +121,38 @@ Record in the report:
 
 If you cannot set environment variables when running commands, record `canSetEnvVar: false`.
 
+### Compare with Heuristic Detection
+
+After testing explicit identification, compare it with the heuristic detection from `is-agentic-tui`:
+
+```bash
+TUI_AGENT=<your-name> npx tsx scripts/terminal-diagnostic.ts --detect
+```
+
+This outputs a comparison:
+
+```json
+{
+  "heuristic": {
+    "detected": true,
+    "tool": "Claude Code",
+    "confidence": "high",
+    "signals": ["CLAUDECODE=1"]
+  },
+  "explicit": {
+    "detected": true,
+    "value": "claude-code"
+  },
+  "match": true
+}
+```
+
+Record in the report:
+
+- `agentIdentification.heuristicDetected`: what `is-agentic-tui` detected (tool name or null)
+- `agentIdentification.heuristicConfidence`: the confidence level (high/medium/low or null)
+- `agentIdentification.signalsMatch`: whether explicit and heuristic detection agree
+
 ### Future Use
 
 If this test succeeds, the `tui-components` library can include per-agent instructions in each agent's skill folder telling it to always set `TUI_AGENT=<agent-name>` when calling CLI tools. This enables automatic renderer selection without user interaction.
@@ -217,7 +249,10 @@ After all tests, generate a JSON report with BOTH contexts recorded:
   "environment": "<output from --env command>",
   "agentIdentification": {
     "canSetEnvVar": "<true|false>",
-    "detectedValue": "<value or null>"
+    "detectedValue": "<value or null>",
+    "heuristicDetected": "<tool name or null>",
+    "heuristicConfidence": "<high|medium|low or null>",
+    "signalsMatch": "<true|false|null>"
   },
   "results": {
     "ansi.fg.basic": {

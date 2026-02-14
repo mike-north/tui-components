@@ -10,6 +10,8 @@
  *   npx tsx scripts/terminal-diagnostic.ts --list           # List all test IDs
  *   npx tsx scripts/terminal-diagnostic.ts --info <id>      # Get test metadata
  *   npx tsx scripts/terminal-diagnostic.ts --env            # Show environment info
+ *   npx tsx scripts/terminal-diagnostic.ts --identify       # Check agent self-identification
+ *   npx tsx scripts/terminal-diagnostic.ts --detect         # Detect agent via heuristics
  */
 
 // ============================================================================
@@ -665,6 +667,7 @@ Usage:
   npx tsx scripts/terminal-diagnostic.ts --info <id>      Get test metadata as JSON
   npx tsx scripts/terminal-diagnostic.ts --env            Show environment info
   npx tsx scripts/terminal-diagnostic.ts --identify [expected]  Check agent self-identification
+  npx tsx scripts/terminal-diagnostic.ts --detect         Compare heuristic vs explicit detection
   npx tsx scripts/terminal-diagnostic.ts --help           Show this help
 
 Categories: ansi, markdown, unicode, tui-pattern
@@ -679,6 +682,58 @@ terminal-diagnostic skill. The skill guides the conversational flow.
 
 function showIdentify(expected?: string): void {
   const result = checkAgentIdentification(expected);
+  console.log(JSON.stringify(result, null, 2));
+}
+
+/**
+ * Show heuristic detection results from is-agentic-tui.
+ * This uses environment variable heuristics to guess which agent is running.
+ */
+async function showDetect(): Promise<void> {
+  const explicit = process.env["TUI_AGENT"];
+
+  // Try to import is-agentic-tui dynamically
+  let detection: {
+    tool: string;
+    confidence: string;
+    signals: string[];
+  } | null = null;
+  let importError: string | null = null;
+
+  try {
+    const mod = (await import("is-agentic-tui")) as {
+      whichAgenticTui: () => typeof detection;
+    };
+    detection = mod.whichAgenticTui();
+  } catch (err: unknown) {
+    importError =
+      "is-agentic-tui not available (run from packages/cli for full detection)";
+  }
+
+  const result = {
+    heuristic: importError
+      ? { error: importError }
+      : detection
+        ? {
+            detected: true,
+            tool: detection.tool,
+            confidence: detection.confidence,
+            signals: detection.signals,
+          }
+        : {
+            detected: false,
+          },
+    explicit: {
+      detected: explicit !== undefined && explicit.length > 0,
+      value: explicit,
+    },
+    match:
+      detection && explicit
+        ? detection.tool.toLowerCase().replace(/\s+/g, "-") ===
+          explicit.toLowerCase()
+        : null,
+  };
+
   console.log(JSON.stringify(result, null, 2));
 }
 
@@ -727,7 +782,7 @@ function showEnv(): void {
 // Main
 // ============================================================================
 
-function main(): void {
+async function main(): Promise<void> {
   const args = process.argv.slice(2);
 
   if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
@@ -764,6 +819,11 @@ function main(): void {
     return;
   }
 
+  if (args.includes("--detect")) {
+    await showDetect();
+    return;
+  }
+
   const patternIdx = args.indexOf("--pattern");
   if (patternIdx !== -1 && args[patternIdx + 1]) {
     showPattern(args[patternIdx + 1]);
@@ -780,4 +840,4 @@ function main(): void {
   process.exit(1);
 }
 
-main();
+void main();
