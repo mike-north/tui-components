@@ -1,6 +1,6 @@
 # @tuicomponents/list
 
-Renders bulleted or numbered lists with nesting support
+Renders lists with support for bullets, numbers, tasks, and definitions.
 
 ![List Example](../../docs/screenshots/list/nested.png)
 
@@ -138,14 +138,94 @@ Nested list with sub-items
 
 </details>
 
+### task
+
+Task list with checkboxes
+
+![Task list with checkboxes](../../docs/screenshots/list/task.png)
+
+<details>
+<summary>Input</summary>
+
+```json
+{
+  "items": [
+    { "text": "Complete documentation", "checked": true },
+    { "text": "Write tests", "checked": false },
+    { "text": "Review PR", "checked": "partial" }
+  ],
+  "style": "task"
+}
+```
+
+</details>
+
+### definition
+
+Definition list with terms
+
+![Definition list with terms](../../docs/screenshots/list/definition.png)
+
+<details>
+<summary>Input</summary>
+
+```json
+{
+  "items": [
+    { "term": "API", "definition": "Application Programming Interface" },
+    { "term": "CLI", "definition": "Command Line Interface" },
+    { "term": "TUI", "definition": "Terminal User Interface" }
+  ],
+  "style": "definition"
+}
+```
+
+</details>
+
 ## Configuration Options
 
-| Property | Type       | Required | Default | Description |
-| -------- | ---------- | -------- | ------- | ----------- | ---------- | ---------- | ------- | ------- | --- | --- | --- |
-| `items`  | `object[]` | ✓        | -       | -           |
-| `style`  | `"bullet"  | "dash"   | "arrow" | "star"      | "numbered" | "lettered" | "roman" | "none"` |     | -   | -   |
-| `indent` | `number`   |          | -       | -           |
-| `start`  | `number`   |          | -       | -           |
+| Property    | Type       | Required | Default    | Description                           |
+| ----------- | ---------- | -------- | ---------- | ------------------------------------- |
+| `items`     | `object[]` | ✓        | -          | Array of list items                   |
+| `style`     | `string`   |          | `"bullet"` | List style (see below)                |
+| `indent`    | `number`   |          | `2`        | Indentation for nested items          |
+| `start`     | `number`   |          | `1`        | Starting number for numbered styles   |
+| `termWidth` | `number`   |          | auto       | Fixed term width for definition lists |
+
+### List Styles
+
+| Style        | Description                    |
+| ------------ | ------------------------------ |
+| `bullet`     | Bullet points (•)              |
+| `dash`       | Dash markers (-)               |
+| `arrow`      | Arrow markers (→)              |
+| `star`       | Star markers (★)               |
+| `numbered`   | Numbered list (1. 2. 3.)       |
+| `lettered`   | Lettered list (a. b. c.)       |
+| `roman`      | Roman numerals (i. ii. iii.)   |
+| `task`       | Task list with checkboxes      |
+| `definition` | Definition list (term → value) |
+| `none`       | No markers                     |
+
+### Item Types
+
+**Standard Item:**
+
+```typescript
+{ text: "Item text", items?: [...] }  // items for nesting
+```
+
+**Task Item (for task style):**
+
+```typescript
+{ text: "Task text", checked: true | false | "partial" }
+```
+
+**Definition Item (for definition style):**
+
+```typescript
+{ term: "Term", definition: "Definition text" }
+```
 
 ## Render Modes
 

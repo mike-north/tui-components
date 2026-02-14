@@ -14,11 +14,38 @@ import * as zod from 'zod';
 // @public
 export function createList(): ListComponent;
 
+// @public (undocumented)
+export type DefinitionItem = z.infer<typeof definitionItemSchema>;
+
+// @public
+export const definitionItemSchema: z.ZodObject<{
+    term: z.ZodString;
+    definition: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    definition: string;
+    term: string;
+}, {
+    definition: string;
+    term: string;
+}>;
+
 // @public
 export function getMarker(style: ListStyle, index: number, startNumber: number): string;
 
 // @public
 export function getMaxMarkerWidth(style: ListStyle, itemCount: number, startNumber: number): number;
+
+// @public
+export function getTaskMarker(checked: TaskChecked): string;
+
+// @public
+export function isDefinitionItem(item: ListItem): item is DefinitionItem;
+
+// @public
+export function isStandardItem(item: ListItem): item is StandardItem;
+
+// @public
+export function isTaskItem(item: ListItem): item is TaskItem;
 
 // @public
 export class ListComponent extends BaseTuiComponent<ListInput, typeof listInputSchema> {
@@ -30,19 +57,22 @@ export class ListComponent extends BaseTuiComponent<ListInput, typeof listInputS
     // (undocumented)
     readonly schema: zod.ZodObject<{
         items: zod.ZodArray<zod.ZodType<any, zod.ZodTypeDef, unknown>, "many">;
-        style: zod.ZodDefault<zod.ZodOptional<zod.ZodEnum<["bullet", "dash", "arrow", "star", "numbered", "lettered", "roman", "none"]>>>;
+        style: zod.ZodDefault<zod.ZodOptional<zod.ZodEnum<["bullet", "dash", "arrow", "star", "numbered", "lettered", "roman", "none", "task", "definition"]>>>;
         indent: zod.ZodDefault<zod.ZodOptional<zod.ZodNumber>>;
         start: zod.ZodDefault<zod.ZodOptional<zod.ZodNumber>>;
+        termWidth: zod.ZodOptional<zod.ZodNumber>;
     }, "strip", zod.ZodTypeAny, {
         items: any[];
-        style: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none";
+        style: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none" | "task" | "definition";
         indent: number;
         start: number;
+        termWidth?: number | undefined;
     }, {
         items: unknown[];
-        style?: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none" | undefined;
+        style?: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none" | "task" | "definition" | undefined;
         indent?: number | undefined;
         start?: number | undefined;
+        termWidth?: number | undefined;
     }>;
 }
 
@@ -52,30 +82,29 @@ export type ListInput = z.input<typeof listInputSchema>;
 // @public
 export const listInputSchema: z.ZodObject<{
     items: z.ZodArray<z.ZodType<any, z.ZodTypeDef, unknown>, "many">;
-    style: z.ZodDefault<z.ZodOptional<z.ZodEnum<["bullet", "dash", "arrow", "star", "numbered", "lettered", "roman", "none"]>>>;
+    style: z.ZodDefault<z.ZodOptional<z.ZodEnum<["bullet", "dash", "arrow", "star", "numbered", "lettered", "roman", "none", "task", "definition"]>>>;
     indent: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
     start: z.ZodDefault<z.ZodOptional<z.ZodNumber>>;
+    termWidth: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
     items: any[];
-    style: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none";
+    style: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none" | "task" | "definition";
     indent: number;
     start: number;
+    termWidth?: number | undefined;
 }, {
     items: unknown[];
-    style?: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none" | undefined;
+    style?: "bullet" | "dash" | "arrow" | "star" | "numbered" | "lettered" | "roman" | "none" | "task" | "definition" | undefined;
     indent?: number | undefined;
     start?: number | undefined;
+    termWidth?: number | undefined;
 }>;
 
 // @public
 export type ListInputWithDefaults = z.output<typeof listInputSchema>;
 
-// Warning: (ae-forgotten-export) The symbol "baseListItemSchema" needs to be exported by the entry point index.d.ts
-//
 // @public
-export type ListItem = z.infer<typeof baseListItemSchema> & {
-    items?: ListItem[];
-};
+export type ListItem = StandardItem | TaskItem | DefinitionItem;
 
 // @public
 export const listItemSchema: z.ZodType<any, z.ZodTypeDef, unknown>;
@@ -84,7 +113,35 @@ export const listItemSchema: z.ZodType<any, z.ZodTypeDef, unknown>;
 export type ListStyle = z.infer<typeof listStyleSchema>;
 
 // @public
-export const listStyleSchema: z.ZodEnum<["bullet", "dash", "arrow", "star", "numbered", "lettered", "roman", "none"]>;
+export const listStyleSchema: z.ZodEnum<["bullet", "dash", "arrow", "star", "numbered", "lettered", "roman", "none", "task", "definition"]>;
+
+// Warning: (ae-forgotten-export) The symbol "baseListItemSchema" needs to be exported by the entry point index.d.ts
+//
+// @public
+export type StandardItem = z.infer<typeof baseListItemSchema> & {
+    items?: ListItem[];
+};
+
+// @public (undocumented)
+export type TaskChecked = z.infer<typeof taskCheckedSchema>;
+
+// @public
+export const taskCheckedSchema: z.ZodUnion<[z.ZodBoolean, z.ZodLiteral<"partial">]>;
+
+// @public (undocumented)
+export type TaskItem = z.infer<typeof taskItemSchema>;
+
+// @public
+export const taskItemSchema: z.ZodObject<{
+    text: z.ZodString;
+    checked: z.ZodUnion<[z.ZodBoolean, z.ZodLiteral<"partial">]>;
+}, "strip", z.ZodTypeAny, {
+    text: string;
+    checked: boolean | "partial";
+}, {
+    text: string;
+    checked: boolean | "partial";
+}>;
 
 // (No @packageDocumentation comment for this package)
 

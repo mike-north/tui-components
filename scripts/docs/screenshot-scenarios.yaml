@@ -276,6 +276,25 @@ list:
             - { text: "Run tests" }
       style: bullet
 
+  - name: task
+    description: Task list with checkboxes
+    input:
+      items:
+        - { text: "Complete documentation", checked: true }
+        - { text: "Write tests", checked: false }
+        - { text: "Review PR", checked: "partial" }
+      style: task
+
+  - name: definition
+    description: Definition list with terms
+    width: 60
+    input:
+      items:
+        - { term: "API", definition: "Application Programming Interface" }
+        - { term: "CLI", definition: "Command Line Interface" }
+        - { term: "TUI", definition: "Terminal User Interface" }
+      style: definition
+
 # ============================================
 # TREE
 # ============================================
