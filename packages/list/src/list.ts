@@ -32,7 +32,7 @@ function colorMarker(text: string, theme: TuiTheme | undefined): string {
 }
 
 /**
- * List component for rendering bulleted and numbered lists.
+ * List component for rendering bulleted, numbered, task, and definition lists.
  */
 class ListComponent extends BaseTuiComponent<
   ListInput,
@@ -273,6 +273,29 @@ class ListComponent extends BaseTuiComponent<
             theme
           );
         }
+        continue;
+      }
+
+      // Fallback: TaskItem with non-task style - render using item.text
+      if (isTaskItem(item)) {
+        const marker = getMarker(style, i, startNumber);
+        const paddedMarker =
+          style === "none"
+            ? ""
+            : colorMarker(marker.padEnd(maxMarkerWidth + 1), theme);
+        lines.push(`${prefix}${paddedMarker}${item.text}`);
+        continue;
+      }
+
+      // Fallback: DefinitionItem with non-definition style - render as "term: definition"
+      if (isDefinitionItem(item)) {
+        const marker = getMarker(style, i, startNumber);
+        const paddedMarker =
+          style === "none"
+            ? ""
+            : colorMarker(marker.padEnd(maxMarkerWidth + 1), theme);
+        lines.push(`${prefix}${paddedMarker}${item.term}: ${item.definition}`);
+        continue;
       }
     }
   }

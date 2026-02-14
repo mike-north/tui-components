@@ -446,4 +446,74 @@ describe("ListComponent", () => {
       expect(isStandardItem({ term: "Term", definition: "Def" })).toBe(false);
     });
   });
+
+  describe("fallback rendering for mismatched item types", () => {
+    it("should render TaskItem with bullet style using item.text", () => {
+      const input: ListInput = {
+        items: [
+          { text: "Task item in bullet list", checked: true },
+          { text: "Standard item" },
+        ],
+        style: "bullet",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("•");
+      expect(result.output).toContain("Task item in bullet list");
+      expect(result.output).toContain("Standard item");
+      expect(result.output).not.toContain("[x]");
+      expect(result.lineCount).toBe(2);
+    });
+
+    it("should render DefinitionItem with bullet style as term: definition", () => {
+      const input: ListInput = {
+        items: [
+          { term: "API", definition: "Application Programming Interface" },
+          { text: "Standard item" },
+        ],
+        style: "bullet",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("•");
+      expect(result.output).toContain("API: Application Programming Interface");
+      expect(result.output).toContain("Standard item");
+      expect(result.lineCount).toBe(2);
+    });
+
+    it("should render TaskItem with numbered style", () => {
+      const input: ListInput = {
+        items: [
+          { text: "First task", checked: false },
+          { text: "Second task", checked: true },
+        ],
+        style: "numbered",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("1.");
+      expect(result.output).toContain("2.");
+      expect(result.output).toContain("First task");
+      expect(result.output).toContain("Second task");
+      expect(result.output).not.toContain("[");
+      expect(result.lineCount).toBe(2);
+    });
+
+    it("should render standard items as unchecked when task style", () => {
+      const input: ListInput = {
+        items: [
+          { text: "Standard item treated as task" },
+        ],
+        style: "task",
+      };
+
+      const result = list.render(input, defaultContext);
+
+      expect(result.output).toContain("[ ]");
+      expect(result.output).toContain("Standard item treated as task");
+    });
+  });
 });
