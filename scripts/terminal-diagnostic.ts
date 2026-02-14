@@ -83,15 +83,20 @@ interface TestOption {
 interface Test {
   id: string;
   name: string;
+  category: "ansi" | "markdown" | "unicode" | "tui-pattern";
   pattern: () => string;
   expected: string;
   options: TestOption[];
 }
 
 const tests: Test[] = [
+  // ===========================================================================
+  // ANSI COLOR TESTS
+  // ===========================================================================
   {
     id: "ansi.fg.basic",
     name: "Basic ANSI Foreground Colors",
+    category: "ansi",
     pattern: () =>
       `${FG.red}RED${RESET}  ${FG.green}GREEN${RESET}  ${FG.blue}BLUE${RESET}  ${FG.yellow}YELLOW${RESET}`,
     expected: "Four words in red, green, blue, and yellow colors",
@@ -117,6 +122,7 @@ const tests: Test[] = [
   {
     id: "ansi.fg.bright",
     name: "Bright ANSI Foreground Colors",
+    category: "ansi",
     pattern: () =>
       `${FG_BRIGHT.red}BRIGHT RED${RESET}  ${FG_BRIGHT.green}BRIGHT GREEN${RESET}  ${FG_BRIGHT.cyan}BRIGHT CYAN${RESET}`,
     expected:
@@ -139,6 +145,7 @@ const tests: Test[] = [
   {
     id: "ansi.bg.basic",
     name: "ANSI Background Colors",
+    category: "ansi",
     pattern: () =>
       `${BG.red}${FG.white} RED BG ${RESET} ${BG.green}${FG.black} GREEN BG ${RESET} ${BG.blue}${FG.white} BLUE BG ${RESET}`,
     expected: "Three text blocks with colored backgrounds (red, green, blue)",
@@ -160,6 +167,7 @@ const tests: Test[] = [
   {
     id: "ansi.256",
     name: "256-Color Mode",
+    category: "ansi",
     pattern: () => {
       const colors = [196, 202, 208, 214, 220, 226, 190, 154, 118, 82, 46];
       const gradient = colors.map((c) => `${fg256(c)}█${RESET}`).join("");
@@ -185,6 +193,7 @@ const tests: Test[] = [
   {
     id: "ansi.truecolor",
     name: "Truecolor (24-bit RGB)",
+    category: "ansi",
     pattern: () => {
       const steps: string[] = [];
       for (let i = 0; i < 16; i++) {
@@ -214,6 +223,7 @@ const tests: Test[] = [
   {
     id: "ansi.styles",
     name: "Text Styles",
+    category: "ansi",
     pattern: () =>
       `${STYLE.bold}Bold${RESET}  ${STYLE.dim}Dim${RESET}  ${STYLE.italic}Italic${RESET}  ${STYLE.underline}Underline${RESET}  ${STYLE.strikethrough}Strike${RESET}`,
     expected:
@@ -233,26 +243,35 @@ const tests: Test[] = [
       { label: "D", description: "Raw escape codes visible", level: "none" },
     ],
   },
+
+  // ===========================================================================
+  // MARKDOWN RENDERING TESTS
+  // ===========================================================================
   {
     id: "md.backtick",
     name: "Markdown Backtick Highlighting",
+    category: "markdown",
     pattern: () => "Plain text then `highlighted text` then plain again.",
-    expected:
-      '"highlighted text" has a distinct background color (often tan/gray)',
+    expected: '"highlighted text" has visual distinction from surrounding text',
     options: [
       {
         label: "A",
-        description: "Highlighted with different background",
+        description: "Background color AND/OR foreground color change",
         level: "full",
       },
       {
         label: "B",
-        description: "Backticks visible, no background change",
+        description: "Foreground color change only (no background)",
         level: "partial",
       },
       {
         label: "C",
-        description: "No backticks visible, no highlighting",
+        description: "Backticks visible, no styling change",
+        level: "none",
+      },
+      {
+        label: "D",
+        description: "No backticks visible, no styling change",
         level: "none",
       },
     ],
@@ -260,6 +279,7 @@ const tests: Test[] = [
   {
     id: "md.bold",
     name: "Markdown Bold Text",
+    category: "markdown",
     pattern: () => "Normal text then **bold text** then normal again.",
     expected: '"bold text" appears in bold/heavier weight',
     options: [
@@ -283,6 +303,7 @@ const tests: Test[] = [
   {
     id: "md.whitespace",
     name: "Leading Whitespace Preservation",
+    category: "markdown",
     pattern: () => "No indent\n    Four spaces\n        Eight spaces",
     expected: "Three lines with increasing indentation (0, 4, 8 spaces)",
     options: [
@@ -306,6 +327,7 @@ const tests: Test[] = [
   {
     id: "md.anchor",
     name: "Anchor Character Visibility",
+    category: "markdown",
     pattern: () =>
       "│ Line with anchor\n│ Another anchored line\n│     Anchor with indent",
     expected: 'Each line starts with a visible "│" character',
@@ -327,9 +349,14 @@ const tests: Test[] = [
       },
     ],
   },
+
+  // ===========================================================================
+  // UNICODE TESTS
+  // ===========================================================================
   {
     id: "unicode.blocks",
     name: "Unicode Block Characters",
+    category: "unicode",
     pattern: () =>
       "Full: ████  3/4: ▓▓▓▓  1/2: ▒▒▒▒  1/4: ░░░░  Lower: ▄▄▄▄  Upper: ▀▀▀▀",
     expected: "Six groups of block characters with varying densities",
@@ -354,6 +381,7 @@ const tests: Test[] = [
   {
     id: "unicode.box",
     name: "Box Drawing Characters",
+    category: "unicode",
     pattern: () => "┌───┬───┐\n│ A │ B │\n├───┼───┤\n│ C │ D │\n└───┴───┘",
     expected: "A 2x2 table with clean corners and straight lines",
     options: [
@@ -370,6 +398,200 @@ const tests: Test[] = [
       {
         label: "C",
         description: "Characters show as ? or jumbled",
+        level: "none",
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // TUI COMPONENT PATTERN TESTS
+  // These test the specific markdown tricks used by tui-components
+  // ===========================================================================
+  {
+    id: "tui.progress",
+    name: "Progress Bar (Markdown Two-Color)",
+    category: "tui-pattern",
+    pattern: () => "│Progress: `████████` ░░░░░░░░░░░░ 40%",
+    expected:
+      "Progress bar with filled portion (████████) visually distinct from empty (░░░░), anchor visible",
+    options: [
+      {
+        label: "A",
+        description:
+          "Filled blocks highlighted (bg or fg color), anchor visible, alignment correct",
+        level: "full",
+      },
+      {
+        label: "B",
+        description:
+          "Some distinction visible but imperfect (missing anchor, partial highlight)",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "No visual distinction between filled and empty portions",
+        level: "none",
+      },
+    ],
+  },
+  {
+    id: "tui.sparkline",
+    name: "Sparkline (Markdown Two-Color)",
+    category: "tui-pattern",
+    pattern: () => "│Trend: `▁▂▃▄▅▆▇█▇▆▅▄`",
+    expected:
+      "Sparkline characters (▁▂▃▄▅▆▇█) with visual highlighting, anchor visible",
+    options: [
+      {
+        label: "A",
+        description:
+          "Sparkline highlighted with distinct style, anchor visible",
+        level: "full",
+      },
+      {
+        label: "B",
+        description: "Sparkline visible but not highlighted, or anchor missing",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "Characters garbled or no visual distinction",
+        level: "none",
+      },
+    ],
+  },
+  {
+    id: "tui.chart",
+    name: "Bar Chart (Markdown Two-Color)",
+    category: "tui-pattern",
+    pattern: () =>
+      "│Sales     `████████████████████` 95\n│Marketing `████████████` 60\n│Support   `████████` 40",
+    expected:
+      "Three labeled bars with highlighted block portions, left-aligned labels, anchors preserving alignment",
+    options: [
+      {
+        label: "A",
+        description:
+          "Bars highlighted, labels aligned, anchors visible on each line",
+        level: "full",
+      },
+      {
+        label: "B",
+        description:
+          "Partial success (highlight works but alignment off, or vice versa)",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "No highlighting or alignment completely broken",
+        level: "none",
+      },
+    ],
+  },
+  {
+    id: "tui.multiline-anchor",
+    name: "Multi-line Anchored Content",
+    category: "tui-pattern",
+    pattern: () =>
+      "│┌────────────────────┐\n││  Anchored Box      │\n││  With Content      │\n│└────────────────────┘",
+    expected:
+      "A box with │ anchor on each line, box structure intact, alignment preserved",
+    options: [
+      {
+        label: "A",
+        description: "Box intact, anchors visible, alignment correct",
+        level: "full",
+      },
+      {
+        label: "B",
+        description: "Box visible but anchors missing or alignment off",
+        level: "partial",
+      },
+      { label: "C", description: "Structure completely broken", level: "none" },
+    ],
+  },
+  {
+    id: "tui.mixed-styles",
+    name: "Mixed Markdown Styles",
+    category: "tui-pattern",
+    pattern: () => "│**Header** `value1` normal `value2` **footer**",
+    expected:
+      "Bold text for Header/footer, highlighted text for values, anchor visible",
+    options: [
+      {
+        label: "A",
+        description: "Bold AND backtick highlighting both work, anchor visible",
+        level: "full",
+      },
+      {
+        label: "B",
+        description: "One style works but not the other",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "Neither bold nor highlighting works",
+        level: "none",
+      },
+    ],
+  },
+  {
+    id: "tui.vertical-chart",
+    name: "Vertical Bar Chart with Axis",
+    category: "tui-pattern",
+    pattern: () =>
+      [
+        "│100 │ `██`    `██`",
+        "│ 75 │ `██` ██ `██`",
+        "│ 50 │ `██` ██ `██` ██",
+        "│ 25 │ `██` ██ `██` ██",
+        "│  0 └────────────────",
+        "│     Q1  Q2  Q3  Q4",
+      ].join("\n"),
+    expected:
+      "Vertical bars with y-axis labels, alternating backtick highlight, axis lines, aligned columns",
+    options: [
+      {
+        label: "A",
+        description:
+          "Y-axis aligned, bars highlighted alternately, structure intact",
+        level: "full",
+      },
+      {
+        label: "B",
+        description:
+          "Some elements work (bars visible but misaligned, or partial highlighting)",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "Alignment broken or no visual distinction",
+        level: "none",
+      },
+    ],
+  },
+  {
+    id: "tui.legend",
+    name: "Chart Legend with Alternating Styles",
+    category: "tui-pattern",
+    pattern: () => "│\n│ `██` Series A   ██ Series B   `██` Series C",
+    expected:
+      "Legend items with alternating backtick highlighting, proper spacing",
+    options: [
+      {
+        label: "A",
+        description:
+          "Alternating styles visible (Series A/C highlighted, B not), anchor visible",
+        level: "full",
+      },
+      {
+        label: "B",
+        description: "Legend visible but no alternating distinction",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "Legend garbled or broken",
         level: "none",
       },
     ],
@@ -416,18 +638,23 @@ Terminal Rendering Diagnostic - Pattern Generator
 Usage:
   npx tsx scripts/terminal-diagnostic.ts --pattern <id>   Output a test pattern
   npx tsx scripts/terminal-diagnostic.ts --list           List all test IDs
+  npx tsx scripts/terminal-diagnostic.ts --list-category <cat>  List tests in category
   npx tsx scripts/terminal-diagnostic.ts --info <id>      Get test metadata as JSON
   npx tsx scripts/terminal-diagnostic.ts --env            Show environment info
   npx tsx scripts/terminal-diagnostic.ts --help           Show this help
+
+Categories: ansi, markdown, unicode, tui-pattern
 
 This utility is designed to be called by AI assistants following the
 terminal-diagnostic skill. The skill guides the conversational flow.
 `);
 }
 
-function listTests(): void {
+function listTests(category?: string): void {
   for (const test of tests) {
-    console.log(`${test.id}: ${test.name}`);
+    if (!category || test.category === category) {
+      console.log(`${test.id}: ${test.name} [${test.category}]`);
+    }
   }
 }
 
@@ -452,6 +679,7 @@ function showInfo(id: string): void {
   const info = {
     id: test.id,
     name: test.name,
+    category: test.category,
     expected: test.expected,
     options: test.options,
   };
@@ -476,7 +704,18 @@ function main(): void {
   }
 
   if (args.includes("--list")) {
-    listTests();
+    const catIdx = args.indexOf("--list-category");
+    if (catIdx !== -1 && args[catIdx + 1]) {
+      listTests(args[catIdx + 1]);
+    } else {
+      listTests();
+    }
+    return;
+  }
+
+  const listCatIdx = args.indexOf("--list-category");
+  if (listCatIdx !== -1 && args[listCatIdx + 1]) {
+    listTests(args[listCatIdx + 1]);
     return;
   }
 
