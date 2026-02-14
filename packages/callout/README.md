@@ -123,25 +123,25 @@ General information
 
 ## Configuration Options
 
-| Property      | Type                                                           | Required | Default | Description                    |
-| ------------- | -------------------------------------------------------------- | -------- | ------- | ------------------------------ |
-| `type`        | `"tip" \| "note" \| "info" \| "warning" \| "error" \| "success"` | ✓        | -       | Semantic type of the callout   |
-| `message`     | `string`                                                       | ✓        | -       | The callout message content    |
-| `title`       | `string`                                                       |          | -       | Custom title (defaults by type)|
-| `icon`        | `string`                                                       |          | -       | Custom icon (defaults by type) |
-| `width`       | `number`                                                       |          | -       | Fixed width in columns         |
-| `borderStyle` | `"single" \| "double" \| "round" \| "bold" \| "none"`          |          | "round" | Border style                   |
+| Property      | Type                                                             | Required | Default | Description                     |
+| ------------- | ---------------------------------------------------------------- | -------- | ------- | ------------------------------- |
+| `type`        | `"tip" \| "note" \| "info" \| "warning" \| "error" \| "success"` | ✓        | -       | Semantic type of the callout    |
+| `message`     | `string`                                                         | ✓        | -       | The callout message content     |
+| `title`       | `string`                                                         |          | -       | Custom title (defaults by type) |
+| `icon`        | `string`                                                         |          | -       | Custom icon (defaults by type)  |
+| `width`       | `number`                                                         |          | -       | Fixed width in columns          |
+| `borderStyle` | `"single" \| "double" \| "round" \| "bold" \| "none"`            |          | "round" | Border style                    |
 
 ## Callout Types
 
-| Type      | Default Icon | Default Title | Use Case                        |
-| --------- | ------------ | ------------- | ------------------------------- |
-| `tip`     | 💡           | Tip           | Helpful suggestions             |
-| `note`    | 📝           | Note          | Additional information          |
-| `info`    | ℹ️            | Info          | General information             |
-| `warning` | ⚠️            | Warning       | Cautionary messages             |
-| `error`   | ❌           | Error         | Error notifications             |
-| `success` | ✅           | Success       | Success confirmations           |
+| Type      | Default Icon | Default Title | Use Case               |
+| --------- | ------------ | ------------- | ---------------------- |
+| `tip`     | 💡           | Tip           | Helpful suggestions    |
+| `note`    | 📝           | Note          | Additional information |
+| `info`    | ℹ️           | Info          | General information    |
+| `warning` | ⚠️           | Warning       | Cautionary messages    |
+| `error`   | ❌           | Error         | Error notifications    |
+| `success` | ✅           | Success       | Success confirmations  |
 
 ## Render Modes
 
