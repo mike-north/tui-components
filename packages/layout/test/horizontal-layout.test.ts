@@ -233,6 +233,12 @@ describe("HorizontalLayoutComponent", () => {
 
       // Should fit within width
       expect(result.actualWidth).toBe(20);
+
+      // Verify that each rendered line is actually truncated to the requested width
+      const lines = result.output.split("\n");
+      for (const line of lines) {
+        expect(line.length).toBeLessThanOrEqual(input.width ?? 20);
+      }
     });
 
     it("should stack items when overflow is stack", () => {

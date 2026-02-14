@@ -65,17 +65,22 @@ export function computeHorizontalLayout(
   const totalGapWidth = gap * (items.length - 1);
 
   // Determine layout width based on mode and input
+  // Account for minItemWidth when computing natural widths
+  const effectiveNaturalWidths = itemNaturalWidths.map((w) =>
+    Math.max(w, minItemWidth)
+  );
   const totalNaturalWidth =
-    itemNaturalWidths.reduce((a, b) => a + b, 0) + totalGapWidth;
+    effectiveNaturalWidths.reduce((a, b) => a + b, 0) + totalGapWidth;
 
   // Use explicit width if provided, otherwise:
-  // - For "auto" mode: use natural widths (no padding)
+  // - For "auto" mode: use effective natural widths (with minItemWidth)
   // - For "equal" and "manual" modes: use context width or natural width
   let layoutWidth: number;
+  const hasExplicitWidth = input.width !== undefined;
   if (input.width !== undefined) {
     layoutWidth = input.width;
   } else if (widthMode === "auto") {
-    // In auto mode without explicit width, use natural widths
+    // In auto mode without explicit width, use effective natural widths
     layoutWidth = totalNaturalWidth;
   } else {
     // For equal/manual modes, prefer context width for distribution
@@ -108,10 +113,32 @@ export function computeHorizontalLayout(
 
     case "auto":
     default:
-      // In auto mode, items use their natural width (no shrinking/expanding)
-      itemAllocatedWidths = itemNaturalWidths.map((w) =>
-        Math.max(w, minItemWidth)
-      );
+      // In auto mode, items prefer their natural width (bounded by minItemWidth)
+      // When explicit width is set and truncation is enabled, shrink proportionally
+      if (
+        hasExplicitWidth &&
+        input.overflow === "truncate" &&
+        totalNaturalWidth > layoutWidth
+      ) {
+        // Shrink items proportionally to fit
+        const scale = availableForItems / (totalNaturalWidth - totalGapWidth);
+        let remaining = availableForItems;
+        itemAllocatedWidths = [];
+
+        for (let i = 0; i < effectiveNaturalWidths.length; i++) {
+          const w = effectiveNaturalWidths[i] ?? 0;
+          if (i < effectiveNaturalWidths.length - 1) {
+            const scaled = Math.max(1, Math.floor(w * scale));
+            itemAllocatedWidths.push(scaled);
+            remaining -= scaled;
+          } else {
+            // Assign remaining to last item
+            itemAllocatedWidths.push(Math.max(1, remaining));
+          }
+        }
+      } else {
+        itemAllocatedWidths = effectiveNaturalWidths;
+      }
       break;
   }
 
@@ -153,6 +180,8 @@ function computeEqualWidths(
 
 /**
  * Compute widths based on manual specifications.
+ * Iterates over naturalWidths to handle mismatched array lengths gracefully.
+ * Missing specs are treated as "auto".
  */
 function computeManualWidths(
   specs: WidthSpec[],
@@ -165,8 +194,9 @@ function computeManualWidths(
   let fillCount = 0;
 
   // First pass: count fixed widths and fill items
-  for (let i = 0; i < specs.length; i++) {
-    const spec = specs[i] ?? "auto";
+  // Iterate over naturalWidths (item count), not specs, to handle length mismatch
+  for (let i = 0; i < naturalWidths.length; i++) {
+    const spec = specs[i] ?? "auto"; // Missing specs default to "auto"
     const natural = naturalWidths[i] ?? 0;
 
     if (spec === "fill") {

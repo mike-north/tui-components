@@ -42,7 +42,6 @@ export type WidthSpec = z.infer<typeof widthSpecSchema>;
  * Overflow behavior when items don't fit.
  * - `truncate`: Truncate items to fit
  * - `stack`: Fall back to vertical stacking
- * - `wrap`: Wrap to next line (not yet implemented)
  */
 export const overflowBehaviorSchema = z.enum(["truncate", "stack"]);
 
