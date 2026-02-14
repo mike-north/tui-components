@@ -210,16 +210,19 @@ Definition list with terms
 ### Item Types
 
 **Standard Item:**
+
 ```typescript
 { text: "Item text", items?: [...] }  // items for nesting
 ```
 
 **Task Item (for task style):**
+
 ```typescript
 { text: "Task text", checked: true | false | "partial" }
 ```
 
 **Definition Item (for definition style):**
+
 ```typescript
 { term: "Term", definition: "Definition text" }
 ```

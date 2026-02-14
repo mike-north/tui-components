@@ -504,9 +504,7 @@ describe("ListComponent", () => {
 
     it("should render standard items as unchecked when task style", () => {
       const input: ListInput = {
-        items: [
-          { text: "Standard item treated as task" },
-        ],
+        items: [{ text: "Standard item treated as task" }],
         style: "task",
       };
 

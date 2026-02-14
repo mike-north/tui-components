@@ -40,7 +40,8 @@ class ListComponent extends BaseTuiComponent<
 > {
   readonly metadata: ComponentMetadata<ListInput> = {
     name: "list",
-    description: "Renders lists with support for bullets, numbers, tasks, and definitions",
+    description:
+      "Renders lists with support for bullets, numbers, tasks, and definitions",
     version: "0.1.0",
     examples: [
       {
