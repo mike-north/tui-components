@@ -40,7 +40,7 @@ class ListComponent extends BaseTuiComponent<
 > {
   readonly metadata: ComponentMetadata<ListInput> = {
     name: "list",
-    description: "Renders bulleted or numbered lists with nesting support",
+    description: "Renders lists with support for bullets, numbers, tasks, and definitions",
     version: "0.1.0",
     examples: [
       {
@@ -198,7 +198,10 @@ class ListComponent extends BaseTuiComponent<
 
     // Render each definition
     for (const item of definitionItems) {
-      const termPadded = item.term.padEnd(effectiveTermWidth);
+      // Pad using display width, not character count, to handle wide characters
+      const termDisplayWidth = getStringWidth(item.term);
+      const paddingSpaces = Math.max(0, effectiveTermWidth - termDisplayWidth);
+      const termPadded = item.term + " ".repeat(paddingSpaces);
       const coloredTerm = theme
         ? theme.semantic.secondary(termPadded)
         : termPadded;
@@ -227,6 +230,17 @@ class ListComponent extends BaseTuiComponent<
       // Handle task items
       if (style === "task" && isTaskItem(item)) {
         const marker = getTaskMarker(item.checked);
+        const paddedMarker = colorMarker(
+          marker.padEnd(maxMarkerWidth + 1),
+          theme
+        );
+        lines.push(`${prefix}${paddedMarker}${item.text}`);
+        continue;
+      }
+
+      // Handle standard items with task style (render as unchecked)
+      if (style === "task" && isStandardItem(item)) {
+        const marker = getTaskMarker(false);
         const paddedMarker = colorMarker(
           marker.padEnd(maxMarkerWidth + 1),
           theme

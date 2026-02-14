@@ -97,6 +97,12 @@ export function getMarker(
       return `${toRoman(index + startNumber)}.`;
     case "none":
       return "";
+    case "task":
+      // Task items should use getTaskMarker instead; fallback to unchecked
+      return "[ ]";
+    case "definition":
+      // Definition lists don't use markers
+      return "";
     default:
       return bulletMarkers[style] ?? "•";
   }
