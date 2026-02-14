@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: npm-publish
     # Only run if CI workflow succeeded
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event.workflow_run.conclusion == 'success'
 
     steps:
       - name: Checkout
