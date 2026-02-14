@@ -327,6 +327,40 @@ const tests: Test[] = [
     ],
   },
   {
+    id: "md.inline-whitespace",
+    name: "Inline Whitespace Preservation (Scatter Plot)",
+    category: "markdown",
+    pattern: () =>
+      [
+        "│10│         ●",
+        "│ 8│    ●          ●",
+        "│ 6│       ●    ●",
+        "│ 4│  ●        ●",
+        "│ 2│      ●",
+        "│ 0└──────────────────",
+        "│   0  2  4  6  8  10",
+      ].join("\n"),
+    expected:
+      "Scatter plot with points (●) at specific positions, aligned grid",
+    options: [
+      {
+        label: "A",
+        description: "Points positioned correctly, grid aligned",
+        level: "full",
+      },
+      {
+        label: "B",
+        description: "Points visible but positions shifted/misaligned",
+        level: "partial",
+      },
+      {
+        label: "C",
+        description: "Whitespace collapsed, points bunched together",
+        level: "none",
+      },
+    ],
+  },
+  {
     id: "md.anchor",
     name: "Anchor Character Visibility",
     category: "markdown",

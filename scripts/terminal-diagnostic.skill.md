@@ -164,7 +164,7 @@ If this test succeeds, the `tui-components` library can include per-agent instru
 The diagnostic includes four categories:
 
 1. **ANSI** (6 tests) - Terminal escape codes for colors and styles
-2. **Markdown** (4 tests) - Markdown rendering tricks (backticks, bold, etc.)
+2. **Markdown** (5 tests) - Markdown rendering tricks (backticks, bold, etc.)
 3. **Unicode** (2 tests) - Block characters and box drawing
 4. **TUI Patterns** (7 tests) - The specific markdown tricks used by tui-components
 
@@ -280,22 +280,23 @@ Record the capability level for both contexts:
 7. `md.backtick` - Markdown Backtick Highlighting
 8. `md.bold` - Markdown Bold Text
 9. `md.whitespace` - Leading Whitespace Preservation
-10. `md.anchor` - Anchor Character Visibility
+10. `md.inline-whitespace` - Inline Whitespace Preservation (Scatter Plot)
+11. `md.anchor` - Anchor Character Visibility
 
 ### Unicode Tests
 
-11. `unicode.blocks` - Unicode Block Characters
-12. `unicode.box` - Box Drawing Characters
+12. `unicode.blocks` - Unicode Block Characters
+13. `unicode.box` - Box Drawing Characters
 
 ### TUI Component Pattern Tests
 
-13. `tui.progress` - Progress Bar (Markdown Two-Color)
-14. `tui.sparkline` - Sparkline (Markdown Two-Color)
-15. `tui.chart` - Bar Chart (Markdown Two-Color)
-16. `tui.multiline-anchor` - Multi-line Anchored Content
-17. `tui.mixed-styles` - Mixed Markdown Styles
-18. `tui.vertical-chart` - Vertical Bar Chart with Axis
-19. `tui.legend` - Chart Legend with Alternating Styles
+14. `tui.progress` - Progress Bar (Markdown Two-Color)
+15. `tui.sparkline` - Sparkline (Markdown Two-Color)
+16. `tui.chart` - Bar Chart (Markdown Two-Color)
+17. `tui.multiline-anchor` - Multi-line Anchored Content
+18. `tui.mixed-styles` - Mixed Markdown Styles
+19. `tui.vertical-chart` - Vertical Bar Chart with Axis
+20. `tui.legend` - Chart Legend with Alternating Styles
 
 ## Generating the Report
 
@@ -347,6 +348,10 @@ After all tests, generate a JSON report with BOTH contexts recorded:
       "chat": "<full|partial|none>"
     },
     "md.whitespace": {
+      "command": "<full|partial|none>",
+      "chat": "<full|partial|none>"
+    },
+    "md.inline-whitespace": {
       "command": "<full|partial|none>",
       "chat": "<full|partial|none>"
     },
@@ -465,7 +470,7 @@ Begin by saying:
 
 > **Terminal Rendering Diagnostic**
 >
-> I'm going to run a series of 19 tests to discover what rendering capabilities are available in this environment.
+> I'm going to run a series of 20 tests to discover what rendering capabilities are available in this environment.
 >
 > **Important:** I'll test each pattern in TWO contexts:
 >
