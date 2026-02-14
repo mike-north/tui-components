@@ -10,7 +10,7 @@ export {
 } from "./schema.js";
 export {
   type CalloutTypeDefaults,
-  CALLOUT_DEFAULTS,
+  calloutDefaults,
   getCalloutDefaults,
 } from "./defaults.js";
 export { type BorderChars, getBorderChars } from "./chars.js";

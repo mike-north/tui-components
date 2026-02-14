@@ -17,7 +17,7 @@ export interface BorderChars {
 /**
  * Border character sets for different styles.
  */
-const BORDER_CHARS: Record<BorderStyle, BorderChars> = {
+const borderChars: Record<BorderStyle, BorderChars> = {
   single: {
     topLeft: "┌",
     top: "─",
@@ -77,5 +77,5 @@ const BORDER_CHARS: Record<BorderStyle, BorderChars> = {
  * @returns Border character set
  */
 export function getBorderChars(style: BorderStyle): BorderChars {
-  return BORDER_CHARS[style];
+  return borderChars[style];
 }

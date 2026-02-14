@@ -39,9 +39,6 @@ export type BorderStyle = z.infer<typeof borderStyleSchema>;
 export const borderStyleSchema: z.ZodEnum<["single", "double", "round", "bold", "none"]>;
 
 // @public
-export const CALLOUT_DEFAULTS: Record<CalloutType, CalloutTypeDefaults>;
-
-// @public
 export class CalloutComponent extends BaseTuiComponent<CalloutInput, typeof calloutInputSchema> {
     getJsonSchema(): object;
     // (undocumented)
@@ -72,6 +69,9 @@ export class CalloutComponent extends BaseTuiComponent<CalloutInput, typeof call
         width?: number | undefined;
     }>;
 }
+
+// @public
+export const calloutDefaults: Record<CalloutType, CalloutTypeDefaults>;
 
 // @public (undocumented)
 export type CalloutInput = z.input<typeof calloutInputSchema>;

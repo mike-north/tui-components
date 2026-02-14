@@ -3,6 +3,7 @@ import {
   padToWidth,
   anchorLine,
   DEFAULT_ANCHOR,
+  getStringWidth,
 } from "@tuicomponents/core";
 import type { CalloutLayout } from "./layout.js";
 import type { CalloutInputWithDefaults, CalloutType } from "./schema.js";
@@ -89,8 +90,8 @@ export function renderCalloutAnsi(
     : layout.title;
   const titleWithSpace = ` ${titleText} `;
 
-  // Top border with title
-  const titleLen = titleWithSpace.length;
+  // Top border with title - use getStringWidth for emoji support
+  const titleLen = getStringWidth(titleWithSpace);
   const remainingWidth = layout.innerWidth - titleLen;
   const leftPad = Math.floor(remainingWidth / 2);
   const rightPad = remainingWidth - leftPad;
@@ -162,8 +163,8 @@ export function renderCalloutMarkdown(
     : layout.title;
   const titleWithSpace = ` ${titleText} `;
 
-  // Top border with title (centered)
-  const titleLen = titleWithSpace.length;
+  // Top border with title (centered) - use getStringWidth for emoji support
+  const titleLen = getStringWidth(titleWithSpace);
   const remainingWidth = layout.innerWidth - titleLen;
   const leftPad = Math.floor(remainingWidth / 2);
   const rightPad = remainingWidth - leftPad;

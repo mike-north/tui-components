@@ -13,7 +13,7 @@ export interface CalloutTypeDefaults {
 /**
  * Default icons and titles for each callout type.
  */
-export const CALLOUT_DEFAULTS: Record<CalloutType, CalloutTypeDefaults> = {
+export const calloutDefaults: Record<CalloutType, CalloutTypeDefaults> = {
   tip: {
     icon: "💡",
     title: "Tip",
@@ -47,5 +47,5 @@ export const CALLOUT_DEFAULTS: Record<CalloutType, CalloutTypeDefaults> = {
  * @returns The default icon and title
  */
 export function getCalloutDefaults(type: CalloutType): CalloutTypeDefaults {
-  return CALLOUT_DEFAULTS[type];
+  return calloutDefaults[type];
 }
