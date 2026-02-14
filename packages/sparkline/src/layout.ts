@@ -84,7 +84,10 @@ function bucketValues(values: number[], targetWidth: number): number[] {
   return result;
 }
 
-/** Minimum sparkline width when fit mode is enabled */
+/**
+ * Minimum sparkline width when fit mode is enabled.
+ * A sparkline narrower than 5 characters provides insufficient visual information.
+ */
 const MIN_FIT_SPARKLINE_WIDTH = 5;
 
 /**

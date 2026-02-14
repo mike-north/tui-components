@@ -334,11 +334,8 @@ describe("SparklineComponent", () => {
         fit: true,
       };
 
-      // Context width is 80, no label, so sparkline should be 80 chars
-      // But we only have 15 values, so output will be compressed to fewer than 80
-      // Since bucketValues doesn't expand, output will be min(80, 15) = 15 values
-      // Wait - that's wrong. bucketValues(15 values, 80) returns 15 values (no expansion)
-      // So the sparkline will be 15 chars, not 80
+      // With 15 values and available width of 80, bucketValues doesn't expand
+      // beyond the original data length, so the sparkline output is 15 characters.
       const result = sparkline.render(input, defaultContext);
 
       expect(result.output.length).toBe(15);
@@ -382,7 +379,7 @@ describe("SparklineComponent", () => {
 
       // Context width is 80, label is ~52 chars
       // Available for sparkline: 80 - 52 = 28 chars
-      // But min is 5, so sparkline should be 28 chars
+      // Since 28 > 5 (the minimum), the sparkline will be 28 chars
       const result = sparkline.render(input, defaultContext);
 
       // The sparkline portion should exist
