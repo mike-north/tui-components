@@ -30,7 +30,9 @@ This is what the user sees when you run a bash command. The output appears in a 
 - A command prompt header showing the command that was run
 - Monospace font
 - Potentially different rendering than your chat text
-- **Some assistants truncate long output** (e.g., showing only 3-5 lines)
+- **Many assistants truncate output** - Claude Code shows only ~3 lines by default
+
+**Note:** For multi-line patterns (scatter plots, charts), command output may be truncated. The chat context test becomes the primary indicator for these patterns. If a pattern has more than 3 lines, ask the user if they can see the full output or skip to the chat context test.
 
 ### 2. Chat Context (Direct Response Text)
 
@@ -492,10 +494,25 @@ Then run the `--env` command and ask which assistant is being used.
 
 ## Handling Command Output Truncation
 
-Some AI assistants truncate command output, showing only a few lines (e.g., 3-5 lines). If the user reports that the command output appears truncated or incomplete:
+Many AI assistants truncate command output by default:
 
-1. **Ask if they can see the full output** - Some assistants have a "show more" or expand option
-2. **Note this in the results** - Add to the notes field that this assistant truncates command output
-3. **Rely more heavily on chat context** - If command output is truncated, the chat context test becomes the primary indicator
+- **Claude Code**: ~3 lines visible (user can press Ctrl+O to expand)
+- **Other assistants**: May vary
 
-This truncation behavior itself is valuable information - assistants that truncate command output may be better suited to the markdown renderer in chat context rather than ANSI output in command blocks.
+### For Multi-Line Patterns (>3 lines)
+
+For patterns like scatter plots, vertical charts, and boxes:
+
+1. **Skip command output test** for multi-line patterns if truncated
+2. **Focus on chat context** - this is the primary indicator anyway
+3. **Record command context as "truncated"** or test only the visible portion
+
+### Recording Truncation
+
+In the report notes, record:
+
+- Whether command output is truncated by default
+- How many lines are visible
+- Whether there's an expand option
+
+This truncation behavior itself is valuable - assistants that heavily truncate command output are better suited to the markdown renderer in chat context.
