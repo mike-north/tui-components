@@ -45,6 +45,7 @@
     "zod-to-json-schema": "^3.24.5"
   },
   "devDependencies": {
+    "@tuicomponents/assistant-simulator": "workspace:*",
     "@types/node": "^22.0.0"
   }
 }
