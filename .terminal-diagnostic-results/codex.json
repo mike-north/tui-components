@@ -1,0 +1,60 @@
+{
+  "assistant": "codex",
+  "timestamp": "2026-02-14T23:52:29Z",
+  "environment": {
+    "isTTY": false,
+    "term": "xterm-256color",
+    "colorTerm": "truecolor",
+    "termProgram": "iTerm.app",
+    "noColor": true,
+    "ciDetected": false
+  },
+  "agentIdentification": {
+    "canSetEnvVar": true,
+    "detectedValue": "codex",
+    "heuristicDetected": null,
+    "heuristicConfidence": null,
+    "signalsMatch": null
+  },
+  "results": {
+    "ansi.fg.basic": { "command": "full", "chat": "full" },
+    "ansi.fg.bright": { "command": "full", "chat": "full" },
+    "ansi.bg.basic": { "command": "full", "chat": "full" },
+    "ansi.256": { "command": "full", "chat": "full" },
+    "ansi.truecolor": { "command": "full", "chat": "full" },
+    "ansi.styles": { "command": "full", "chat": "full" },
+    "md.backtick": { "command": "none", "chat": "full" },
+    "md.bold": { "command": "none", "chat": "full" },
+    "md.whitespace": { "command": "full", "chat": "none" },
+    "md.inline-whitespace": { "command": "none", "chat": "full" },
+    "md.anchor": { "command": "none", "chat": "full" },
+    "unicode.blocks": { "command": "none", "chat": "full" },
+    "unicode.box": { "command": "none", "chat": "full" },
+    "tui.progress": { "command": "none", "chat": "full" },
+    "tui.sparkline": { "command": "none", "chat": "full" },
+    "tui.chart": { "command": "none", "chat": "full" },
+    "tui.multiline-anchor": { "command": "none", "chat": "full" },
+    "tui.mixed-styles": { "command": "none", "chat": "full" },
+    "tui.vertical-chart": { "command": "none", "chat": "full" },
+    "tui.legend": { "command": "none", "chat": "full" }
+  },
+  "summary": {
+    "commandContext": {
+      "ansiSupport": "truecolor",
+      "textStyles": true,
+      "markdownTricks": false,
+      "unicodeSupport": false,
+      "tuiPatternsWork": false
+    },
+    "chatContext": {
+      "ansiSupport": "truecolor",
+      "textStyles": true,
+      "markdownTricks": true,
+      "unicodeSupport": true,
+      "tuiPatternsWork": true
+    },
+    "recommendedRenderer": "markdown",
+    "recommendedContext": "chat",
+    "notes": "Command output appears truncated or unavailable for later tests; TUI command-context results recorded as none based on user report. Heuristic detection unavailable from this repo path ('is-agentic-tui not available')."
+  }
+}

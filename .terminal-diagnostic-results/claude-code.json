@@ -1,0 +1,64 @@
+{
+  "assistant": "claude-code",
+  "timestamp": "2026-02-14T00:00:00.000Z",
+  "environment": {
+    "isTTY": false,
+    "term": "xterm-256color",
+    "colorTerm": "truecolor",
+    "termProgram": "iTerm.app",
+    "noColor": false,
+    "ciDetected": false
+  },
+  "agentIdentification": {
+    "canSetEnvVar": true,
+    "detectedValue": "claude-code",
+    "heuristicDetected": null,
+    "heuristicConfidence": null,
+    "signalsMatch": null
+  },
+  "commandOutputTruncation": {
+    "truncates": true,
+    "visibleLines": 3
+  },
+  "results": {
+    "ansi.fg.basic":          { "command": "full",  "chat": "none" },
+    "ansi.fg.bright":         { "command": "full",  "chat": "none" },
+    "ansi.bg.basic":          { "command": "full",  "chat": "none" },
+    "ansi.256":               { "command": "full",  "chat": "none" },
+    "ansi.truecolor":         { "command": "full",  "chat": "none" },
+    "ansi.styles":            { "command": "full",  "chat": "none" },
+    "md.backtick":            { "command": "none",  "chat": "full" },
+    "md.bold":                { "command": "none",  "chat": "full" },
+    "md.whitespace":          { "command": "full",  "chat": "full" },
+    "md.inline-whitespace":   { "command": "full",  "chat": "full" },
+    "md.anchor":              { "command": "full",  "chat": "full" },
+    "unicode.blocks":         { "command": "full",  "chat": "full" },
+    "unicode.box":            { "command": "full",  "chat": "full" },
+    "tui.progress":           { "command": "none",  "chat": "full" },
+    "tui.sparkline":          { "command": "none",  "chat": "full" },
+    "tui.chart":              { "command": "none",  "chat": "full" },
+    "tui.multiline-anchor":   { "command": "full",  "chat": "full" },
+    "tui.mixed-styles":       { "command": "none",  "chat": "full" },
+    "tui.vertical-chart":     { "command": "none",  "chat": "full" },
+    "tui.legend":             { "command": "none",  "chat": "full" }
+  },
+  "summary": {
+    "commandContext": {
+      "ansiSupport": "truecolor",
+      "textStyles": true,
+      "markdownTricks": false,
+      "unicodeSupport": true,
+      "tuiPatternsWork": false
+    },
+    "chatContext": {
+      "ansiSupport": "none",
+      "textStyles": false,
+      "markdownTricks": true,
+      "unicodeSupport": true,
+      "tuiPatternsWork": true
+    },
+    "recommendedRenderer": "markdown",
+    "recommendedContext": "chat",
+    "notes": "Claude Code has a strong split: full truecolor ANSI in command output but zero ANSI in chat; full markdown rendering in chat but zero in command. Command output is truncated to ~3 visible lines, making it unsuitable for multi-line TUI components even though ANSI works there. The markdown renderer in chat context is the clear winner — all TUI patterns render correctly. Agent self-identification via TUI_AGENT env var works reliably. Heuristic detection could not be tested (is-agentic-tui not available from project root)."
+  }
+}
