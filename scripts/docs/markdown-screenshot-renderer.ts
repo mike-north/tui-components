@@ -25,7 +25,7 @@ const MARKDOWN_STYLES = `
   body {
     background: #ffffff;
     color: #1a1a1a;
-    font-family: 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'DejaVu Sans Mono', monospace;
     font-size: 14px;
     line-height: 1.5;
     padding: 16px;
@@ -36,6 +36,9 @@ const MARKDOWN_STYLES = `
     display: inline-block;
     white-space: pre;
     margin: 0;
+    font-variant-ligatures: none;
+    letter-spacing: 0;
+    font-feature-settings: "liga" 0;
   }
 
   .inline-code {
