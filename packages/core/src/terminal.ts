@@ -1,6 +1,7 @@
 import terminalSize from "terminal-size";
 import type { RenderContext, RenderMode } from "./component.js";
 import { isRunningInAIAssistant } from "./detection.js";
+import type { MarkdownRendererOptions } from "./markdown.js";
 import { createStyleFunctions } from "./styling.js";
 import { defaultTheme, type TuiTheme } from "./theme.js";
 
@@ -129,6 +130,74 @@ export interface CreateRenderContextOptions {
    * @default true
    */
   autoDetectMode?: boolean;
+  /**
+   * Markdown-specific renderer options.
+   * Only applies when renderMode is "markdown".
+   */
+  markdownOptions?: MarkdownRendererOptions;
+  /**
+   * Agent identifier for automatic configuration.
+   * If set, auto-configures renderer options for that agent.
+   *
+   * Supported agents:
+   * - "github-copilot": Uses markdown with inline mode (collapses newlines)
+   * - "cline": Uses grayscale mode (no backtick support)
+   * - "kiro-cli": Uses markdown with relaxed spacing
+   * - Others default to markdown mode
+   *
+   * Can also be set via the TUI_AGENT environment variable.
+   */
+  agent?: string;
+}
+
+/**
+ * Agent-specific configuration presets.
+ *
+ * These configs are based on terminal diagnostic testing across
+ * different AI coding assistants.
+ */
+interface AgentConfig {
+  renderMode: RenderMode;
+  markdownOptions?: MarkdownRendererOptions;
+}
+
+const AGENT_CONFIGS: Record<string, AgentConfig> = {
+  // GitHub Copilot collapses all newlines in chat - needs inline mode
+  "github-copilot": {
+    renderMode: "markdown",
+    markdownOptions: { multilineMode: "inline" },
+  },
+  // Cline has no backtick highlighting - needs grayscale renderer
+  cline: {
+    renderMode: "grayscale",
+  },
+  // Kiro CLI edge case: │**text** fails without space after anchor
+  "kiro-cli": {
+    renderMode: "markdown",
+    markdownOptions: { spacingMode: "relaxed" },
+  },
+  // Claude Code, Codex, Gemini CLI, OpenCode - standard markdown
+  "claude-code": {
+    renderMode: "markdown",
+  },
+  codex: {
+    renderMode: "markdown",
+  },
+  "gemini-cli": {
+    renderMode: "markdown",
+  },
+  opencode: {
+    renderMode: "markdown",
+  },
+};
+
+/**
+ * Get the agent identifier from options or environment.
+ */
+function getAgentIdentifier(
+  options: CreateRenderContextOptions
+): string | undefined {
+  return options.agent ?? process.env["TUI_AGENT"];
 }
 
 /**
@@ -138,6 +207,15 @@ function determineRenderMode(options: CreateRenderContextOptions): RenderMode {
   // Explicit override takes precedence
   if (options.renderMode !== undefined) {
     return options.renderMode;
+  }
+
+  // Check for agent-specific configuration
+  const agent = getAgentIdentifier(options);
+  if (agent) {
+    const agentConfig = AGENT_CONFIGS[agent];
+    if (agentConfig) {
+      return agentConfig.renderMode;
+    }
   }
 
   // If auto-detection is disabled, default to ansi
@@ -151,6 +229,29 @@ function determineRenderMode(options: CreateRenderContextOptions): RenderMode {
   }
 
   return "ansi";
+}
+
+/**
+ * Determine markdown options based on options and agent config.
+ */
+function determineMarkdownOptions(
+  options: CreateRenderContextOptions
+): MarkdownRendererOptions | undefined {
+  // Explicit options take precedence
+  if (options.markdownOptions) {
+    return options.markdownOptions;
+  }
+
+  // Check for agent-specific configuration
+  const agent = getAgentIdentifier(options);
+  if (agent) {
+    const agentConfig = AGENT_CONFIGS[agent];
+    if (agentConfig?.markdownOptions) {
+      return agentConfig.markdownOptions;
+    }
+  }
+
+  return undefined;
 }
 
 /**
@@ -178,6 +279,7 @@ export function createRenderContext(
   options: CreateRenderContextOptions = {}
 ): RenderContext {
   const renderMode = determineRenderMode(options);
+  const markdownOptions = determineMarkdownOptions(options);
   const colorLevel = options.noColor ? 0 : detectColorLevel();
   const tty = isTTY();
 
@@ -192,12 +294,17 @@ export function createRenderContext(
     isTTY: tty,
     colorLevel,
     renderMode,
-    style: createStyleFunctions(renderMode, theme),
+    style: createStyleFunctions(renderMode, theme, markdownOptions),
   };
 
   // Include theme only if colors are supported and in ANSI mode
   if (theme) {
     context.theme = theme;
+  }
+
+  // Include markdown options when in markdown mode
+  if (renderMode === "markdown" && markdownOptions) {
+    context.markdownOptions = markdownOptions;
   }
 
   return context;

@@ -1,4 +1,9 @@
-import { type TuiTheme, anchorLine, DEFAULT_ANCHOR } from "@tuicomponents/core";
+import {
+  type TuiTheme,
+  type RenderContext,
+  anchorLine,
+  DEFAULT_ANCHOR,
+} from "@tuicomponents/core";
 import type { ProgressLayout } from "./layout.js";
 import type { ProgressInputWithDefaults } from "./schema.js";
 
@@ -67,11 +72,13 @@ export function renderProgressAnsi(
  *
  * @param layout - Pre-computed progress layout
  * @param input - Original input with defaults
+ * @param context - Optional render context for markdown options
  * @returns Markdown-friendly progress bar string
  */
 export function renderProgressMarkdown(
   layout: ProgressLayout,
-  input: ProgressInputWithDefaults
+  input: ProgressInputWithDefaults,
+  context?: RenderContext
 ): string {
   const parts: string[] = [];
 
@@ -102,7 +109,57 @@ export function renderProgressMarkdown(
     parts.push(suffix);
   }
 
-  return anchorLine(parts.join(""), DEFAULT_ANCHOR);
+  return anchorLine(parts.join(""), DEFAULT_ANCHOR, context?.markdownOptions);
+}
+
+/**
+ * Render a progress bar using grayscale mode.
+ *
+ * Uses Unicode shade characters for visual distinction in environments
+ * without ANSI or markdown support.
+ *
+ * @param layout - Pre-computed progress layout
+ * @param input - Original input with defaults
+ * @param context - Render context for styling
+ * @returns Grayscale-styled progress bar string
+ */
+export function renderProgressGrayscale(
+  layout: ProgressLayout,
+  input: ProgressInputWithDefaults,
+  context: RenderContext
+): string {
+  const parts: string[] = [];
+
+  // Add label if present (with header styling)
+  if (layout.label) {
+    parts.push(context.style.header(layout.label));
+    parts.push(" ");
+  }
+
+  // Add left bracket
+  if (layout.leftBracket) {
+    parts.push(layout.leftBracket);
+  }
+
+  // Add bar with grayscale styling
+  // Filled portion gets secondary styling (shade decoration)
+  const styledFilled = context.style.secondary(layout.filledBar);
+  parts.push(styledFilled);
+  parts.push(layout.emptyBar);
+
+  // Add right bracket
+  if (layout.rightBracket) {
+    parts.push(layout.rightBracket);
+  }
+
+  // Add percentage and/or value with info styling
+  const suffix = buildSuffix(layout, input);
+  if (suffix) {
+    parts.push(" ");
+    parts.push(context.style.info(suffix));
+  }
+
+  return parts.join("");
 }
 
 /**

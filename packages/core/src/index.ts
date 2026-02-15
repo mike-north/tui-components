@@ -65,6 +65,7 @@ export {
 // Markdown rendering utilities
 export {
   type MarkdownStyle,
+  type MarkdownRendererOptions,
   DEFAULT_ANCHOR,
   inlineCode,
   anchorLine,
@@ -73,3 +74,12 @@ export {
   stripMarkdownFormatting,
   getMarkdownRenderedWidth,
 } from "./markdown.js";
+
+// Grayscale rendering utilities
+export {
+  type GrayscaleShade,
+  type GrayscaleStyleFunctions,
+  GRAYSCALE_CHARS,
+  createGrayscaleStyleFunctions,
+  getShadeForValue,
+} from "./grayscale.js";

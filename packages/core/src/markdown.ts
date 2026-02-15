@@ -8,6 +8,34 @@
 import { getStringWidth } from "./width.js";
 
 /**
+ * Configuration options for the markdown renderer.
+ *
+ * These options allow adapting markdown output for different AI assistants
+ * that have varying markdown rendering behaviors.
+ */
+export interface MarkdownRendererOptions {
+  /**
+   * Spacing around markdown formatting characters.
+   *
+   * - "tight": No extra spacing (default) - works for most assistants
+   * - "relaxed": Add space after anchor before **bold** (for Kiro CLI)
+   *
+   * @default "tight"
+   */
+  spacingMode?: "tight" | "relaxed";
+
+  /**
+   * Multiline behavior control.
+   *
+   * - "full": Normal multiline output (default)
+   * - "inline": Single-line only (for GitHub Copilot which collapses newlines)
+   *
+   * @default "full"
+   */
+  multilineMode?: "full" | "inline";
+}
+
+/**
  * Style types for the two-color markdown system.
  * - "primary": Plain text (default terminal foreground)
  * - "secondary": Inline code (`text`) - typically rendered with tan/yellow background
@@ -28,16 +56,23 @@ export const DEFAULT_ANCHOR = "│";
  * the visual width difference when backticks are rendered as invisible.
  *
  * @param text - Text to wrap
+ * @param options - Optional markdown renderer options
  * @returns Text wrapped in inline code with alignment compensation
  *
  * @example
  * ```ts
  * inlineCode("hello") // Returns " `hello`"
+ * inlineCode("hello", { spacingMode: "relaxed" }) // Returns "  `hello`"
  * ```
  */
-export function inlineCode(text: string): string {
+export function inlineCode(
+  text: string,
+  options?: MarkdownRendererOptions
+): string {
   // Leading space compensates for invisible backtick
-  return ` \`${text}\``;
+  // Relaxed mode adds extra space for Kiro CLI compatibility
+  const prefix = options?.spacingMode === "relaxed" ? "  " : " ";
+  return `${prefix}\`${text}\``;
 }
 
 /**
@@ -48,18 +83,23 @@ export function inlineCode(text: string): string {
  *
  * @param content - Line content (without the anchor)
  * @param anchor - Anchor character to use (defaults to │)
+ * @param options - Optional markdown renderer options
  * @returns Line with anchor prefix
  *
  * @example
  * ```ts
  * anchorLine("  Sales    ████████") // "│  Sales    ████████"
+ * anchorLine("**bold**", "│", { spacingMode: "relaxed" }) // "│ **bold**"
  * ```
  */
 export function anchorLine(
   content: string,
-  anchor: string = DEFAULT_ANCHOR
+  anchor: string = DEFAULT_ANCHOR,
+  options?: MarkdownRendererOptions
 ): string {
-  return `${anchor}${content}`;
+  // Add space after anchor in relaxed mode (fixes Kiro CLI **bold** issue)
+  const separator = options?.spacingMode === "relaxed" ? " " : "";
+  return `${anchor}${separator}${content}`;
 }
 
 /**
@@ -91,6 +131,7 @@ export function applyMarkdownStyle(text: string, style: MarkdownStyle): string {
  *
  * @param lines - Lines to join
  * @param anchor - Anchor character to use
+ * @param options - Optional markdown renderer options
  * @returns Lines joined with newlines, each prefixed with anchor
  *
  * @example
@@ -100,9 +141,14 @@ export function applyMarkdownStyle(text: string, style: MarkdownStyle): string {
  */
 export function joinAnchoredLines(
   lines: string[],
-  anchor: string = DEFAULT_ANCHOR
+  anchor: string = DEFAULT_ANCHOR,
+  options?: MarkdownRendererOptions
 ): string {
-  return lines.map((line) => anchorLine(line, anchor)).join("\n");
+  // In inline mode, join with separator instead of newlines
+  if (options?.multilineMode === "inline") {
+    return lines.map((line) => anchorLine(line, anchor, options)).join(" | ");
+  }
+  return lines.map((line) => anchorLine(line, anchor, options)).join("\n");
 }
 
 /**
