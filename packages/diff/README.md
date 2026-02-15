@@ -210,17 +210,17 @@ IDE-style diff with gutter and backgrounds
 
 ## Configuration Options
 
-| Property          | Type       | Required  | Default | Description |
-| ----------------- | ---------- | --------- | ------- | ----------- | --- | --- |
-| `hunks`           | `object[]` | ✓         | -       | -           |
-| `oldFile`         | `string`   |           | -       | -           |
-| `newFile`         | `string`   |           | -       | -           |
-| `showLineNumbers` | `boolean`  |           | -       | -           |
-| `markerStyle`     | `"symbol"  | "word"    | "none"` |             | -   | -   |
-| `showHunkHeaders` | `boolean`  |           | -       | -           |
-| `contextLines`    | `number`   |           | -       | -           |
-| `displayStyle`    | `"inline"  | "gutter"` |         | -           | -   |
-| `backgroundMode`  | `"none"    | "line"`   |         | -           | -   |
+| Property | Type | Required | Default | Description |
+| -------- | ---- | -------- | ------- | ----------- |
+| `hunks` | `object[]` | ✓ | - | Array of diff hunks |
+| `oldFile` | `string` | | - | Original file name |
+| `newFile` | `string` | | - | New file name |
+| `showLineNumbers` | `boolean` | | `true` | Show line numbers |
+| `markerStyle` | `string` | | `"symbol"` | Marker style: `"symbol"`, `"word"`, or `"none"` |
+| `showHunkHeaders` | `boolean` | | `true` | Show hunk headers |
+| `contextLines` | `number` | | `3` | Number of context lines |
+| `displayStyle` | `string` | | `"inline"` | Display style: `"inline"` or `"gutter"` |
+| `backgroundMode` | `string` | | `"none"` | Background mode: `"none"` or `"line"` |
 
 ## Render Modes
 

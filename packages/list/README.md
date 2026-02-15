@@ -200,13 +200,13 @@ Definition list with terms
 
 ## Configuration Options
 
-| Property    | Type      | Required | Default   | Description |
-| ----------- | --------- | -------- | --------- | ----------- | ---------- | ---------- | ------- | ------ | ------ | ------------- | --- | --- | --- |
-| `items`     | `object   | object   | object[]` | ✓           | -          | -          |
-| `style`     | `"bullet" | "dash"   | "arrow"   | "star"      | "numbered" | "lettered" | "roman" | "none" | "task" | "definition"` |     | -   | -   |
-| `indent`    | `number`  |          | -         | -           |
-| `start`     | `number`  |          | -         | -           |
-| `termWidth` | `number`  |          | -         | -           |
+| Property | Type | Required | Default | Description |
+| -------- | ---- | -------- | ------- | ----------- |
+| `items` | `object[]` | ✓ | - | Array of list items |
+| `style` | `string` | | `"bullet"` | List style: `"bullet"`, `"dash"`, `"arrow"`, `"star"`, `"numbered"`, `"lettered"`, `"roman"`, `"none"`, `"task"`, or `"definition"` |
+| `indent` | `number` | | `0` | Indentation level |
+| `start` | `number` | | `1` | Starting number for numbered lists |
+| `termWidth` | `number` | | - | Term width for definition lists |
 
 ## Render Modes
 
