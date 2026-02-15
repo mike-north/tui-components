@@ -8,7 +8,11 @@ import {
 } from "@tuicomponents/core";
 import { sparklineInputSchema, type SparklineInput } from "./schema.js";
 import { computeSparklineLayout } from "./layout.js";
-import { renderSparklineAnsi, renderSparklineMarkdown } from "./renderers.js";
+import {
+  renderSparklineAnsi,
+  renderSparklineMarkdown,
+  renderSparklineGrayscale,
+} from "./renderers.js";
 
 /**
  * Sparkline component for compact inline data visualization.
@@ -34,7 +38,7 @@ export class SparklineComponent extends BaseTuiComponent<
     description:
       "Compact inline sparkline visualization using height block characters (▁▂▃▄▅▆▇█)",
     version: "0.1.0",
-    supportedModes: ["ansi", "markdown"],
+    supportedModes: ["ansi", "markdown", "grayscale"],
     examples: [
       {
         name: "basic",
@@ -85,10 +89,17 @@ export class SparklineComponent extends BaseTuiComponent<
     const layout = computeSparklineLayout(parsed, context.width);
 
     // Render based on mode
-    const output =
-      context.renderMode === "markdown"
-        ? renderSparklineMarkdown(layout, context)
-        : renderSparklineAnsi(layout, context.theme);
+    let output: string;
+    switch (context.renderMode) {
+      case "markdown":
+        output = renderSparklineMarkdown(layout, context);
+        break;
+      case "grayscale":
+        output = renderSparklineGrayscale(layout, context);
+        break;
+      default:
+        output = renderSparklineAnsi(layout, context.theme);
+    }
 
     // Measure output
     const measured = measureLines(output);

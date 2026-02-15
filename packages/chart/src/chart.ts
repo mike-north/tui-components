@@ -40,6 +40,11 @@ import {
   renderPieChartMarkdown,
   renderHeatmapMarkdown,
 } from "./renderers/markdown.js";
+import {
+  renderBarChartInline,
+  renderStackedBarChartInline,
+  renderChartSummaryInline,
+} from "./renderers/markdown-inline.js";
 
 /**
  * Chart component for rendering various chart types.
@@ -373,103 +378,159 @@ class ChartComponent extends BaseTuiComponent<
 
     let output: string;
 
+    // Check if we should use inline mode (for GitHub Copilot)
+    const useInlineMode =
+      context.renderMode === "markdown" &&
+      context.markdownOptions?.multilineMode === "inline";
+
+    // Helper to count total data points across all series
+    const totalDataPoints = parsed.series.reduce(
+      (sum, s) => sum + s.data.length,
+      0
+    );
+
     switch (parsed.type) {
       case "bar": {
         const layout = computeBarLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderBarChartMarkdown(layout, { input: parsed })
-            : renderBarChartAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          output = renderBarChartInline(layout);
+        } else if (context.renderMode === "markdown") {
+          output = renderBarChartMarkdown(layout, { input: parsed });
+        } else {
+          output = renderBarChartAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 
       case "bar-vertical": {
         const layout = computeBarLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderVerticalBarChartMarkdown(layout, { input: parsed })
-            : renderVerticalBarChartAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          // Vertical bar charts use the same inline format as horizontal
+          output = renderBarChartInline(layout);
+        } else if (context.renderMode === "markdown") {
+          output = renderVerticalBarChartMarkdown(layout, { input: parsed });
+        } else {
+          output = renderVerticalBarChartAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 
       case "bar-stacked":
       case "bar-stacked-vertical": {
         const layout = computeStackedBarLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderStackedBarChartMarkdown(layout, { input: parsed })
-            : renderStackedBarChartAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          output = renderStackedBarChartInline(layout);
+        } else if (context.renderMode === "markdown") {
+          output = renderStackedBarChartMarkdown(layout, { input: parsed });
+        } else {
+          output = renderStackedBarChartAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 
       case "line": {
         const layout = computeLineLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderLineChartMarkdown(layout, { input: parsed })
-            : renderLineChartAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          output = renderChartSummaryInline(
+            "line",
+            totalDataPoints,
+            parsed.series.length
+          );
+        } else if (context.renderMode === "markdown") {
+          output = renderLineChartMarkdown(layout, { input: parsed });
+        } else {
+          output = renderLineChartAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 
       case "area":
       case "area-stacked": {
         const layout = computeAreaLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderAreaChartMarkdown(layout, { input: parsed })
-            : renderAreaChartAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          output = renderChartSummaryInline(
+            parsed.type,
+            totalDataPoints,
+            parsed.series.length
+          );
+        } else if (context.renderMode === "markdown") {
+          output = renderAreaChartMarkdown(layout, { input: parsed });
+        } else {
+          output = renderAreaChartAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 
       case "scatter": {
         const layout = computeScatterLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderScatterChartMarkdown(layout, { input: parsed })
-            : renderScatterChartAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          output = renderChartSummaryInline(
+            "scatter",
+            totalDataPoints,
+            parsed.series.length
+          );
+        } else if (context.renderMode === "markdown") {
+          output = renderScatterChartMarkdown(layout, { input: parsed });
+        } else {
+          output = renderScatterChartAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 
       case "pie":
       case "donut": {
         const layout = computePieLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderPieChartMarkdown(layout, { input: parsed })
-            : renderPieChartAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          output = renderChartSummaryInline(
+            parsed.type,
+            totalDataPoints,
+            parsed.series.length
+          );
+        } else if (context.renderMode === "markdown") {
+          output = renderPieChartMarkdown(layout, { input: parsed });
+        } else {
+          output = renderPieChartAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 
       case "heatmap": {
         const layout = computeHeatmapLayout(parsed);
-        output =
-          context.renderMode === "markdown"
-            ? renderHeatmapMarkdown(layout, { input: parsed })
-            : renderHeatmapAnsi(layout, {
-                theme: context.theme,
-                input: parsed,
-              });
+        if (useInlineMode) {
+          output = renderChartSummaryInline(
+            "heatmap",
+            totalDataPoints,
+            parsed.series.length
+          );
+        } else if (context.renderMode === "markdown") {
+          output = renderHeatmapMarkdown(layout, { input: parsed });
+        } else {
+          output = renderHeatmapAnsi(layout, {
+            theme: context.theme,
+            input: parsed,
+          });
+        }
         break;
       }
 

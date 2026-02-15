@@ -1,5 +1,6 @@
 import type { ZodType, ZodTypeDef } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+import type { MarkdownRendererOptions } from "./markdown.js";
 import type { StyleFunctions } from "./styling.js";
 import type { TuiTheme } from "./theme.js";
 
@@ -41,15 +42,6 @@ export interface ComponentMetadata<TInput> {
    * If not specified, defaults to ["ansi"].
    */
   supportedModes?: RenderMode[];
-}
-
-/**
- * Markdown-specific renderer options (forward declaration).
- * Full type is in markdown.ts.
- */
-export interface MarkdownRendererOptions {
-  spacingMode?: "tight" | "relaxed";
-  multilineMode?: "full" | "inline";
 }
 
 /**

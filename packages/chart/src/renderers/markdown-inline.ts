@@ -122,8 +122,7 @@ export function renderChartSummaryInline(
   seriesCount: number
 ): string {
   const typeLabel = chartType.replace("-", " ");
-  const seriesLabel = seriesCount === 1 ? "series" : "series";
   const pointLabel = dataPoints === 1 ? "point" : "points";
 
-  return `[${typeLabel}: ${String(seriesCount)} ${seriesLabel}, ${String(dataPoints)} ${pointLabel}]`;
+  return `[${typeLabel}: ${String(seriesCount)} series, ${String(dataPoints)} ${pointLabel}]`;
 }
