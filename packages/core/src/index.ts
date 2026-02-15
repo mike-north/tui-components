@@ -42,9 +42,13 @@ export {
   type ThemeOptions,
   type SemanticColors,
   type TuiTheme,
+  type ThemePreset,
   createThemeSync,
   detectTheme,
   defaultTheme,
+  themePresets,
+  getThemePreset,
+  applySemanticOverrides,
 } from "./theme.js";
 
 // Semantic styling
@@ -83,3 +87,26 @@ export {
   createGrayscaleStyleFunctions,
   getShadeForValue,
 } from "./grayscale.js";
+
+// Configuration system
+export {
+  type TuiConfig,
+  type ThemeConfig,
+  type RenderConfig,
+  type TerminalConfig,
+  type AgentOverride,
+  type MarkdownOptions as ConfigMarkdownOptions,
+  themePresetSchema,
+  semanticColorsOverrideSchema,
+  themeConfigSchema,
+  multilineModeSchema,
+  spacingModeSchema,
+  markdownOptionsSchema,
+  renderModeSchema,
+  agentOverrideSchema,
+  renderConfigSchema,
+  terminalConfigSchema,
+  tuiConfigSchema,
+} from "./config.schema.js";
+
+export { loadConfig, mergeConfigs } from "./config.js";

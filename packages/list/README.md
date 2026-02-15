@@ -1,8 +1,6 @@
 # @tuicomponents/list
 
-Renders lists with support for bullets, numbers, tasks, and definitions.
-
-![List Example](../../docs/screenshots/list/nested.png)
+Renders lists with support for bullets, numbers, tasks, and definitions
 
 ## Installation
 
@@ -150,9 +148,18 @@ Task list with checkboxes
 ```json
 {
   "items": [
-    { "text": "Complete documentation", "checked": true },
-    { "text": "Write tests", "checked": false },
-    { "text": "Review PR", "checked": "partial" }
+    {
+      "text": "Complete documentation",
+      "checked": true
+    },
+    {
+      "text": "Write tests",
+      "checked": false
+    },
+    {
+      "text": "Review PR",
+      "checked": "partial"
+    }
   ],
   "style": "task"
 }
@@ -172,9 +179,18 @@ Definition list with terms
 ```json
 {
   "items": [
-    { "term": "API", "definition": "Application Programming Interface" },
-    { "term": "CLI", "definition": "Command Line Interface" },
-    { "term": "TUI", "definition": "Terminal User Interface" }
+    {
+      "term": "API",
+      "definition": "Application Programming Interface"
+    },
+    {
+      "term": "CLI",
+      "definition": "Command Line Interface"
+    },
+    {
+      "term": "TUI",
+      "definition": "Terminal User Interface"
+    }
   ],
   "style": "definition"
 }
@@ -184,55 +200,21 @@ Definition list with terms
 
 ## Configuration Options
 
-| Property    | Type       | Required | Default    | Description                           |
-| ----------- | ---------- | -------- | ---------- | ------------------------------------- |
-| `items`     | `object[]` | ✓        | -          | Array of list items                   |
-| `style`     | `string`   |          | `"bullet"` | List style (see below)                |
-| `indent`    | `number`   |          | `2`        | Indentation for nested items          |
-| `start`     | `number`   |          | `1`        | Starting number for numbered styles   |
-| `termWidth` | `number`   |          | auto       | Fixed term width for definition lists |
-
-### List Styles
-
-| Style        | Description                    |
-| ------------ | ------------------------------ |
-| `bullet`     | Bullet points (•)              |
-| `dash`       | Dash markers (-)               |
-| `arrow`      | Arrow markers (→)              |
-| `star`       | Star markers (★)               |
-| `numbered`   | Numbered list (1. 2. 3.)       |
-| `lettered`   | Lettered list (a. b. c.)       |
-| `roman`      | Roman numerals (i. ii. iii.)   |
-| `task`       | Task list with checkboxes      |
-| `definition` | Definition list (term → value) |
-| `none`       | No markers                     |
-
-### Item Types
-
-**Standard Item:**
-
-```typescript
-{ text: "Item text", items?: [...] }  // items for nesting
-```
-
-**Task Item (for task style):**
-
-```typescript
-{ text: "Task text", checked: true | false | "partial" }
-```
-
-**Definition Item (for definition style):**
-
-```typescript
-{ term: "Term", definition: "Definition text" }
-```
+| Property    | Type      | Required | Default   | Description |
+| ----------- | --------- | -------- | --------- | ----------- | ---------- | ---------- | ------- | ------ | ------ | ------------- | --- | --- | --- |
+| `items`     | `object   | object   | object[]` | ✓           | -          | -          |
+| `style`     | `"bullet" | "dash"   | "arrow"   | "star"      | "numbered" | "lettered" | "roman" | "none" | "task" | "definition"` |     | -   | -   |
+| `indent`    | `number`  |          | -         | -           |
+| `start`     | `number`  |          | -         | -           |
+| `termWidth` | `number`  |          | -         | -           |
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -244,6 +226,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API

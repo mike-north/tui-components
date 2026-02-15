@@ -29,6 +29,9 @@ export {
   legendConfigSchema,
   gridConfigSchema,
   chartInputSchema,
+  // Future: Gradient support (see docs/adr/001-gradient-support.md)
+  gradientStopSchema,
+  gradientConfigSchema,
 } from "./schema.js";
 
 // Types
@@ -51,6 +54,9 @@ export type {
   StackedBarLayout,
   LineRowLayout,
   ChartLayout,
+  // Future: Gradient support (see docs/adr/001-gradient-support.md)
+  GradientStop,
+  GradientConfig,
 } from "./types.js";
 
 // Core utilities

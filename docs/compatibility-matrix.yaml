@@ -1,0 +1,87 @@
+# AI Assistant and Terminal Compatibility Matrix
+# This file defines which render modes work best with different AI assistants and terminals.
+
+assistants:
+  - id: claude-code
+    displayName: Claude Code
+    recommendedMode: markdown
+    backtickHighlight: true
+    ansiSupport: none
+    newlineHandling: full
+    notes: "Command output truncated ~3 lines"
+
+  - id: github-copilot
+    displayName: GitHub Copilot
+    recommendedMode: markdown
+    markdownOptions:
+      multilineMode: inline
+    backtickHighlight: true
+    ansiSupport: none
+    newlineHandling: collapsed
+    notes: "Collapses newlines - use inline mode"
+
+  - id: cline
+    displayName: Cline
+    recommendedMode: grayscale
+    backtickHighlight: false
+    ansiSupport: partial
+    newlineHandling: full
+    notes: "No backtick highlighting"
+
+  - id: codex
+    displayName: OpenAI Codex CLI
+    recommendedMode: markdown
+    backtickHighlight: true
+    ansiSupport: none
+    newlineHandling: full
+    notes: ""
+
+  - id: gemini-cli
+    displayName: Gemini CLI
+    recommendedMode: markdown
+    backtickHighlight: true
+    ansiSupport: none
+    newlineHandling: full
+    notes: ""
+
+  - id: kiro-cli
+    displayName: Kiro CLI
+    recommendedMode: ansi
+    backtickHighlight: false
+    ansiSupport: truecolor
+    newlineHandling: full
+    notes: "Full ANSI support in terminal"
+
+  - id: opencode
+    displayName: OpenCode
+    recommendedMode: markdown
+    backtickHighlight: true
+    ansiSupport: none
+    newlineHandling: full
+    notes: ""
+
+terminals:
+  - name: iTerm2
+    ansiSupport: truecolor
+    chromatermCompatible: true
+    unicodeSupport: full
+
+  - name: VS Code Terminal
+    ansiSupport: truecolor
+    chromatermCompatible: true
+    unicodeSupport: full
+
+  - name: macOS Terminal
+    ansiSupport: 256color
+    chromatermCompatible: true
+    unicodeSupport: full
+
+  - name: Windows Terminal
+    ansiSupport: truecolor
+    chromatermCompatible: false
+    unicodeSupport: full
+
+  - name: GNOME Terminal
+    ansiSupport: truecolor
+    chromatermCompatible: true
+    unicodeSupport: full

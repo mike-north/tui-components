@@ -1,9 +1,17 @@
 import terminalSize from "terminal-size";
 import type { RenderContext, RenderMode } from "./component.js";
+import { loadConfig } from "./config.js";
+import type { TuiConfig } from "./config.schema.js";
 import { isRunningInAIAssistant } from "./detection.js";
 import type { MarkdownRendererOptions } from "./markdown.js";
 import { createStyleFunctions } from "./styling.js";
-import { defaultTheme, type TuiTheme } from "./theme.js";
+import {
+  defaultTheme,
+  getThemePreset,
+  applySemanticOverrides,
+  type SemanticColors,
+  type TuiTheme,
+} from "./theme.js";
 
 /**
  * Default terminal dimensions when size cannot be determined.
@@ -148,6 +156,17 @@ export interface CreateRenderContextOptions {
    * Can also be set via the TUI_AGENT environment variable.
    */
   agent?: string;
+  /**
+   * Whether to load user configuration from dotfiles.
+   * When true (default), loads config from .tui-components.yaml or ~/.config/tui-components/config.yaml.
+   * @default true
+   */
+  loadUserConfig?: boolean;
+  /**
+   * Explicit user configuration override.
+   * If provided, this config is used instead of loading from files.
+   */
+  userConfig?: TuiConfig | null;
 }
 
 /**
@@ -192,18 +211,50 @@ const AGENT_CONFIGS: Record<string, AgentConfig> = {
 };
 
 /**
+ * Load user config based on options.
+ */
+function loadUserConfig(options: CreateRenderContextOptions): TuiConfig | null {
+  // Explicit config takes precedence
+  if (options.userConfig !== undefined) {
+    return options.userConfig;
+  }
+
+  // If loading is disabled, return null
+  if (options.loadUserConfig === false) {
+    return null;
+  }
+
+  // Load from dotfiles
+  return loadConfig();
+}
+
+/**
  * Get the agent identifier from options or environment.
  */
 function getAgentIdentifier(
   options: CreateRenderContextOptions
 ): string | undefined {
-  return options.agent ?? process.env["TUI_AGENT"];
+  // Explicit option takes precedence
+  if (options.agent !== undefined) {
+    return options.agent;
+  }
+
+  // Check environment variable
+  const envAgent = process.env["TUI_AGENT"];
+  if (envAgent !== undefined) {
+    return envAgent;
+  }
+
+  return undefined;
 }
 
 /**
- * Determine the render mode based on options and environment.
+ * Determine the render mode based on options, config, and environment.
  */
-function determineRenderMode(options: CreateRenderContextOptions): RenderMode {
+function determineRenderMode(
+  options: CreateRenderContextOptions,
+  userConfig: TuiConfig | null
+): RenderMode {
   // Explicit override takes precedence
   if (options.renderMode !== undefined) {
     return options.renderMode;
@@ -212,14 +263,27 @@ function determineRenderMode(options: CreateRenderContextOptions): RenderMode {
   // Check for agent-specific configuration
   const agent = getAgentIdentifier(options);
   if (agent) {
+    // Check user config for agent override first
+    const configAgentOverride = userConfig?.render?.agents?.[agent];
+    if (configAgentOverride?.mode) {
+      return configAgentOverride.mode;
+    }
+
+    // Fall back to built-in agent config
     const agentConfig = AGENT_CONFIGS[agent];
     if (agentConfig) {
       return agentConfig.renderMode;
     }
   }
 
-  // If auto-detection is disabled, default to ansi
-  if (options.autoDetectMode === false) {
+  // Check user config default mode
+  if (userConfig?.render?.defaultMode) {
+    return userConfig.render.defaultMode;
+  }
+
+  // Check auto-detection setting from config
+  const autoDetect = options.autoDetectMode ?? userConfig?.render?.autoDetect;
+  if (autoDetect === false) {
     return "ansi";
   }
 
@@ -232,10 +296,46 @@ function determineRenderMode(options: CreateRenderContextOptions): RenderMode {
 }
 
 /**
- * Determine markdown options based on options and agent config.
+ * Convert config markdown options to MarkdownRendererOptions.
+ * Handles translation from config schema values ("default") to actual defaults (undefined).
+ */
+function convertMarkdownOptions(
+  configOptions:
+    | {
+        multilineMode?: "default" | "inline" | undefined;
+        spacingMode?: "default" | "relaxed" | undefined;
+      }
+    | undefined
+): MarkdownRendererOptions | undefined {
+  if (!configOptions) {
+    return undefined;
+  }
+
+  const result: MarkdownRendererOptions = {};
+
+  // Convert multilineMode: "default" means "full" in MarkdownRendererOptions
+  if (configOptions.multilineMode === "inline") {
+    result.multilineMode = "inline";
+  } else if (configOptions.multilineMode === "default") {
+    result.multilineMode = "full";
+  }
+
+  // Convert spacingMode: "default" means "tight" in MarkdownRendererOptions
+  if (configOptions.spacingMode === "relaxed") {
+    result.spacingMode = "relaxed";
+  } else if (configOptions.spacingMode === "default") {
+    result.spacingMode = "tight";
+  }
+
+  return Object.keys(result).length > 0 ? result : undefined;
+}
+
+/**
+ * Determine markdown options based on options, config, and agent config.
  */
 function determineMarkdownOptions(
-  options: CreateRenderContextOptions
+  options: CreateRenderContextOptions,
+  userConfig: TuiConfig | null
 ): MarkdownRendererOptions | undefined {
   // Explicit options take precedence
   if (options.markdownOptions) {
@@ -245,6 +345,13 @@ function determineMarkdownOptions(
   // Check for agent-specific configuration
   const agent = getAgentIdentifier(options);
   if (agent) {
+    // Check user config for agent override first
+    const configAgentOverride = userConfig?.render?.agents?.[agent];
+    if (configAgentOverride?.markdownOptions) {
+      return convertMarkdownOptions(configAgentOverride.markdownOptions);
+    }
+
+    // Fall back to built-in agent config
     const agentConfig = AGENT_CONFIGS[agent];
     if (agentConfig?.markdownOptions) {
       return agentConfig.markdownOptions;
@@ -255,14 +362,55 @@ function determineMarkdownOptions(
 }
 
 /**
+ * Resolve theme from options and user config.
+ */
+function resolveTheme(
+  options: CreateRenderContextOptions,
+  userConfig: TuiConfig | null
+): TuiTheme {
+  // Explicit theme option takes precedence
+  if (options.theme !== undefined) {
+    return options.theme;
+  }
+
+  // Start with default theme
+  let theme = defaultTheme;
+
+  // Apply user config theme preset
+  if (userConfig?.theme?.preset) {
+    theme = getThemePreset(userConfig.theme.preset);
+  }
+
+  // Apply semantic color overrides from config (currently a no-op)
+  if (userConfig?.theme?.semantic) {
+    // Filter out undefined values to satisfy exactOptionalPropertyTypes
+    const semanticOverrides: Partial<Record<keyof SemanticColors, string>> = {};
+    for (const [key, value] of Object.entries(userConfig.theme.semantic)) {
+      if (value !== undefined) {
+        semanticOverrides[key as keyof SemanticColors] = value;
+      }
+    }
+    if (Object.keys(semanticOverrides).length > 0) {
+      theme = applySemanticOverrides(theme, semanticOverrides);
+    }
+  }
+
+  return theme;
+}
+
+/**
  * Create a render context from current terminal state.
+ *
+ * This function automatically loads user configuration from dotfiles
+ * and applies theme presets, render mode settings, and agent-specific
+ * configurations.
  *
  * @param options - Optional overrides for the context
  * @returns A RenderContext ready for component rendering
  *
  * @example
  * ```ts
- * // Auto-detect everything with theme
+ * // Auto-detect everything with theme and user config
  * const ctx = createRenderContext();
  *
  * // Force a specific width
@@ -273,24 +421,46 @@ function determineMarkdownOptions(
  *
  * // Force markdown mode
  * const ctx = createRenderContext({ renderMode: "markdown" });
+ *
+ * // Disable config loading
+ * const ctx = createRenderContext({ loadUserConfig: false });
  * ```
  */
 export function createRenderContext(
   options: CreateRenderContextOptions = {}
 ): RenderContext {
-  const renderMode = determineRenderMode(options);
-  const markdownOptions = determineMarkdownOptions(options);
-  const colorLevel = options.noColor ? 0 : detectColorLevel();
+  // Load user config first
+  const userConfig = loadUserConfig(options);
+
+  // Determine render mode and markdown options
+  const renderMode = determineRenderMode(options, userConfig);
+  const markdownOptions = determineMarkdownOptions(options, userConfig);
+
+  // Determine color level (config can override)
+  let colorLevel: 0 | 1 | 2 | 3;
+  if (options.noColor) {
+    colorLevel = 0;
+  } else if (userConfig?.terminal?.colorLevel !== undefined) {
+    colorLevel = userConfig.terminal.colorLevel;
+  } else {
+    colorLevel = detectColorLevel();
+  }
+
   const tty = isTTY();
+
+  // Resolve theme from config and options
+  const resolvedTheme = resolveTheme(options, userConfig);
 
   // Determine theme: only apply in ANSI mode with color support
   const theme =
-    colorLevel > 0 && renderMode === "ansi"
-      ? (options.theme ?? defaultTheme)
-      : undefined;
+    colorLevel > 0 && renderMode === "ansi" ? resolvedTheme : undefined;
+
+  // Determine width (config can override)
+  const width =
+    options.width ?? userConfig?.terminal?.width ?? getTerminalWidth();
 
   const context: RenderContext = {
-    width: options.width ?? getTerminalWidth(),
+    width,
     isTTY: tty,
     colorLevel,
     renderMode,

@@ -34,6 +34,8 @@ import {
   registry,
   type TuiComponent,
 } from "@tuicomponents/core";
+import { renderMarkdownToHtml } from "./markdown-screenshot-renderer.js";
+import { generateScenarioComparison } from "./comparison-generator.js";
 
 // Import all visual components to register them
 import "@tuicomponents/sparkline";
@@ -77,8 +79,9 @@ const TERMINAL_THEME = {
   brightWhite: "#e5e5e5",
 };
 
-// Background color for cropping (as RGB)
-const BACKGROUND_RGB = { r: 0x1e, g: 0x1e, b: 0x1e };
+// Background colors for cropping (as RGB)
+const DARK_BACKGROUND_RGB = { r: 0x1e, g: 0x1e, b: 0x1e };
+const LIGHT_BACKGROUND_RGB = { r: 0xff, g: 0xff, b: 0xff };
 const COLOR_TOLERANCE = 5;
 
 interface Scenario {
@@ -87,6 +90,8 @@ interface Scenario {
   width?: number;
   input: unknown;
 }
+
+type ScreenshotMode = "ansi" | "markdown" | "grayscale" | "inline";
 
 interface ScenariosFile {
   [component: string]: Scenario[];
@@ -313,6 +318,39 @@ function takeScreenshotNative(
 }
 
 /**
+ * Detect background color of an image
+ */
+async function detectBackgroundColor(
+  imagePath: string
+): Promise<{ r: number; g: number; b: number }> {
+  const image = sharp(imagePath);
+  const { data } = await image.raw().toBuffer({ resolveWithObject: true });
+
+  // Sample the top-left pixel to determine background
+  const r = data[0];
+  const g = data[1];
+  const b = data[2];
+
+  return { r, g, b };
+}
+
+/**
+ * Check if a color matches a background color within tolerance
+ */
+function isBackgroundColor(
+  r: number,
+  g: number,
+  b: number,
+  background: { r: number; g: number; b: number }
+): boolean {
+  return (
+    Math.abs(r - background.r) <= COLOR_TOLERANCE &&
+    Math.abs(g - background.g) <= COLOR_TOLERANCE &&
+    Math.abs(b - background.b) <= COLOR_TOLERANCE
+  );
+}
+
+/**
  * Crop image to content bounds
  */
 async function cropToContent(imagePath: string, padding = 12): Promise<void> {
@@ -322,6 +360,9 @@ async function cropToContent(imagePath: string, padding = 12): Promise<void> {
   if (!width || !height) {
     throw new Error("Could not get image dimensions");
   }
+
+  // Detect background color
+  const backgroundColor = await detectBackgroundColor(imagePath);
 
   const { data, info } = await image
     .raw()
@@ -341,10 +382,7 @@ async function cropToContent(imagePath: string, padding = 12): Promise<void> {
       const g = data[idx + 1];
       const b = data[idx + 2];
 
-      const isBackground =
-        Math.abs(r - BACKGROUND_RGB.r) <= COLOR_TOLERANCE &&
-        Math.abs(g - BACKGROUND_RGB.g) <= COLOR_TOLERANCE &&
-        Math.abs(b - BACKGROUND_RGB.b) <= COLOR_TOLERANCE;
+      const isBackground = isBackgroundColor(r, g, b, backgroundColor);
 
       if (!isBackground) {
         minX = Math.min(minX, x);
@@ -374,17 +412,24 @@ async function cropToContent(imagePath: string, padding = 12): Promise<void> {
 }
 
 /**
- * Render a component and return the ANSI output
+ * Render a component and return the output for the specified mode
  */
 function renderComponent(
   component: TuiComponent,
   input: unknown,
+  mode: ScreenshotMode,
   width = 80
 ): string {
+  // For "inline" mode, use markdown with multilineMode: "inline"
+  const renderMode = mode === "inline" ? "markdown" : mode;
+  const markdownOptions =
+    mode === "inline" ? { multilineMode: "inline" as const } : undefined;
+
   const context = createRenderContext({
     width,
-    renderMode: "ansi",
+    renderMode,
     theme: createThemeSync(),
+    markdownOptions,
   });
 
   const result = component.render(input, context);
@@ -392,12 +437,36 @@ function renderComponent(
 }
 
 /**
- * Generate screenshot for a single scenario
+ * Determine which modes a component supports for inline rendering
  */
-async function generateScreenshot(
+function supportsInlineMode(component: TuiComponent): boolean {
+  // Components that support single-line rendering can use inline mode
+  // For now, we'll check if "sparkline" or similar single-line components
+  const singleLineComponents = ["sparkline", "gauge", "progress"];
+  return singleLineComponents.includes(component.metadata.name);
+}
+
+/**
+ * Get the screenshot filename for a given mode
+ */
+function getScreenshotFilename(
+  scenarioName: string,
+  mode: ScreenshotMode
+): string {
+  if (mode === "ansi") {
+    return `${scenarioName}.png`;
+  }
+  return `${scenarioName}-${mode}.png`;
+}
+
+/**
+ * Generate screenshot for a single scenario and mode
+ */
+async function generateScreenshotForMode(
   componentName: string,
   component: TuiComponent,
   scenario: Scenario,
+  mode: ScreenshotMode,
   options: ScreenshotOptions
 ): Promise<boolean> {
   const componentDir = path.join(SCREENSHOTS_DIR, componentName);
@@ -409,15 +478,27 @@ async function generateScreenshot(
   try {
     // Render the component
     const width = scenario.width ?? 80;
-    const ansiOutput = renderComponent(component, scenario.input, width);
+    const output = renderComponent(component, scenario.input, mode, width);
 
-    // Generate HTML
-    const html = generateHtml(ansiOutput);
-    const htmlPath = path.join(tmpComponentDir, `${scenario.name}.html`);
+    // Generate HTML based on mode
+    let html: string;
+    if (mode === "markdown" || mode === "inline" || mode === "grayscale") {
+      // Use markdown renderer for non-ANSI modes
+      html = renderMarkdownToHtml(output);
+    } else {
+      // Use ANSI terminal renderer for ANSI mode
+      html = generateHtml(output);
+    }
+
+    const htmlPath = path.join(
+      tmpComponentDir,
+      `${scenario.name}-${mode}.html`
+    );
     fs.writeFileSync(htmlPath, html);
 
     // Take screenshot
-    const outputPath = path.join(componentDir, `${scenario.name}.png`);
+    const filename = getScreenshotFilename(scenario.name, mode);
+    const outputPath = path.join(componentDir, filename);
 
     if (options.useDocker) {
       takeScreenshotDocker(htmlPath, outputPath, options.verbose);
@@ -433,6 +514,70 @@ async function generateScreenshot(
     console.error(`    Error: ${err}`);
     return false;
   }
+}
+
+/**
+ * Generate screenshots for a single scenario (all modes)
+ */
+async function generateScreenshot(
+  componentName: string,
+  component: TuiComponent,
+  scenario: Scenario,
+  options: ScreenshotOptions
+): Promise<boolean> {
+  // Determine which modes to generate
+  const modes: ScreenshotMode[] = ["ansi", "markdown", "grayscale"];
+
+  // Add inline mode if component supports single-line rendering
+  if (supportsInlineMode(component)) {
+    modes.push("inline");
+  }
+
+  let allSucceeded = true;
+
+  // Generate individual mode screenshots
+  for (const mode of modes) {
+    const success = await generateScreenshotForMode(
+      componentName,
+      component,
+      scenario,
+      mode,
+      options
+    );
+    if (!success) {
+      allSucceeded = false;
+    }
+  }
+
+  // Generate comparison image if all individual screenshots succeeded
+  if (allSucceeded) {
+    try {
+      const modeConfigs = modes.map((mode) => {
+        if (mode === "ansi") {
+          return { suffix: "", label: "ANSI" };
+        } else if (mode === "inline") {
+          return { suffix: "-inline", label: "Inline" };
+        } else {
+          return {
+            suffix: `-${mode}`,
+            label: mode.charAt(0).toUpperCase() + mode.slice(1),
+          };
+        }
+      });
+
+      await generateScenarioComparison(
+        componentName,
+        scenario.name,
+        SCREENSHOTS_DIR,
+        modeConfigs
+      );
+    } catch (err) {
+      console.error(`    Failed to generate comparison: ${err}`);
+      allSucceeded = false;
+    }
+  }
+
+  return allSucceeded;
 }
 
 /**

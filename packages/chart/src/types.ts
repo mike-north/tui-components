@@ -17,6 +17,8 @@ import type {
   scatterStyleSchema,
   scatterMarkerSchema,
   heatmapStyleSchema,
+  gradientStopSchema,
+  gradientConfigSchema,
 } from "./schema.js";
 
 /**
@@ -53,6 +55,24 @@ export type ScatterMarker = z.infer<typeof scatterMarkerSchema>;
  * Style options for heatmap rendering.
  */
 export type HeatmapStyle = z.infer<typeof heatmapStyleSchema>;
+
+/**
+ * A single color stop in a gradient.
+ *
+ * @public
+ * @remarks
+ * Not yet implemented. See docs/adr/001-gradient-support.md
+ */
+export type GradientStop = z.infer<typeof gradientStopSchema>;
+
+/**
+ * Gradient configuration for bar chart series.
+ *
+ * @public
+ * @remarks
+ * Not yet implemented. See docs/adr/001-gradient-support.md
+ */
+export type GradientConfig = z.infer<typeof gradientConfigSchema>;
 
 /**
  * A single data point in a chart.

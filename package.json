@@ -27,7 +27,9 @@
     "docs:readme": "node --import=tsx/esm scripts/docs/generate-readmes.ts",
     "docs:snapshots": "FORCE_COLOR=3 tsx scripts/docs/generate-snapshots.ts",
     "docs:snapshots:update": "FORCE_COLOR=3 tsx scripts/docs/generate-snapshots.ts --update",
-    "docs:assistant-previews": "tsx scripts/docs/generate-assistant-previews.ts"
+    "docs:assistant-previews": "tsx scripts/docs/generate-assistant-previews.ts",
+    "docs:compatibility": "tsx scripts/docs/generate-compatibility-matrix.ts",
+    "docs:compatibility:check": "tsx scripts/docs/generate-compatibility-matrix.ts --check"
   },
   "keywords": [
     "tui",

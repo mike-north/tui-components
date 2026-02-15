@@ -7,14 +7,48 @@
 import { Color as ChromatermColor } from 'chromaterm';
 import { Theme as ChromatermTheme } from 'chromaterm';
 import { ThemeOptions } from 'chromaterm';
+import { z } from 'zod';
 import { ZodType } from 'zod';
 import { ZodTypeDef } from 'zod';
+
+// @public
+export type AgentOverride = z.infer<typeof agentOverrideSchema>;
+
+// @public
+export const agentOverrideSchema: z.ZodObject<{
+    mode: z.ZodOptional<z.ZodEnum<["ansi", "markdown", "grayscale"]>>;
+    markdownOptions: z.ZodOptional<z.ZodObject<{
+        multilineMode: z.ZodOptional<z.ZodEnum<["default", "inline"]>>;
+        spacingMode: z.ZodOptional<z.ZodEnum<["default", "relaxed"]>>;
+    }, "strip", z.ZodTypeAny, {
+        multilineMode?: "inline" | "default" | undefined;
+        spacingMode?: "relaxed" | "default" | undefined;
+    }, {
+        multilineMode?: "inline" | "default" | undefined;
+        spacingMode?: "relaxed" | "default" | undefined;
+    }>>;
+}, "strip", z.ZodTypeAny, {
+    mode?: "ansi" | "markdown" | "grayscale" | undefined;
+    markdownOptions?: {
+        multilineMode?: "inline" | "default" | undefined;
+        spacingMode?: "relaxed" | "default" | undefined;
+    } | undefined;
+}, {
+    mode?: "ansi" | "markdown" | "grayscale" | undefined;
+    markdownOptions?: {
+        multilineMode?: "inline" | "default" | undefined;
+        spacingMode?: "relaxed" | "default" | undefined;
+    } | undefined;
+}>;
 
 // @public
 export function anchorLine(content: string, anchor?: string, options?: MarkdownRendererOptions): string;
 
 // @public
 export function applyMarkdownStyle(text: string, style: MarkdownStyle): string;
+
+// @public
+export function applySemanticOverrides(theme: TuiTheme, overrides: Partial<Record<keyof SemanticColors, string>>): TuiTheme;
 
 // @public
 export abstract class BaseTuiComponent<TInput, TSchema extends ZodType<TInput, ZodTypeDef, unknown>> implements TuiComponent<TInput, TSchema> {
@@ -73,6 +107,9 @@ export class ComponentRegistry {
 }
 
 // @public
+export type ConfigMarkdownOptions = z.infer<typeof markdownOptionsSchema>;
+
+// @public
 export function createGrayscaleStyleFunctions(): GrayscaleStyleFunctions;
 
 // @public
@@ -82,10 +119,12 @@ export function createRenderContext(options?: CreateRenderContextOptions): Rende
 export interface CreateRenderContextOptions {
     agent?: string;
     autoDetectMode?: boolean;
+    loadUserConfig?: boolean;
     markdownOptions?: MarkdownRendererOptions;
     noColor?: boolean;
     renderMode?: RenderMode;
     theme?: TuiTheme;
+    userConfig?: TuiConfig | null;
     width?: number;
 }
 
@@ -146,6 +185,9 @@ export function getTerminalSize(): {
 export function getTerminalWidth(): number;
 
 // @public
+export function getThemePreset(preset: ThemePreset): TuiTheme;
+
+// @public
 export const GRAYSCALE_CHARS: Record<GrayscaleShade, string>;
 
 // @public
@@ -176,6 +218,21 @@ export function isTTY(): boolean;
 export function joinAnchoredLines(lines: string[], anchor?: string, options?: MarkdownRendererOptions): string;
 
 // @public
+export function loadConfig(cwd?: string): TuiConfig | null;
+
+// @public
+export const markdownOptionsSchema: z.ZodOptional<z.ZodObject<{
+    multilineMode: z.ZodOptional<z.ZodEnum<["default", "inline"]>>;
+    spacingMode: z.ZodOptional<z.ZodEnum<["default", "relaxed"]>>;
+}, "strip", z.ZodTypeAny, {
+    multilineMode?: "inline" | "default" | undefined;
+    spacingMode?: "relaxed" | "default" | undefined;
+}, {
+    multilineMode?: "inline" | "default" | undefined;
+    spacingMode?: "relaxed" | "default" | undefined;
+}>>;
+
+// @public
 export interface MarkdownRendererOptions {
     multilineMode?: "full" | "inline";
     spacingMode?: "tight" | "relaxed";
@@ -190,6 +247,12 @@ export function measureLines(str: string): {
     maxWidth: number;
     lineCount: number;
 };
+
+// @public
+export function mergeConfigs(programmatic: Partial<TuiConfig>, userConfig: TuiConfig | null): TuiConfig;
+
+// @public
+export const multilineModeSchema: z.ZodEnum<["default", "inline"]>;
 
 // @public
 export interface PadOptions {
@@ -212,6 +275,60 @@ export interface ProcessAncestor {
 export const registry: ComponentRegistry;
 
 // @public
+export type RenderConfig = z.infer<typeof renderConfigSchema>;
+
+// @public
+export const renderConfigSchema: z.ZodOptional<z.ZodObject<{
+    defaultMode: z.ZodOptional<z.ZodEnum<["ansi", "markdown", "grayscale"]>>;
+    autoDetect: z.ZodOptional<z.ZodBoolean>;
+    agents: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+        mode: z.ZodOptional<z.ZodEnum<["ansi", "markdown", "grayscale"]>>;
+        markdownOptions: z.ZodOptional<z.ZodObject<{
+            multilineMode: z.ZodOptional<z.ZodEnum<["default", "inline"]>>;
+            spacingMode: z.ZodOptional<z.ZodEnum<["default", "relaxed"]>>;
+        }, "strip", z.ZodTypeAny, {
+            multilineMode?: "inline" | "default" | undefined;
+            spacingMode?: "relaxed" | "default" | undefined;
+        }, {
+            multilineMode?: "inline" | "default" | undefined;
+            spacingMode?: "relaxed" | "default" | undefined;
+        }>>;
+    }, "strip", z.ZodTypeAny, {
+        mode?: "ansi" | "markdown" | "grayscale" | undefined;
+        markdownOptions?: {
+            multilineMode?: "inline" | "default" | undefined;
+            spacingMode?: "relaxed" | "default" | undefined;
+        } | undefined;
+    }, {
+        mode?: "ansi" | "markdown" | "grayscale" | undefined;
+        markdownOptions?: {
+            multilineMode?: "inline" | "default" | undefined;
+            spacingMode?: "relaxed" | "default" | undefined;
+        } | undefined;
+    }>>>;
+}, "strip", z.ZodTypeAny, {
+    defaultMode?: "ansi" | "markdown" | "grayscale" | undefined;
+    autoDetect?: boolean | undefined;
+    agents?: Record<string, {
+        mode?: "ansi" | "markdown" | "grayscale" | undefined;
+        markdownOptions?: {
+            multilineMode?: "inline" | "default" | undefined;
+            spacingMode?: "relaxed" | "default" | undefined;
+        } | undefined;
+    }> | undefined;
+}, {
+    defaultMode?: "ansi" | "markdown" | "grayscale" | undefined;
+    autoDetect?: boolean | undefined;
+    agents?: Record<string, {
+        mode?: "ansi" | "markdown" | "grayscale" | undefined;
+        markdownOptions?: {
+            multilineMode?: "inline" | "default" | undefined;
+            spacingMode?: "relaxed" | "default" | undefined;
+        } | undefined;
+    }> | undefined;
+}>>;
+
+// @public
 export interface RenderContext {
     colorLevel: 0 | 1 | 2 | 3;
     isTTY: boolean;
@@ -224,6 +341,9 @@ export interface RenderContext {
 
 // @public
 export type RenderMode = "ansi" | "markdown" | "grayscale";
+
+// @public
+export const renderModeSchema: z.ZodEnum<["ansi", "markdown", "grayscale"]>;
 
 // @public
 export interface RenderResult {
@@ -250,6 +370,30 @@ export interface SemanticColors {
 }
 
 // @public
+export const semanticColorsOverrideSchema: z.ZodOptional<z.ZodObject<{
+    success: z.ZodOptional<z.ZodString>;
+    error: z.ZodOptional<z.ZodString>;
+    warning: z.ZodOptional<z.ZodString>;
+    info: z.ZodOptional<z.ZodString>;
+    muted: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    success?: string | undefined;
+    warning?: string | undefined;
+    error?: string | undefined;
+    info?: string | undefined;
+    muted?: string | undefined;
+}, {
+    success?: string | undefined;
+    warning?: string | undefined;
+    error?: string | undefined;
+    info?: string | undefined;
+    muted?: string | undefined;
+}>>;
+
+// @public
+export const spacingModeSchema: z.ZodEnum<["default", "relaxed"]>;
+
+// @public
 export function stripMarkdownFormatting(str: string): string;
 
 // @public
@@ -264,7 +408,76 @@ export interface StyleFunctions {
     warning: (text: string) => string;
 }
 
+// @public
+export type TerminalConfig = z.infer<typeof terminalConfigSchema>;
+
+// @public
+export const terminalConfigSchema: z.ZodOptional<z.ZodObject<{
+    colorLevel: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<0>, z.ZodLiteral<1>, z.ZodLiteral<2>, z.ZodLiteral<3>]>>;
+    width: z.ZodOptional<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    colorLevel?: 0 | 2 | 1 | 3 | undefined;
+    width?: number | undefined;
+}, {
+    colorLevel?: 0 | 2 | 1 | 3 | undefined;
+    width?: number | undefined;
+}>>;
+
+// @public
+export type ThemeConfig = z.infer<typeof themeConfigSchema>;
+
+// @public
+export const themeConfigSchema: z.ZodOptional<z.ZodObject<{
+    preset: z.ZodOptional<z.ZodEnum<["default", "monokai", "solarized-dark", "solarized-light", "nord"]>>;
+    semantic: z.ZodOptional<z.ZodObject<{
+        success: z.ZodOptional<z.ZodString>;
+        error: z.ZodOptional<z.ZodString>;
+        warning: z.ZodOptional<z.ZodString>;
+        info: z.ZodOptional<z.ZodString>;
+        muted: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        success?: string | undefined;
+        warning?: string | undefined;
+        error?: string | undefined;
+        info?: string | undefined;
+        muted?: string | undefined;
+    }, {
+        success?: string | undefined;
+        warning?: string | undefined;
+        error?: string | undefined;
+        info?: string | undefined;
+        muted?: string | undefined;
+    }>>;
+}, "strip", z.ZodTypeAny, {
+    semantic?: {
+        success?: string | undefined;
+        warning?: string | undefined;
+        error?: string | undefined;
+        info?: string | undefined;
+        muted?: string | undefined;
+    } | undefined;
+    preset?: "default" | "monokai" | "solarized-dark" | "solarized-light" | "nord" | undefined;
+}, {
+    semantic?: {
+        success?: string | undefined;
+        warning?: string | undefined;
+        error?: string | undefined;
+        info?: string | undefined;
+        muted?: string | undefined;
+    } | undefined;
+    preset?: "default" | "monokai" | "solarized-dark" | "solarized-light" | "nord" | undefined;
+}>>;
+
 export { ThemeOptions }
+
+// @public
+export type ThemePreset = "default" | "monokai" | "solarized-dark" | "solarized-light" | "nord";
+
+// @public
+export const themePresets: Record<ThemePreset, TuiTheme>;
+
+// @public
+export const themePresetSchema: z.ZodEnum<["default", "monokai", "solarized-dark", "solarized-light", "nord"]>;
 
 // @public
 export interface TruncateOptions {
@@ -282,6 +495,164 @@ export interface TuiComponent<TInput, TSchema extends ZodType<TInput, ZodTypeDef
     render(input: TInput, context: RenderContext): RenderResult;
     readonly schema: TSchema;
 }
+
+// @public
+export type TuiConfig = z.infer<typeof tuiConfigSchema>;
+
+// @public
+export const tuiConfigSchema: z.ZodObject<{
+    theme: z.ZodOptional<z.ZodObject<{
+        preset: z.ZodOptional<z.ZodEnum<["default", "monokai", "solarized-dark", "solarized-light", "nord"]>>;
+        semantic: z.ZodOptional<z.ZodObject<{
+            success: z.ZodOptional<z.ZodString>;
+            error: z.ZodOptional<z.ZodString>;
+            warning: z.ZodOptional<z.ZodString>;
+            info: z.ZodOptional<z.ZodString>;
+            muted: z.ZodOptional<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            success?: string | undefined;
+            warning?: string | undefined;
+            error?: string | undefined;
+            info?: string | undefined;
+            muted?: string | undefined;
+        }, {
+            success?: string | undefined;
+            warning?: string | undefined;
+            error?: string | undefined;
+            info?: string | undefined;
+            muted?: string | undefined;
+        }>>;
+    }, "strip", z.ZodTypeAny, {
+        semantic?: {
+            success?: string | undefined;
+            warning?: string | undefined;
+            error?: string | undefined;
+            info?: string | undefined;
+            muted?: string | undefined;
+        } | undefined;
+        preset?: "default" | "monokai" | "solarized-dark" | "solarized-light" | "nord" | undefined;
+    }, {
+        semantic?: {
+            success?: string | undefined;
+            warning?: string | undefined;
+            error?: string | undefined;
+            info?: string | undefined;
+            muted?: string | undefined;
+        } | undefined;
+        preset?: "default" | "monokai" | "solarized-dark" | "solarized-light" | "nord" | undefined;
+    }>>;
+    render: z.ZodOptional<z.ZodObject<{
+        defaultMode: z.ZodOptional<z.ZodEnum<["ansi", "markdown", "grayscale"]>>;
+        autoDetect: z.ZodOptional<z.ZodBoolean>;
+        agents: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+            mode: z.ZodOptional<z.ZodEnum<["ansi", "markdown", "grayscale"]>>;
+            markdownOptions: z.ZodOptional<z.ZodObject<{
+                multilineMode: z.ZodOptional<z.ZodEnum<["default", "inline"]>>;
+                spacingMode: z.ZodOptional<z.ZodEnum<["default", "relaxed"]>>;
+            }, "strip", z.ZodTypeAny, {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            }, {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            mode?: "ansi" | "markdown" | "grayscale" | undefined;
+            markdownOptions?: {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            } | undefined;
+        }, {
+            mode?: "ansi" | "markdown" | "grayscale" | undefined;
+            markdownOptions?: {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            } | undefined;
+        }>>>;
+    }, "strip", z.ZodTypeAny, {
+        defaultMode?: "ansi" | "markdown" | "grayscale" | undefined;
+        autoDetect?: boolean | undefined;
+        agents?: Record<string, {
+            mode?: "ansi" | "markdown" | "grayscale" | undefined;
+            markdownOptions?: {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            } | undefined;
+        }> | undefined;
+    }, {
+        defaultMode?: "ansi" | "markdown" | "grayscale" | undefined;
+        autoDetect?: boolean | undefined;
+        agents?: Record<string, {
+            mode?: "ansi" | "markdown" | "grayscale" | undefined;
+            markdownOptions?: {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            } | undefined;
+        }> | undefined;
+    }>>;
+    terminal: z.ZodOptional<z.ZodObject<{
+        colorLevel: z.ZodOptional<z.ZodUnion<[z.ZodLiteral<0>, z.ZodLiteral<1>, z.ZodLiteral<2>, z.ZodLiteral<3>]>>;
+        width: z.ZodOptional<z.ZodNumber>;
+    }, "strip", z.ZodTypeAny, {
+        colorLevel?: 0 | 2 | 1 | 3 | undefined;
+        width?: number | undefined;
+    }, {
+        colorLevel?: 0 | 2 | 1 | 3 | undefined;
+        width?: number | undefined;
+    }>>;
+}, "strip", z.ZodTypeAny, {
+    theme?: {
+        semantic?: {
+            success?: string | undefined;
+            warning?: string | undefined;
+            error?: string | undefined;
+            info?: string | undefined;
+            muted?: string | undefined;
+        } | undefined;
+        preset?: "default" | "monokai" | "solarized-dark" | "solarized-light" | "nord" | undefined;
+    } | undefined;
+    render?: {
+        defaultMode?: "ansi" | "markdown" | "grayscale" | undefined;
+        autoDetect?: boolean | undefined;
+        agents?: Record<string, {
+            mode?: "ansi" | "markdown" | "grayscale" | undefined;
+            markdownOptions?: {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            } | undefined;
+        }> | undefined;
+    } | undefined;
+    terminal?: {
+        colorLevel?: 0 | 2 | 1 | 3 | undefined;
+        width?: number | undefined;
+    } | undefined;
+}, {
+    theme?: {
+        semantic?: {
+            success?: string | undefined;
+            warning?: string | undefined;
+            error?: string | undefined;
+            info?: string | undefined;
+            muted?: string | undefined;
+        } | undefined;
+        preset?: "default" | "monokai" | "solarized-dark" | "solarized-light" | "nord" | undefined;
+    } | undefined;
+    render?: {
+        defaultMode?: "ansi" | "markdown" | "grayscale" | undefined;
+        autoDetect?: boolean | undefined;
+        agents?: Record<string, {
+            mode?: "ansi" | "markdown" | "grayscale" | undefined;
+            markdownOptions?: {
+                multilineMode?: "inline" | "default" | undefined;
+                spacingMode?: "relaxed" | "default" | undefined;
+            } | undefined;
+        }> | undefined;
+    } | undefined;
+    terminal?: {
+        colorLevel?: 0 | 2 | 1 | 3 | undefined;
+        width?: number | undefined;
+    } | undefined;
+}>;
 
 // @public
 export interface TuiTheme {

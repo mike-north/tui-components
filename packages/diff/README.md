@@ -2,8 +2,6 @@
 
 Renders unified diff format with additions and deletions
 
-![Diff Example](../../docs/screenshots/diff/code-diff.png)
-
 ## Installation
 
 ```bash
@@ -163,24 +161,74 @@ Code change diff
 
 </details>
 
+### gutter-style
+
+IDE-style diff with gutter and backgrounds
+
+![IDE-style diff with gutter and backgrounds](../../docs/screenshots/diff/gutter-style.png)
+
+<details>
+<summary>Input</summary>
+
+```json
+{
+  "displayStyle": "gutter",
+  "backgroundMode": "line",
+  "showLineNumbers": true,
+  "hunks": [
+    {
+      "lines": [
+        {
+          "type": "context",
+          "content": "const config = {",
+          "oldLineNumber": 45,
+          "newLineNumber": 45
+        },
+        {
+          "type": "deletion",
+          "content": "  debug: false,",
+          "oldLineNumber": 46
+        },
+        {
+          "type": "addition",
+          "content": "  debug: true,",
+          "newLineNumber": 46
+        },
+        {
+          "type": "context",
+          "content": "};",
+          "oldLineNumber": 47,
+          "newLineNumber": 47
+        }
+      ]
+    }
+  ]
+}
+```
+
+</details>
+
 ## Configuration Options
 
-| Property          | Type       | Required | Default | Description |
-| ----------------- | ---------- | -------- | ------- | ----------- | --- | --- |
-| `hunks`           | `object[]` | ✓        | -       | -           |
-| `oldFile`         | `string`   |          | -       | -           |
-| `newFile`         | `string`   |          | -       | -           |
-| `showLineNumbers` | `boolean`  |          | -       | -           |
-| `markerStyle`     | `"symbol"  | "word"   | "none"` |             | -   | -   |
-| `showHunkHeaders` | `boolean`  |          | -       | -           |
-| `contextLines`    | `number`   |          | -       | -           |
+| Property          | Type       | Required  | Default | Description |
+| ----------------- | ---------- | --------- | ------- | ----------- | --- | --- |
+| `hunks`           | `object[]` | ✓         | -       | -           |
+| `oldFile`         | `string`   |           | -       | -           |
+| `newFile`         | `string`   |           | -       | -           |
+| `showLineNumbers` | `boolean`  |           | -       | -           |
+| `markerStyle`     | `"symbol"  | "word"    | "none"` |             | -   | -   |
+| `showHunkHeaders` | `boolean`  |           | -       | -           |
+| `contextLines`    | `number`   |           | -       | -           |
+| `displayStyle`    | `"inline"  | "gutter"` |         | -           | -   |
+| `backgroundMode`  | `"none"    | "line"`   |         | -           | -   |
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -192,6 +240,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API

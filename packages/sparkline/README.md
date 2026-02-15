@@ -1,8 +1,6 @@
 # @tuicomponents/sparkline
 
-Compact inline sparkline visualization using height block characters (▁▂▃▄▅▆▇)
-
-![Sparkline Example](../../docs/screenshots/sparkline/basic.png)
+Compact inline sparkline visualization using height block characters (▁▂▃▄▅▆▇█)
 
 ## Installation
 
@@ -34,7 +32,16 @@ console.log(result.output);
 
 Simple sparkline with default settings
 
-![Simple sparkline with default settings](../../docs/screenshots/sparkline/basic.png)
+![Simple sparkline with default settings](../../docs/screenshots/sparkline/basic-comparison.png)
+
+<details>
+<summary>View individual modes</summary>
+
+| ANSI                                                | Markdown                                                         | Grayscale                                                          | Inline                                                       |
+| --------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![ANSI](../../docs/screenshots/sparkline/basic.png) | ![Markdown](../../docs/screenshots/sparkline/basic-markdown.png) | ![Grayscale](../../docs/screenshots/sparkline/basic-grayscale.png) | ![Inline](../../docs/screenshots/sparkline/basic-inline.png) |
+
+</details>
 
 <details>
 <summary>Input</summary>
@@ -51,7 +58,16 @@ Simple sparkline with default settings
 
 CPU usage monitoring over time
 
-![CPU usage monitoring over time](../../docs/screenshots/sparkline/cpu-usage.png)
+![CPU usage monitoring over time](../../docs/screenshots/sparkline/cpu-usage-comparison.png)
+
+<details>
+<summary>View individual modes</summary>
+
+| ANSI                                                    | Markdown                                                             | Grayscale                                                              | Inline                                                           |
+| ------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| ![ANSI](../../docs/screenshots/sparkline/cpu-usage.png) | ![Markdown](../../docs/screenshots/sparkline/cpu-usage-markdown.png) | ![Grayscale](../../docs/screenshots/sparkline/cpu-usage-grayscale.png) | ![Inline](../../docs/screenshots/sparkline/cpu-usage-inline.png) |
+
+</details>
 
 <details>
 <summary>Input</summary>
@@ -70,7 +86,16 @@ CPU usage monitoring over time
 
 Sparkline with label prefix
 
-![Sparkline with label prefix](../../docs/screenshots/sparkline/with-label.png)
+![Sparkline with label prefix](../../docs/screenshots/sparkline/with-label-comparison.png)
+
+<details>
+<summary>View individual modes</summary>
+
+| ANSI                                                     | Markdown                                                              | Grayscale                                                               | Inline                                                            |
+| -------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| ![ANSI](../../docs/screenshots/sparkline/with-label.png) | ![Markdown](../../docs/screenshots/sparkline/with-label-markdown.png) | ![Grayscale](../../docs/screenshots/sparkline/with-label-grayscale.png) | ![Inline](../../docs/screenshots/sparkline/with-label-inline.png) |
+
+</details>
 
 <details>
 <summary>Input</summary>
@@ -88,7 +113,16 @@ Sparkline with label prefix
 
 Stock price trend
 
-![Stock price trend](../../docs/screenshots/sparkline/stock-trend.png)
+![Stock price trend](../../docs/screenshots/sparkline/stock-trend-comparison.png)
+
+<details>
+<summary>View individual modes</summary>
+
+| ANSI                                                      | Markdown                                                               | Grayscale                                                                | Inline                                                             |
+| --------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| ![ANSI](../../docs/screenshots/sparkline/stock-trend.png) | ![Markdown](../../docs/screenshots/sparkline/stock-trend-markdown.png) | ![Grayscale](../../docs/screenshots/sparkline/stock-trend-grayscale.png) | ![Inline](../../docs/screenshots/sparkline/stock-trend-inline.png) |
+
+</details>
 
 <details>
 <summary>Input</summary>
@@ -110,13 +144,15 @@ Stock price trend
 | `min`    | `number`   |          | -       | -           |
 | `max`    | `number`   |          | -       | -           |
 | `label`  | `string`   |          | -       | -           |
+| `fit`    | `boolean`  |          | -       | -           |
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -128,6 +164,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API
