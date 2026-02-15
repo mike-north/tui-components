@@ -13,9 +13,17 @@
  */
 
 /**
+ * Google Fonts import for JetBrains Mono - a monospace font with excellent
+ * Unicode box-drawing character support and consistent character widths.
+ */
+const GOOGLE_FONTS_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');`;
+
+/**
  * CSS styles for markdown rendering
  */
 const MARKDOWN_STYLES = `
+  ${GOOGLE_FONTS_IMPORT}
+
   * {
     margin: 0;
     padding: 0;
@@ -25,7 +33,7 @@ const MARKDOWN_STYLES = `
   body {
     background: #ffffff;
     color: #1a1a1a;
-    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'DejaVu Sans Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
     line-height: 1.5;
     padding: 16px;
@@ -36,6 +44,7 @@ const MARKDOWN_STYLES = `
     display: inline-block;
     white-space: pre;
     margin: 0;
+    font-family: 'JetBrains Mono', monospace;
     font-variant-ligatures: none;
     letter-spacing: 0;
     font-feature-settings: "liga" 0;
