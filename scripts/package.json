@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuicomponents/assistant-simulator": "workspace:*",
     "@tuicomponents/box": "workspace:*",
+    "@tuicomponents/callout": "workspace:*",
     "@tuicomponents/chart": "workspace:*",
     "@tuicomponents/core": "workspace:*",
     "@tuicomponents/diff": "workspace:*",

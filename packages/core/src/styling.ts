@@ -4,10 +4,12 @@
  * Provides consistent styling across render modes:
  * - ANSI mode: Uses theme semantic colors
  * - Markdown mode: Uses markdown formatting (backticks, bold, etc.)
+ * - Grayscale mode: Uses Unicode shade character decorations
  */
 
 import type { RenderMode } from "./component.js";
-import { inlineCode } from "./markdown.js";
+import { createGrayscaleStyleFunctions } from "./grayscale.js";
+import { inlineCode, type MarkdownRendererOptions } from "./markdown.js";
 import type { TuiTheme } from "./theme.js";
 
 /**
@@ -45,7 +47,7 @@ export interface StyleFunctions {
 }
 
 /**
- * Style function implementations for markdown mode.
+ * Create style function implementations for markdown mode.
  *
  * Maps semantic styles to markdown formatting:
  * - primary: Plain text (no formatting)
@@ -53,17 +55,23 @@ export interface StyleFunctions {
  * - header: Bold (**text**)
  * - border: Plain text (borders don't need styling in markdown)
  * - success/warning/error/info: Inline code (colored in many renderers)
+ *
+ * @param options - Optional markdown renderer options
  */
-const markdownStyleFunctions: StyleFunctions = {
-  primary: (text: string) => text,
-  secondary: (text: string) => (text === "" ? "" : inlineCode(text)),
-  header: (text: string) => (text === "" ? "" : `**${text}**`),
-  border: (text: string) => text,
-  success: (text: string) => (text === "" ? "" : inlineCode(text)),
-  warning: (text: string) => (text === "" ? "" : inlineCode(text)),
-  error: (text: string) => (text === "" ? "" : inlineCode(text)),
-  info: (text: string) => (text === "" ? "" : inlineCode(text)),
-};
+function createMarkdownStyleFunctions(
+  options?: MarkdownRendererOptions
+): StyleFunctions {
+  return {
+    primary: (text: string) => text,
+    secondary: (text: string) => (text === "" ? "" : inlineCode(text, options)),
+    header: (text: string) => (text === "" ? "" : `**${text}**`),
+    border: (text: string) => text,
+    success: (text: string) => (text === "" ? "" : inlineCode(text, options)),
+    warning: (text: string) => (text === "" ? "" : inlineCode(text, options)),
+    error: (text: string) => (text === "" ? "" : inlineCode(text, options)),
+    info: (text: string) => (text === "" ? "" : inlineCode(text, options)),
+  };
+}
 
 /**
  * Create passthrough style functions (no styling applied).
@@ -101,8 +109,9 @@ function createThemedStyleFunctions(theme: TuiTheme): StyleFunctions {
 /**
  * Create style functions appropriate for the render mode.
  *
- * @param renderMode - The current render mode ("ansi" or "markdown")
+ * @param renderMode - The current render mode ("ansi", "markdown", or "grayscale")
  * @param theme - Optional theme for ANSI mode styling
+ * @param markdownOptions - Optional markdown-specific renderer options
  * @returns StyleFunctions that apply mode-appropriate styling
  *
  * @example
@@ -110,6 +119,14 @@ function createThemedStyleFunctions(theme: TuiTheme): StyleFunctions {
  * // Markdown mode
  * const style = createStyleFunctions("markdown");
  * style.secondary("blocks") // Returns " `blocks`"
+ *
+ * // Markdown mode with relaxed spacing (for Kiro CLI)
+ * const style = createStyleFunctions("markdown", undefined, { spacingMode: "relaxed" });
+ * style.secondary("blocks") // Returns "  `blocks`"
+ *
+ * // Grayscale mode (for Cline)
+ * const style = createStyleFunctions("grayscale");
+ * style.secondary("blocks") // Returns "░blocks░"
  *
  * // ANSI mode with theme
  * const style = createStyleFunctions("ansi", theme);
@@ -122,10 +139,15 @@ function createThemedStyleFunctions(theme: TuiTheme): StyleFunctions {
  */
 export function createStyleFunctions(
   renderMode: RenderMode,
-  theme?: TuiTheme
+  theme?: TuiTheme,
+  markdownOptions?: MarkdownRendererOptions
 ): StyleFunctions {
+  if (renderMode === "grayscale") {
+    return createGrayscaleStyleFunctions();
+  }
+
   if (renderMode === "markdown") {
-    return markdownStyleFunctions;
+    return createMarkdownStyleFunctions(markdownOptions);
   }
 
   // ANSI mode: use theme if available, otherwise passthrough

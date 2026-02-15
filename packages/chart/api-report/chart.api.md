@@ -1097,7 +1097,13 @@ export function renderAreaChartMarkdown(layout: AreaChartLayout, options: Markdo
 export function renderBarChartAnsi(layout: BarChartLayout, options: AnsiRenderOptions): string;
 
 // @public
+export function renderBarChartInline(layout: BarChartLayout): string;
+
+// @public
 export function renderBarChartMarkdown(layout: BarChartLayout, _options: MarkdownRenderOptions): string;
+
+// @public
+export function renderChartSummaryInline(chartType: string, dataPoints: number, seriesCount: number): string;
 
 // @public
 export function renderHeatmapAnsi(layout: HeatmapChartLayout, options: AnsiRenderOptions): string;
@@ -1128,6 +1134,9 @@ export function renderScatterChartMarkdown(layout: ScatterChartLayout, options: 
 
 // @public
 export function renderStackedBarChartAnsi(layout: StackedBarChartLayout, options: AnsiRenderOptions): string;
+
+// @public
+export function renderStackedBarChartInline(layout: StackedBarChartLayout): string;
 
 // @public
 export function renderStackedBarChartMarkdown(layout: StackedBarChartLayout, options: MarkdownRenderOptions): string;

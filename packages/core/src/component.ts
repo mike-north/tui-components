@@ -1,12 +1,17 @@
 import type { ZodType, ZodTypeDef } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+import type { MarkdownRendererOptions } from "./markdown.js";
 import type { StyleFunctions } from "./styling.js";
 import type { TuiTheme } from "./theme.js";
 
 /**
  * Render mode for component output.
+ *
+ * - "ansi": Full ANSI escape codes for rich terminals
+ * - "markdown": Markdown-friendly output with backticks for AI assistants
+ * - "grayscale": Unicode shade characters for environments without ANSI or markdown
  */
-export type RenderMode = "ansi" | "markdown";
+export type RenderMode = "ansi" | "markdown" | "grayscale";
 
 /**
  * Example input/output pair for a component.
@@ -55,6 +60,7 @@ export interface RenderContext {
    * Render mode for output.
    * - "ansi": Full ANSI escape codes for rich terminals
    * - "markdown": Markdown-friendly output for AI assistants
+   * - "grayscale": Unicode shade characters for environments without ANSI or markdown
    * @default "ansi"
    */
   renderMode: RenderMode;
@@ -64,15 +70,22 @@ export interface RenderContext {
    * Use these to apply consistent styling across render modes:
    * - ANSI mode: Applies theme colors (or passthrough if no theme)
    * - Markdown mode: Applies markdown formatting (backticks, bold, etc.)
+   * - Grayscale mode: Applies Unicode shade character decorations
    *
    * @example
    * ```ts
    * const styledBlocks = context.style.secondary(sparklineBlocks);
    * // ANSI: muted color
    * // Markdown: `sparklineBlocks`
+   * // Grayscale: ░sparklineBlocks░
    * ```
    */
   style: StyleFunctions;
+  /**
+   * Markdown-specific renderer options.
+   * Only present when renderMode is "markdown".
+   */
+  markdownOptions?: MarkdownRendererOptions;
 }
 
 /**

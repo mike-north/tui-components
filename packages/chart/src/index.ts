@@ -195,3 +195,10 @@ export {
   renderHeatmapMarkdown,
   type MarkdownRenderOptions,
 } from "./renderers/markdown.js";
+
+// Inline renderers for newline-collapsing environments (e.g., GitHub Copilot)
+export {
+  renderBarChartInline,
+  renderStackedBarChartInline,
+  renderChartSummaryInline,
+} from "./renderers/markdown-inline.js";

@@ -10,7 +10,11 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 import { progressInputSchema, type ProgressInput } from "./schema.js";
 import { getProgressChars } from "./chars.js";
 import { computeProgressLayout } from "./layout.js";
-import { renderProgressAnsi, renderProgressMarkdown } from "./renderers.js";
+import {
+  renderProgressAnsi,
+  renderProgressMarkdown,
+  renderProgressGrayscale,
+} from "./renderers.js";
 
 /**
  * Progress component for rendering horizontal progress bars.
@@ -23,7 +27,7 @@ class ProgressComponent extends BaseTuiComponent<
     name: "progress",
     description: "Renders horizontal progress bars for task completion",
     version: "0.1.0",
-    supportedModes: ["ansi", "markdown"],
+    supportedModes: ["ansi", "markdown", "grayscale"],
     examples: [
       {
         name: "basic",
@@ -153,10 +157,17 @@ class ProgressComponent extends BaseTuiComponent<
     const layout = computeProgressLayout(parsed, chars, context.width);
 
     // Choose renderer based on render mode
-    const output =
-      context.renderMode === "markdown"
-        ? renderProgressMarkdown(layout, parsed)
-        : renderProgressAnsi(layout, parsed, context.theme);
+    let output: string;
+    switch (context.renderMode) {
+      case "markdown":
+        output = renderProgressMarkdown(layout, parsed, context);
+        break;
+      case "grayscale":
+        output = renderProgressGrayscale(layout, parsed, context);
+        break;
+      default:
+        output = renderProgressAnsi(layout, parsed, context.theme);
+    }
 
     const measured = measureLines(output);
 
