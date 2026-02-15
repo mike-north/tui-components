@@ -1,0 +1,121 @@
+{
+  "assistant": "Cline",
+  "timestamp": "2026-02-14T16:55:26-08:00",
+  "environment": {
+    "isTTY": false,
+    "term": "xterm-256color",
+    "colorTerm": "truecolor",
+    "termProgram": "iTerm.app",
+    "noColor": false,
+    "ciDetected": false
+  },
+  "agentIdentification": {
+    "canSetEnvVar": true,
+    "detectedValue": "cline",
+    "heuristicDetected": null,
+    "heuristicConfidence": null,
+    "signalsMatch": null,
+    "notes": "Heuristic detection unavailable from scripts directory, but explicit TUI_AGENT environment variable works perfectly"
+  },
+  "results": {
+    "ansi.fg.basic": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.fg.bright": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.bg.basic": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.256": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.truecolor": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.styles": {
+      "command": "full",
+      "chat": "none"
+    },
+    "md.backtick": {
+      "command": "none",
+      "chat": "none"
+    },
+    "md.bold": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.whitespace": {
+      "command": "full",
+      "chat": "full"
+    },
+    "md.inline-whitespace": {
+      "command": "full",
+      "chat": "full"
+    },
+    "md.anchor": {
+      "command": "full",
+      "chat": "full"
+    },
+    "unicode.blocks": {
+      "command": "full",
+      "chat": "full"
+    },
+    "unicode.box": {
+      "command": "full",
+      "chat": "full"
+    },
+    "tui.progress": {
+      "command": "none",
+      "chat": "partial"
+    },
+    "tui.sparkline": {
+      "command": "none",
+      "chat": "none"
+    },
+    "tui.chart": {
+      "command": "none",
+      "chat": "none"
+    },
+    "tui.multiline-anchor": {
+      "command": "full",
+      "chat": "full"
+    },
+    "tui.mixed-styles": {
+      "command": "none",
+      "chat": "partial"
+    },
+    "tui.vertical-chart": {
+      "command": "none",
+      "chat": "none"
+    },
+    "tui.legend": {
+      "command": "none",
+      "chat": "none"
+    }
+  },
+  "summary": {
+    "commandContext": {
+      "ansiSupport": "truecolor",
+      "textStyles": true,
+      "markdownTricks": false,
+      "unicodeSupport": true,
+      "tuiPatternsWork": false
+    },
+    "chatContext": {
+      "ansiSupport": "none",
+      "textStyles": false,
+      "markdownTricks": false,
+      "unicodeSupport": true,
+      "tuiPatternsWork": false
+    },
+    "recommendedRenderer": "ansi",
+    "recommendedContext": "command",
+    "notes": "Cline shows excellent ANSI support in command output (full truecolor) but strips all ANSI codes in chat context. Markdown support in chat is limited: bold works, but backticks provide NO highlighting - they're simply removed/ignored. Mixed-styles test shows partial support (bold works but backticks don't). Progress bars show visual distinction only from block character shades (50% fill blocks), not from backtick highlighting. Unicode support is excellent in both contexts. The ANSI renderer in command context is strongly recommended."
+  }
+}

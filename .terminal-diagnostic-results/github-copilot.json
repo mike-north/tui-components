@@ -1,0 +1,178 @@
+{
+  "assistant": "GitHub Copilot",
+  "timestamp": "2026-02-15T00:23:59.667Z",
+  "environment": {
+    "isTTY": true,
+    "term": "xterm-color",
+    "colorTerm": "truecolor",
+    "termProgram": "iTerm.app",
+    "noColor": false,
+    "ciDetected": false
+  },
+  "agentIdentification": {
+    "canSetEnvVar": true,
+    "detectedValue": "github-copilot",
+    "heuristicDetected": null,
+    "heuristicConfidence": null,
+    "signalsMatch": null,
+    "notes": "Heuristic detection unavailable (script must run from packages/cli)"
+  },
+  "displayBehavior": {
+    "commandOutputVisibility": "hidden-by-default",
+    "commandOutputAccess": "ctrl+o",
+    "truncationBehavior": "effectively zero lines shown by default",
+    "primaryContext": "chat"
+  },
+  "results": {
+    "ansi.fg.basic": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.fg.bright": {
+      "command": "none",
+      "chat": "none",
+      "skipped": true,
+      "reason": "ansi.fg.basic failed"
+    },
+    "ansi.bg.basic": {
+      "command": "none",
+      "chat": "none",
+      "skipped": true,
+      "reason": "ansi.fg.basic failed"
+    },
+    "ansi.256": {
+      "command": "none",
+      "chat": "none",
+      "skipped": true,
+      "reason": "ansi.fg.basic failed"
+    },
+    "ansi.truecolor": {
+      "command": "none",
+      "chat": "none",
+      "skipped": true,
+      "reason": "ansi.fg.basic failed"
+    },
+    "ansi.styles": {
+      "command": "unknown",
+      "chat": "unknown",
+      "skipped": true,
+      "reason": "not tested due to time constraints"
+    },
+    "md.backtick": {
+      "command": "unknown",
+      "chat": "full"
+    },
+    "md.bold": {
+      "command": "unknown",
+      "chat": "full"
+    },
+    "md.whitespace": {
+      "command": "full",
+      "chat": "none",
+      "notes": "Chat context collapses newlines into single line"
+    },
+    "md.inline-whitespace": {
+      "command": "full",
+      "chat": "none",
+      "notes": "Chat context collapses whitespace and newlines"
+    },
+    "md.anchor": {
+      "command": "full",
+      "chat": "none",
+      "notes": "Anchor characters visible but multiline structure collapsed"
+    },
+    "unicode.blocks": {
+      "command": "unknown",
+      "chat": "full"
+    },
+    "unicode.box": {
+      "command": "full",
+      "chat": "none",
+      "notes": "Box characters visible but structure collapsed to single line"
+    },
+    "tui.progress": {
+      "command": "unknown",
+      "chat": "full",
+      "notes": "Two-color distinction works perfectly via backtick highlighting"
+    },
+    "tui.sparkline": {
+      "command": "unknown",
+      "chat": "full"
+    },
+    "tui.chart": {
+      "command": "unknown",
+      "chat": "partial",
+      "notes": "Highlighting works but multiline structure collapses to single line"
+    },
+    "tui.multiline-anchor": {
+      "command": "full",
+      "chat": "none",
+      "notes": "All content collapses to single line in chat"
+    },
+    "tui.mixed-styles": {
+      "command": "unknown",
+      "chat": "full",
+      "notes": "Both bold and backtick highlighting work simultaneously"
+    },
+    "tui.vertical-chart": {
+      "command": "full",
+      "chat": "partial",
+      "notes": "Highlighting works but collapses to single line"
+    },
+    "tui.legend": {
+      "command": "unknown",
+      "chat": "partial",
+      "notes": "Highlighting works but structure collapses"
+    }
+  },
+  "summary": {
+    "commandContext": {
+      "ansiSupport": "none",
+      "textStyles": "unknown",
+      "markdownTricks": true,
+      "unicodeSupport": true,
+      "tuiPatternsWork": true,
+      "availability": "hidden-by-default",
+      "notes": "Command output requires ctrl+o to view, making it effectively unavailable for default UX"
+    },
+    "chatContext": {
+      "ansiSupport": "none",
+      "textStyles": true,
+      "markdownTricks": true,
+      "unicodeSupport": "partial",
+      "tuiPatternsWork": "partial",
+      "notes": "Chat context collapses newlines to single line, breaking multiline layouts"
+    },
+    "recommendedRenderer": "markdown-inline-only",
+    "recommendedContext": "chat",
+    "criticalLimitations": [
+      "Chat context collapses all newlines into single line",
+      "Command output hidden by default (requires ctrl+o)",
+      "Multiline charts/layouts impossible in chat context",
+      "Only inline patterns (progress bars, sparklines, legends) work in chat"
+    ],
+    "strengths": [
+      "Markdown backtick highlighting works perfectly",
+      "Bold text works",
+      "Unicode block characters work",
+      "Mixed styles (bold + backticks) work together",
+      "Single-line TUI patterns work well"
+    ],
+    "notes": "GitHub Copilot has a unique display model where chat context is the primary view but collapses all newlines. This creates a need for a specialized 'inline-only' markdown renderer that avoids multiline layouts. Command output preserves formatting perfectly but is hidden by default, making it unsuitable for primary TUI output. The library should provide single-line alternatives for all visualizations when running in GitHub Copilot."
+  },
+  "recommendations": {
+    "newRendererNeeded": true,
+    "rendererName": "markdown-inline",
+    "rendererDescription": "A markdown renderer optimized for chat contexts that collapse newlines. Uses backtick highlighting and unicode blocks but constrains all output to single-line patterns.",
+    "fallbackStrategy": "When multiline output is required, instruct user to press ctrl+o to view command output where formatting is preserved",
+    "componentGuidance": {
+      "progress": "Works perfectly - single line with backtick highlighting",
+      "sparkline": "Works perfectly - single line with backtick highlighting",
+      "chart": "Use horizontal single-line format instead of vertical bars",
+      "table": "Use inline format with separators instead of box drawing",
+      "multilineText": "Collapse to single line or use command output context",
+      "scatterPlot": "Not viable in chat context - use command output or simplify",
+      "legend": "Works if kept on single line"
+    }
+  }
+}

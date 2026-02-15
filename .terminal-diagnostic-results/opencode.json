@@ -1,0 +1,120 @@
+{
+  "assistant": "opencode",
+  "timestamp": "2026-02-14T00:00:00.000Z",
+  "environment": {
+    "isTTY": false,
+    "term": "xterm-256color",
+    "colorTerm": "truecolor",
+    "termProgram": "iTerm.app",
+    "noColor": false,
+    "ciDetected": false
+  },
+  "agentIdentification": {
+    "canSetEnvVar": true,
+    "detectedValue": "opencode",
+    "heuristicDetected": null,
+    "heuristicConfidence": null,
+    "signalsMatch": null
+  },
+  "results": {
+    "ansi.fg.basic": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.fg.bright": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.bg.basic": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.256": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.truecolor": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.styles": {
+      "command": "none",
+      "chat": "none"
+    },
+    "md.backtick": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.bold": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.whitespace": {
+      "command": "full",
+      "chat": "full"
+    },
+    "md.inline-whitespace": {
+      "command": "full",
+      "chat": "full"
+    },
+    "md.anchor": {
+      "command": "full",
+      "chat": "full"
+    },
+    "unicode.blocks": {
+      "command": "full",
+      "chat": "full"
+    },
+    "unicode.box": {
+      "command": "full",
+      "chat": "full"
+    },
+    "tui.progress": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.sparkline": {
+      "command": "partial",
+      "chat": "full"
+    },
+    "tui.chart": {
+      "command": "partial",
+      "chat": "full"
+    },
+    "tui.multiline-anchor": {
+      "command": "full",
+      "chat": "full"
+    },
+    "tui.mixed-styles": {
+      "command": "partial",
+      "chat": "full"
+    },
+    "tui.vertical-chart": {
+      "command": "partial",
+      "chat": "full"
+    },
+    "tui.legend": {
+      "command": "partial",
+      "chat": "full"
+    }
+  },
+  "summary": {
+    "commandContext": {
+      "ansiSupport": "none",
+      "textStyles": false,
+      "markdownTricks": true,
+      "unicodeSupport": true,
+      "tuiPatternsWork": false
+    },
+    "chatContext": {
+      "ansiSupport": "none",
+      "textStyles": false,
+      "markdownTricks": true,
+      "unicodeSupport": true,
+      "tuiPatternsWork": true
+    },
+    "recommendedRenderer": "markdown",
+    "recommendedContext": "chat",
+    "notes": "OpenCode shows a stark difference between command output and chat contexts. In command output, ANSI codes are completely stripped and markdown backticks are literal. However, in chat context, all markdown tricks work perfectly including backtick highlighting, bold text, and anchor characters. This makes the markdown renderer the clear choice for OpenCode, specifically using chat context rather than command blocks."
+  }
+}

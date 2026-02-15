@@ -1,0 +1,120 @@
+{
+  "assistant": "Gemini CLI",
+  "timestamp": "2026-02-14T12:00:00Z",
+  "environment": {
+    "isTTY": true,
+    "term": "xterm-256color",
+    "colorTerm": "truecolor",
+    "termProgram": "iTerm.app",
+    "noColor": false,
+    "ciDetected": false
+  },
+  "agentIdentification": {
+    "canSetEnvVar": true,
+    "detectedValue": "gemini-cli",
+    "heuristicDetected": null,
+    "heuristicConfidence": null,
+    "signalsMatch": null
+  },
+  "results": {
+    "ansi.fg.basic": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.fg.bright": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.bg.basic": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.256": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.truecolor": {
+      "command": "none",
+      "chat": "none"
+    },
+    "ansi.styles": {
+      "command": "none",
+      "chat": "none"
+    },
+    "md.backtick": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.bold": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.whitespace": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.inline-whitespace": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.anchor": {
+      "command": "none",
+      "chat": "full"
+    },
+    "unicode.blocks": {
+      "command": "none",
+      "chat": "full"
+    },
+    "unicode.box": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.progress": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.sparkline": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.chart": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.multiline-anchor": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.mixed-styles": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.vertical-chart": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.legend": {
+      "command": "none",
+      "chat": "full"
+    }
+  },
+  "summary": {
+    "commandContext": {
+      "ansiSupport": "none",
+      "textStyles": false,
+      "markdownTricks": false,
+      "unicodeSupport": false,
+      "tuiPatternsWork": false
+    },
+    "chatContext": {
+      "ansiSupport": "none",
+      "textStyles": false,
+      "markdownTricks": true,
+      "unicodeSupport": true,
+      "tuiPatternsWork": true
+    },
+    "recommendedRenderer": "markdown",
+    "recommendedContext": "chat",
+    "notes": "Command output (terminal block) is not visible to the user in this environment. ANSI escape codes are displayed literally in the chat context. However, the chat context's markdown renderer supports backtick highlighting, bold text, leading whitespace preservation, and Unicode block/box characters perfectly. Notably, wrapping characters in backticks (e.g., `●`) results in them being rendered with color in this assistant, which is a key discovery for the markdown renderer."
+  }
+}

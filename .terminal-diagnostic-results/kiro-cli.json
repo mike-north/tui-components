@@ -1,0 +1,120 @@
+{
+  "assistant": "Kiro CLI",
+  "timestamp": "2026-02-14T16:07:52.924-08:00",
+  "environment": {
+    "isTTY": false,
+    "term": "xterm-256color",
+    "colorTerm": "truecolor",
+    "termProgram": "iTerm.app",
+    "noColor": false,
+    "ciDetected": false
+  },
+  "agentIdentification": {
+    "canSetEnvVar": true,
+    "detectedValue": "kiro-cli",
+    "heuristicDetected": null,
+    "heuristicConfidence": null,
+    "signalsMatch": null
+  },
+  "results": {
+    "ansi.fg.basic": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.fg.bright": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.bg.basic": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.256": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.truecolor": {
+      "command": "full",
+      "chat": "none"
+    },
+    "ansi.styles": {
+      "command": "full",
+      "chat": "none"
+    },
+    "md.backtick": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.bold": {
+      "command": "none",
+      "chat": "full"
+    },
+    "md.whitespace": {
+      "command": "full",
+      "chat": "full"
+    },
+    "md.inline-whitespace": {
+      "command": "full",
+      "chat": "full"
+    },
+    "md.anchor": {
+      "command": "full",
+      "chat": "full"
+    },
+    "unicode.blocks": {
+      "command": "full",
+      "chat": "full"
+    },
+    "unicode.box": {
+      "command": "full",
+      "chat": "full"
+    },
+    "tui.progress": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.sparkline": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.chart": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.multiline-anchor": {
+      "command": "full",
+      "chat": "full"
+    },
+    "tui.mixed-styles": {
+      "command": "none",
+      "chat": "partial"
+    },
+    "tui.vertical-chart": {
+      "command": "none",
+      "chat": "full"
+    },
+    "tui.legend": {
+      "command": "none",
+      "chat": "full"
+    }
+  },
+  "summary": {
+    "commandContext": {
+      "ansiSupport": "truecolor",
+      "textStyles": true,
+      "markdownTricks": false,
+      "unicodeSupport": true,
+      "tuiPatternsWork": false
+    },
+    "chatContext": {
+      "ansiSupport": "none",
+      "textStyles": false,
+      "markdownTricks": true,
+      "unicodeSupport": true,
+      "tuiPatternsWork": true
+    },
+    "recommendedRenderer": "markdown",
+    "recommendedContext": "chat",
+    "notes": "Kiro CLI has a clear separation between command output and chat contexts. Command output supports full ANSI truecolor and styles but strips all markdown formatting. Chat context supports full markdown (backticks, bold) and Unicode but strips all ANSI codes. Edge case discovered: bold markdown (**text**) fails to parse when immediately following the anchor character (│**text**) without a space, but works when preceded by space. TUI markdown patterns work excellently in chat context (6/7 full, 1/7 partial). Whitespace preservation is excellent in both contexts. Recommendation: Use markdown renderer with chat context for tui-components output."
+  }
+}
