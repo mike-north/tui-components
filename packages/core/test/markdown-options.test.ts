@@ -72,8 +72,6 @@ describe("joinAnchoredLines with options", () => {
       spacingMode: "relaxed",
       multilineMode: "inline",
     };
-    expect(joinAnchoredLines(lines, DEFAULT_ANCHOR, options)).toBe(
-      "│ A | │ B"
-    );
+    expect(joinAnchoredLines(lines, DEFAULT_ANCHOR, options)).toBe("│ A | │ B");
   });
 });

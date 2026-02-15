@@ -80,18 +80,28 @@ export function createGrayscaleStyleFunctions(): GrayscaleStyleFunctions {
   return {
     primary: (text: string) => text,
     secondary: (text: string) =>
-      text === "" ? "" : `${GRAYSCALE_CHARS.light}${text}${GRAYSCALE_CHARS.light}`,
+      text === ""
+        ? ""
+        : `${GRAYSCALE_CHARS.light}${text}${GRAYSCALE_CHARS.light}`,
     header: (text: string) =>
       text === "" ? "" : `${GRAYSCALE_CHARS.solid} ${text}`,
     border: (text: string) => text,
     success: (text: string) =>
-      text === "" ? "" : `${GRAYSCALE_CHARS.dark}${text}${GRAYSCALE_CHARS.dark}`,
+      text === ""
+        ? ""
+        : `${GRAYSCALE_CHARS.dark}${text}${GRAYSCALE_CHARS.dark}`,
     warning: (text: string) =>
-      text === "" ? "" : `${GRAYSCALE_CHARS.medium}${text}${GRAYSCALE_CHARS.medium}`,
+      text === ""
+        ? ""
+        : `${GRAYSCALE_CHARS.medium}${text}${GRAYSCALE_CHARS.medium}`,
     error: (text: string) =>
-      text === "" ? "" : `${GRAYSCALE_CHARS.solid}${text}${GRAYSCALE_CHARS.solid}`,
+      text === ""
+        ? ""
+        : `${GRAYSCALE_CHARS.solid}${text}${GRAYSCALE_CHARS.solid}`,
     info: (text: string) =>
-      text === "" ? "" : `${GRAYSCALE_CHARS.light}${text}${GRAYSCALE_CHARS.light}`,
+      text === ""
+        ? ""
+        : `${GRAYSCALE_CHARS.light}${text}${GRAYSCALE_CHARS.light}`,
   };
 }
 

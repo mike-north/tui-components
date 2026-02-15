@@ -63,8 +63,7 @@ function createMarkdownStyleFunctions(
 ): StyleFunctions {
   return {
     primary: (text: string) => text,
-    secondary: (text: string) =>
-      text === "" ? "" : inlineCode(text, options),
+    secondary: (text: string) => (text === "" ? "" : inlineCode(text, options)),
     header: (text: string) => (text === "" ? "" : `**${text}**`),
     border: (text: string) => text,
     success: (text: string) => (text === "" ? "" : inlineCode(text, options)),
