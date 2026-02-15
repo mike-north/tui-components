@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/assistant-simulator",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Simulate how AI coding assistants render terminal/TUI output",
   "type": "module",
   "main": "./dist/index.cjs",

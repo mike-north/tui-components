@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/callout",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Semantic callout/alert box component for TUI",
   "type": "module",
   "main": "./dist/index.cjs",

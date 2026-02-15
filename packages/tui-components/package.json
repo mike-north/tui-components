@@ -1,6 +1,6 @@
 {
   "name": "tui-components",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Terminal UI components for beautiful CLI output",
   "type": "module",
   "main": "./dist/index.cjs",

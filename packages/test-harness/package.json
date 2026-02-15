@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/test-harness",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Test harness utilities for TUI components with AI assistant rendering simulation",
   "type": "module",
   "main": "./dist/index.cjs",

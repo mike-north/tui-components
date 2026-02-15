@@ -1,8 +1,17 @@
-# @tuicomponents/box
+# @tuicomponents/layout
 
 ## 0.2.0
 
 ### Minor Changes
+
+- 4157c81: Add horizontal layout component for side-by-side composition
+  - `createHorizontalLayout()` factory function to create horizontal layout components
+  - Width distribution modes: `equal`, `auto`, `manual`
+  - Manual width specs: fixed numbers, `fill`, or `auto` per item
+  - Vertical alignment options: `top`, `middle`, `bottom` for items of different heights
+  - Overflow behavior: `truncate` (default) or `stack` when items don't fit
+  - Multi-line item support with proper alignment across rows
+  - Both ANSI and markdown rendering modes
 
 - 65f6373: Add user configuration system, theme presets, and compatibility documentation
 
@@ -31,41 +40,13 @@
   - Comparison image generation for side-by-side mode views
   - Compatibility matrix generator from YAML source
 
+- 6ed4417: Add vertical layout component for stacking rendered components vertically
+  - New `@tuicomponents/layout` package
+  - `createVerticalLayout()` factory function
+  - Support for gap between items, horizontal alignment (left, center, right)
+  - ANSI and markdown render modes
+
 ### Patch Changes
 
 - Updated dependencies [65f6373]
   - @tuicomponents/core@0.2.0
-
-## 0.1.2
-
-### Patch Changes
-
-- Updated dependencies [5a1bb86]
-  - @tuicomponents/core@0.1.2
-
-## 0.1.1
-
-### Patch Changes
-
-- 9493b07: Initial release of TUI Components library
-
-  A comprehensive terminal UI component library for rendering rich text-based visualizations in ANSI and markdown formats.
-
-  **Packages included:**
-  - `@tuicomponents/core` - Core rendering primitives, theming, and component registry
-  - `@tuicomponents/box` - Box drawing with borders and padding
-  - `@tuicomponents/chart` - Bar, line, area, scatter, pie, donut, and heatmap charts
-  - `@tuicomponents/cli` - Command-line interface for rendering components
-  - `@tuicomponents/diff` - Text diff visualization
-  - `@tuicomponents/gauge` - Gauge/meter visualizations
-  - `@tuicomponents/graph` - Graph/network visualizations
-  - `@tuicomponents/keyvalue` - Key-value pair formatting
-  - `@tuicomponents/list` - List rendering with bullets and nesting
-  - `@tuicomponents/progress` - Progress bars and spinners
-  - `@tuicomponents/sparkline` - Inline sparkline charts
-  - `@tuicomponents/table` - Table rendering with alignment and borders
-  - `@tuicomponents/tree` - Tree structure visualization
-  - `tui-components` - Meta-package bundling all components
-
-- Updated dependencies [9493b07]
-  - @tuicomponents/core@0.1.1

@@ -1,6 +1,6 @@
 {
   "name": "@tuicomponents/gauge",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Gauge meter component with threshold zones for TUI",
   "type": "module",
   "main": "./dist/index.cjs",
