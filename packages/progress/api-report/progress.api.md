@@ -140,7 +140,7 @@ export const progressStyleSchema: z.ZodEnum<["block", "shaded", "bracket", "arro
 export function renderProgressAnsi(layout: ProgressLayout, input: ProgressInputWithDefaults, theme?: TuiTheme): string;
 
 // @public
-export function renderProgressMarkdown(layout: ProgressLayout, input: ProgressInputWithDefaults): string;
+export function renderProgressMarkdown(layout: ProgressLayout, input: ProgressInputWithDefaults, context?: RenderContext): string;
 
 // (No @packageDocumentation comment for this package)
 

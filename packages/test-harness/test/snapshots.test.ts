@@ -57,7 +57,7 @@ describe("compareAssistantRenderings", () => {
     const groups = compareAssistantRenderings(output);
 
     expect(groups.size).toBeGreaterThan(0);
-    
+
     // At least some assistants should render identically
     let hasGroupWithMultiple = false;
     for (const [_, assistants] of groups) {

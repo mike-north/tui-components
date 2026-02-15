@@ -81,20 +81,23 @@ const allConfigs = getAllConfigs();
 
 ### Assistant Configurations
 
-| Assistant | ANSI Support | Newline Handling | Command Truncation | Notes |
-|-----------|--------------|------------------|-------------------|-------|
-| Claude Code | None | Full | 3 lines | Strips ANSI, truncates command output |
-| GitHub Copilot | None | Collapsed | None | Collapses all newlines to spaces |
-| Cline | None | Full | None | Shows literal backticks (no highlighting) |
-| Codex | Truecolor | Full | None | Full ANSI color support |
-| Gemini CLI | Basic | Full | None | 16-color ANSI support |
-| Kiro CLI | 256 | Full | None | 256-color ANSI support |
-| OpenCode | None | Full | None | Basic ANSI stripping |
+| Assistant      | ANSI Support | Newline Handling | Command Truncation | Notes                                     |
+| -------------- | ------------ | ---------------- | ------------------ | ----------------------------------------- |
+| Claude Code    | None         | Full             | 3 lines            | Strips ANSI, truncates command output     |
+| GitHub Copilot | None         | Collapsed        | None               | Collapses all newlines to spaces          |
+| Cline          | None         | Full             | None               | Shows literal backticks (no highlighting) |
+| Codex          | Truecolor    | Full             | None               | Full ANSI color support                   |
+| Gemini CLI     | Basic        | Full             | None               | 16-color ANSI support                     |
+| Kiro CLI       | 256          | Full             | None               | 256-color ANSI support                    |
+| OpenCode       | None         | Full             | None               | Basic ANSI stripping                      |
 
 ### Custom Transforms
 
 ```typescript
-import { simulateRendering, claudeCodeConfig } from "@tuicomponents/assistant-simulator";
+import {
+  simulateRendering,
+  claudeCodeConfig,
+} from "@tuicomponents/assistant-simulator";
 
 const addTimestamp = (s: string) => `[${new Date().toISOString()}] ${s}`;
 const toUpperCase = (s: string) => s.toUpperCase();
@@ -117,16 +120,19 @@ console.log(result.rendered);
 ### Types
 
 #### `AssistantContext`
+
 - `"command"`: Output shown in a bash/terminal command result block
 - `"chat"`: Output shown directly in the chat/conversation
 
 #### `AnsiSupport`
+
 - `"none"`: All ANSI codes are stripped
 - `"basic"`: 16 basic colors supported
 - `"256"`: 256 color palette supported
 - `"truecolor"`: Full 24-bit RGB color supported
 
 #### `NewlineHandling`
+
 - `"full"`: Newlines are preserved as-is
 - `"collapsed"`: Multiple newlines collapsed to spaces
 
@@ -149,12 +155,14 @@ console.log(result.rendered);
 Simulates how an AI assistant would render terminal output.
 
 **Parameters:**
+
 - `output: string` - Raw terminal output
 - `config: AssistantConfig` - Assistant configuration
 - `context: AssistantContext` - Rendering context ("command" or "chat")
 - `options?: SimulateOptions` - Optional additional transforms
 
 **Returns:** `SimulatedOutput`
+
 ```typescript
 {
   rendered: string;

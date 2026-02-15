@@ -187,7 +187,9 @@ export function identity(input: string): string {
  *
  * @public
  */
-export function composeTransforms(transforms: readonly TransformFn[]): TransformFn {
+export function composeTransforms(
+  transforms: readonly TransformFn[]
+): TransformFn {
   return (input: string) => {
     let result = input;
     for (const transform of transforms) {

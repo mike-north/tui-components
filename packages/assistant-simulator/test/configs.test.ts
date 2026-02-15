@@ -187,12 +187,12 @@ describe("config structure validation", () => {
     const configs = getAllConfigs();
 
     for (const config of configs) {
-      expect(config.contexts.command.structure.truncationLines).toBeGreaterThanOrEqual(
-        0
-      );
-      expect(config.contexts.chat.structure.truncationLines).toBeGreaterThanOrEqual(
-        0
-      );
+      expect(
+        config.contexts.command.structure.truncationLines
+      ).toBeGreaterThanOrEqual(0);
+      expect(
+        config.contexts.chat.structure.truncationLines
+      ).toBeGreaterThanOrEqual(0);
     }
   });
 
@@ -209,7 +209,9 @@ describe("config structure validation", () => {
       expect(typeof config.contexts.chat.markdown.backtickHighlight).toBe(
         "boolean"
       );
-      expect(typeof config.contexts.chat.markdown.boldRendering).toBe("boolean");
+      expect(typeof config.contexts.chat.markdown.boldRendering).toBe(
+        "boolean"
+      );
     }
   });
 });

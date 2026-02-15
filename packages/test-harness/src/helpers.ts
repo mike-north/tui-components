@@ -70,7 +70,10 @@ export function findTruncatingAssistants(output: string): string[] {
     const commandResult = simulateRendering(output, config, "command");
     const chatResult = simulateRendering(output, config, "chat");
 
-    if (commandResult.metadata.wasTruncated || chatResult.metadata.wasTruncated) {
+    if (
+      commandResult.metadata.wasTruncated ||
+      chatResult.metadata.wasTruncated
+    ) {
       truncating.push(id);
     }
   }

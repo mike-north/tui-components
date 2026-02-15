@@ -2,8 +2,14 @@
  * Custom Vitest matchers for TUI component testing.
  */
 
-import type { AssistantConfig, AssistantContext } from "@tuicomponents/assistant-simulator";
-import { simulateRendering, getConfig } from "@tuicomponents/assistant-simulator";
+import type {
+  AssistantConfig,
+  AssistantContext,
+} from "@tuicomponents/assistant-simulator";
+import {
+  simulateRendering,
+  getConfig,
+} from "@tuicomponents/assistant-simulator";
 
 /**
  * Result of a matcher evaluation.
@@ -31,7 +37,8 @@ export function createAssistantMatchers() {
       configOrId: AssistantConfig | string,
       context: AssistantContext = "chat"
     ): MatcherResult {
-      const config = typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
+      const config =
+        typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
       const result = simulateRendering(received, config, context);
       const pass = result.rendered === expected;
 
@@ -54,7 +61,8 @@ export function createAssistantMatchers() {
       configOrId: AssistantConfig | string,
       context: AssistantContext = "chat"
     ): MatcherResult {
-      const config = typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
+      const config =
+        typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
       const result = simulateRendering(received, config, context);
       const pass = !result.metadata.wasTruncated;
 
@@ -77,7 +85,8 @@ export function createAssistantMatchers() {
       configOrId: AssistantConfig | string,
       context: AssistantContext = "chat"
     ): MatcherResult {
-      const config = typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
+      const config =
+        typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
       const result = simulateRendering(received, config, context);
       const inputNewlines = (received.match(/\n/g) ?? []).length;
       const outputNewlines = (result.rendered.match(/\n/g) ?? []).length;
@@ -102,7 +111,8 @@ export function createAssistantMatchers() {
       configOrId: AssistantConfig | string,
       context: AssistantContext = "chat"
     ): MatcherResult {
-      const config = typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
+      const config =
+        typeof configOrId === "string" ? getConfig(configOrId) : configOrId;
       const result = simulateRendering(received, config, context);
       // Check if any ANSI codes remain
       // eslint-disable-next-line no-control-regex
@@ -132,7 +142,16 @@ export interface AssistantMatchers<R = unknown> {
     configOrId: AssistantConfig | string,
     context?: AssistantContext
   ): R;
-  toNotBeTruncated(configOrId: AssistantConfig | string, context?: AssistantContext): R;
-  toPreserveNewlines(configOrId: AssistantConfig | string, context?: AssistantContext): R;
-  toStripAnsi(configOrId: AssistantConfig | string, context?: AssistantContext): R;
+  toNotBeTruncated(
+    configOrId: AssistantConfig | string,
+    context?: AssistantContext
+  ): R;
+  toPreserveNewlines(
+    configOrId: AssistantConfig | string,
+    context?: AssistantContext
+  ): R;
+  toStripAnsi(
+    configOrId: AssistantConfig | string,
+    context?: AssistantContext
+  ): R;
 }

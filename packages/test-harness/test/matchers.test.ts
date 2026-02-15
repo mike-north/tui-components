@@ -24,7 +24,11 @@ describe("toRenderAs", () => {
 
   it("should handle newline collapsing for GitHub Copilot", () => {
     const output = "Line 1\nLine 2\nLine 3";
-    expect(output).toRenderAs("Line 1 Line 2 Line 3", "github-copilot", "command");
+    expect(output).toRenderAs(
+      "Line 1 Line 2 Line 3",
+      "github-copilot",
+      "command"
+    );
   });
 
   it("should handle ANSI stripping", () => {
@@ -41,7 +45,10 @@ describe("toNotBeTruncated", () => {
 
   it("should fail when output is truncated", () => {
     // Create output with many lines to trigger truncation
-    const manyLines = Array.from({ length: 200 }, (_, i) => 'Line ' + (i + 1)).join("\n");
+    const manyLines = Array.from(
+      { length: 200 },
+      (_, i) => "Line " + (i + 1)
+    ).join("\n");
     expect(() => {
       expect(manyLines).toNotBeTruncated("claude-code", "command");
     }).toThrow();

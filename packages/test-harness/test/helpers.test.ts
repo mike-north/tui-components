@@ -15,7 +15,7 @@ describe("renderForAllAssistants", () => {
     const results = renderForAllAssistants(output, "chat");
 
     expect(results.length).toBeGreaterThan(0);
-    
+
     // Each result should be a tuple of [assistantId, rendered]
     for (const [assistantId, rendered] of results) {
       expect(typeof assistantId).toBe("string");
@@ -40,11 +40,11 @@ describe("renderForAllAssistants", () => {
     const commandResults = renderForAllAssistants(output, "command");
 
     expect(chatResults.length).toBe(commandResults.length);
-    
+
     // Some renderings might differ between contexts
     const chatRendered = new Set(chatResults.map(([_, r]) => r));
     const commandRendered = new Set(commandResults.map(([_, r]) => r));
-    
+
     // At least check they both produced results
     expect(chatRendered.size).toBeGreaterThan(0);
     expect(commandRendered.size).toBeGreaterThan(0);
@@ -57,7 +57,7 @@ describe("findRenderingDifferences", () => {
     const groups = findRenderingDifferences(output, "chat");
 
     expect(Object.keys(groups).length).toBeGreaterThan(0);
-    
+
     // Each group should have at least one assistant
     for (const rendered in groups) {
       expect(groups[rendered].length).toBeGreaterThan(0);
@@ -97,7 +97,7 @@ describe("findRenderingDifferences", () => {
     // So there should be multiple groups
     expect(Object.keys(groups).length).toBeGreaterThan(0);
     // At least one group should have "Red" (stripped ANSI)
-    const hasStrippedVersion = Object.keys(groups).some(key => key === "Red");
+    const hasStrippedVersion = Object.keys(groups).some((key) => key === "Red");
     // Could also have the original with ANSI
     expect(hasStrippedVersion || Object.keys(groups).length > 0).toBe(true);
   });
@@ -114,7 +114,10 @@ describe("findTruncatingAssistants", () => {
 
   it("should identify assistants that truncate long output", () => {
     // Create output with many lines
-    const manyLines = Array.from({ length: 200 }, (_, i) => 'Line ' + (i + 1)).join("\n");
+    const manyLines = Array.from(
+      { length: 200 },
+      (_, i) => "Line " + (i + 1)
+    ).join("\n");
     const truncating = findTruncatingAssistants(manyLines);
 
     // Claude Code truncates in command context
@@ -124,7 +127,10 @@ describe("findTruncatingAssistants", () => {
 
   it("should check both command and chat contexts", () => {
     // Create output that might be truncated in command but not chat
-    const manyLines = Array.from({ length: 100 }, (_, i) => 'Line ' + (i + 1)).join("\n");
+    const manyLines = Array.from(
+      { length: 100 },
+      (_, i) => "Line " + (i + 1)
+    ).join("\n");
     const truncating = findTruncatingAssistants(manyLines);
 
     // If any truncation happens, it should be reported

@@ -93,10 +93,7 @@ export function simulateRendering(
   let wasTruncated = false;
   if (contextConfig.structure.truncationLines > 0) {
     const before = rendered;
-    rendered = truncateLines(
-      rendered,
-      contextConfig.structure.truncationLines
-    );
+    rendered = truncateLines(rendered, contextConfig.structure.truncationLines);
     wasTruncated = before !== rendered;
     if (wasTruncated) {
       transformsApplied.push(

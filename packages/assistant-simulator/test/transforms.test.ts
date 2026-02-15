@@ -145,7 +145,9 @@ describe("stripBackticks", () => {
   });
 
   it("should strip triple backticks", () => {
-    expect(stripBackticks("```typescript\ncode\n```")).toBe("typescript\ncode\n");
+    expect(stripBackticks("```typescript\ncode\n```")).toBe(
+      "typescript\ncode\n"
+    );
   });
 
   it("should strip all backticks from text", () => {
@@ -194,7 +196,9 @@ describe("stripBoldMarkers", () => {
   });
 
   it("should not affect single asterisks or underscores", () => {
-    expect(stripBoldMarkers("*italic* _also italic_")).toBe("*italic* _also italic_");
+    expect(stripBoldMarkers("*italic* _also italic_")).toBe(
+      "*italic* _also italic_"
+    );
   });
 });
 

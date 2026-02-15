@@ -98,7 +98,9 @@ describe("simulateRendering", () => {
       const result = simulateRendering(input, clineConfig, "command");
 
       expect(result.rendered).toBe("**bold** text");
-      expect(result.metadata.transformsApplied).not.toContain("stripBoldMarkers");
+      expect(result.metadata.transformsApplied).not.toContain(
+        "stripBoldMarkers"
+      );
     });
   });
 
@@ -116,7 +118,9 @@ describe("simulateRendering", () => {
       const result = simulateRendering(input, codexConfig, "command");
 
       expect(result.rendered).toBe(input);
-      expect(result.metadata.transformsApplied).not.toContain("collapseNewlines");
+      expect(result.metadata.transformsApplied).not.toContain(
+        "collapseNewlines"
+      );
     });
   });
 
@@ -144,7 +148,9 @@ describe("simulateRendering", () => {
       });
 
       expect(result.rendered).toBe("PREFIX: TEST");
-      expect(result.metadata.transformsApplied.filter((t) => t === "custom")).toHaveLength(2);
+      expect(
+        result.metadata.transformsApplied.filter((t) => t === "custom")
+      ).toHaveLength(2);
     });
 
     it("should work with no additional transforms", () => {
@@ -212,7 +218,11 @@ describe("simulateRendering", () => {
     });
 
     it("should handle single line input", () => {
-      const result = simulateRendering("single line", claudeCodeConfig, "command");
+      const result = simulateRendering(
+        "single line",
+        claudeCodeConfig,
+        "command"
+      );
 
       expect(result.rendered).toBe("single line");
       expect(result.metadata.originalLineCount).toBe(1);
@@ -226,8 +236,7 @@ describe("simulateRendering", () => {
     });
 
     it("should handle complex mixed content", () => {
-      const input =
-        "\x1b[31m**Error**\x1b[0m\n`code`\nLine 3\nLine 4\nLine 5";
+      const input = "\x1b[31m**Error**\x1b[0m\n`code`\nLine 3\nLine 4\nLine 5";
       const result = simulateRendering(input, claudeCodeConfig, "command");
 
       expect(result.rendered).toBe(

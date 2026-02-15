@@ -28,7 +28,9 @@ export type AllAssistantsSnapshot = Record<
  * @returns Object mapping assistant IDs to their rendered outputs
  * @public
  */
-export function generateAllAssistantsSnapshot(output: string): AllAssistantsSnapshot {
+export function generateAllAssistantsSnapshot(
+  output: string
+): AllAssistantsSnapshot {
   const configs = getAllConfigs();
   const result: Record<string, { command: string; chat: string }> = {};
 
