@@ -1,6 +1,21 @@
 ---
-"@tuicomponents/core": minor
+"@tuicomponents/assistant-simulator": minor
+"@tuicomponents/box": minor
+"@tuicomponents/callout": minor
 "@tuicomponents/chart": minor
+"@tuicomponents/cli": minor
+"@tuicomponents/core": minor
+"@tuicomponents/diff": minor
+"@tuicomponents/gauge": minor
+"@tuicomponents/graph": minor
+"@tuicomponents/keyvalue": minor
+"@tuicomponents/layout": minor
+"@tuicomponents/list": minor
+"@tuicomponents/progress": minor
+"@tuicomponents/sparkline": minor
+"@tuicomponents/table": minor
+"@tuicomponents/test-harness": minor
+"@tuicomponents/tree": minor
 "tui-components": minor
 ---
 
