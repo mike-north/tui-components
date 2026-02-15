@@ -2,8 +2,6 @@
 
 Renders tabular data with customizable borders and alignment
 
-![Table Example](../../docs/screenshots/table/basic.png)
-
 ## Installation
 
 ```bash
@@ -169,10 +167,11 @@ Table with borders
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -184,6 +183,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API

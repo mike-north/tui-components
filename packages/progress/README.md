@@ -2,8 +2,6 @@
 
 Renders horizontal progress bars for task completion
 
-![Progress Example](../../docs/screenshots/progress/labeled.png)
-
 ## Installation
 
 ```bash
@@ -105,13 +103,15 @@ Progress bar with label
 | `label`          | `string`  |          | -         | -           |
 | `showPercentage` | `boolean` |          | -         | -           |
 | `showValue`      | `boolean` |          | -         | -           |
+| `fit`            | `boolean` |          | -         | -           |
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -123,6 +123,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API

@@ -2,8 +2,6 @@
 
 Renders key-value pairs in an aligned format
 
-![Key-Value Example](../../docs/screenshots/keyvalue/system-info.png)
-
 ## Installation
 
 ```bash
@@ -119,10 +117,11 @@ System information
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -134,6 +133,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API

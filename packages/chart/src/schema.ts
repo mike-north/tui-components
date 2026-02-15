@@ -215,6 +215,97 @@ export const gridConfigSchema = z.object({
   char: z.string().default("·"),
 });
 
+// =============================================================================
+// FUTURE: Gradient Support (see docs/adr/001-gradient-support.md)
+// =============================================================================
+
+/**
+ * A single color stop in a gradient.
+ *
+ * @public
+ * @remarks
+ * Not yet implemented. See docs/adr/001-gradient-support.md
+ *
+ * Defines a color at a specific position along the gradient.
+ * Multiple stops can be used to create multi-color gradients.
+ *
+ * @example
+ * ```typescript
+ * const stop: GradientStop = {
+ *   offset: 0.5,      // Middle of the gradient
+ *   color: "#3b82f6"  // Blue
+ * };
+ * ```
+ */
+export const gradientStopSchema = z.object({
+  /**
+   * Position along the gradient (0 = start, 1 = end of bar).
+   * Values outside 0-1 are clamped.
+   */
+  offset: z.number().min(0).max(1),
+
+  /**
+   * Hex color at this position (e.g., "#3b82f6").
+   * Must be a valid 6-digit hex color code.
+   */
+  color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+});
+
+/**
+ * Gradient configuration for bar chart series.
+ *
+ * @public
+ * @remarks
+ * Not yet implemented. See docs/adr/001-gradient-support.md
+ *
+ * Defines how colors transition across a bar. Supports linear gradients
+ * in horizontal or vertical directions with multiple color stops.
+ *
+ * In ANSI mode, renders smooth color transitions (truecolor terminals) or
+ * stepped transitions (256-color terminals) or shade characters (basic terminals).
+ * In markdown mode, falls back to solid color using the first stop.
+ *
+ * @example
+ * ```typescript
+ * const gradient: GradientConfig = {
+ *   type: "linear-horizontal",
+ *   stops: [
+ *     { offset: 0, color: "#3b82f6" },    // Blue at start
+ *     { offset: 0.5, color: "#8b5cf6" },  // Purple at middle
+ *     { offset: 1, color: "#ec4899" }     // Pink at end
+ *   ]
+ * };
+ * ```
+ */
+export const gradientConfigSchema = z.object({
+  /**
+   * Gradient direction.
+   * - "linear-horizontal": Left to right (default for horizontal bars)
+   * - "linear-vertical": Bottom to top (for vertical bars)
+   *
+   * @default "linear-horizontal"
+   */
+  type: z
+    .enum(["linear-horizontal", "linear-vertical"])
+    .default("linear-horizontal"),
+
+  /**
+   * Color stops (minimum 2 required for a valid gradient).
+   * Stops should be ordered by offset, though the implementation
+   * will sort them if needed.
+   */
+  stops: z.array(gradientStopSchema).min(2),
+});
+
+// Note: These schemas are defined but not yet integrated into dataSeriesSchema.
+// Integration will happen when gradient rendering is implemented.
+// To integrate, add to dataSeriesSchema:
+//   gradient: gradientConfigSchema.optional(),
+
+// =============================================================================
+// Main Chart Input Schema
+// =============================================================================
+
 /**
  * Main chart input schema.
  */

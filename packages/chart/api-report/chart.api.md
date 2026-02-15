@@ -837,6 +837,51 @@ export function getBarChar(style: "block" | "shaded" | "light" | "hash" | "equal
 export function getLegendItemWidth(item: LegendItem): number;
 
 // @public
+export type GradientConfig = z.infer<typeof gradientConfigSchema>;
+
+// @public
+export const gradientConfigSchema: z.ZodObject<{
+    type: z.ZodDefault<z.ZodEnum<["linear-horizontal", "linear-vertical"]>>;
+    stops: z.ZodArray<z.ZodObject<{
+        offset: z.ZodNumber;
+        color: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        offset: number;
+        color: string;
+    }, {
+        offset: number;
+        color: string;
+    }>, "many">;
+}, "strip", z.ZodTypeAny, {
+    type: "linear-horizontal" | "linear-vertical";
+    stops: {
+        offset: number;
+        color: string;
+    }[];
+}, {
+    stops: {
+        offset: number;
+        color: string;
+    }[];
+    type?: "linear-horizontal" | "linear-vertical" | undefined;
+}>;
+
+// @public
+export type GradientStop = z.infer<typeof gradientStopSchema>;
+
+// @public
+export const gradientStopSchema: z.ZodObject<{
+    offset: z.ZodNumber;
+    color: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    offset: number;
+    color: string;
+}, {
+    offset: number;
+    color: string;
+}>;
+
+// @public
 export type GridConfig = z.infer<typeof gridConfigSchema>;
 
 // @public

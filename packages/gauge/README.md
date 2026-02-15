@@ -2,8 +2,6 @@
 
 Renders meters with threshold zones for status display
 
-![Gauge Example](../../docs/screenshots/gauge/disk-usage.png)
-
 ## Installation
 
 ```bash
@@ -121,10 +119,11 @@ Memory usage gauge
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -136,6 +135,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API

@@ -231,19 +231,69 @@ function generateExamples(
 
   return scenarios
     .map((scenario) => {
-      const screenshotPath = `../../docs/screenshots/${componentName}/${scenario.name}.png`;
-      const absoluteScreenshotPath = resolve(
+      const comparisonPath = `../../docs/screenshots/${componentName}/${scenario.name}-comparison.png`;
+      const absoluteComparisonPath = resolve(
+        screenshotsDir,
+        componentName,
+        `${scenario.name}-comparison.png`
+      );
+
+      // Check if comparison image exists
+      const hasComparison = existsSync(absoluteComparisonPath);
+
+      // Fall back to single ANSI image if comparison doesn't exist
+      const ansiPath = `../../docs/screenshots/${componentName}/${scenario.name}.png`;
+      const absoluteAnsiPath = resolve(
         screenshotsDir,
         componentName,
         `${scenario.name}.png`
       );
+      const hasAnsi = existsSync(absoluteAnsiPath);
 
-      const hasScreenshot = existsSync(absoluteScreenshotPath);
       const input = JSON.stringify(scenario.input, null, 2);
 
-      const screenshotSection = hasScreenshot
-        ? `![${scenario.description}](${screenshotPath})`
-        : "_Screenshot not yet generated. Run `pnpm docs:screenshots` to generate._";
+      let screenshotSection: string;
+
+      if (hasComparison) {
+        // Use comparison image with individual mode images in collapsible details
+        const markdownPath = `../../docs/screenshots/${componentName}/${scenario.name}-markdown.png`;
+        const grayscalePath = `../../docs/screenshots/${componentName}/${scenario.name}-grayscale.png`;
+        const inlinePath = `../../docs/screenshots/${componentName}/${scenario.name}-inline.png`;
+        const absoluteInlinePath = resolve(
+          screenshotsDir,
+          componentName,
+          `${scenario.name}-inline.png`
+        );
+        const hasInline = existsSync(absoluteInlinePath);
+
+        let individualModesTable: string;
+        if (hasInline) {
+          // 4-column table for components with inline mode
+          individualModesTable = `| ANSI | Markdown | Grayscale | Inline |
+|------|----------|-----------|--------|
+| ![ANSI](${ansiPath}) | ![Markdown](${markdownPath}) | ![Grayscale](${grayscalePath}) | ![Inline](${inlinePath}) |`;
+        } else {
+          // 3-column table for standard components
+          individualModesTable = `| ANSI | Markdown | Grayscale |
+|------|----------|-----------|
+| ![ANSI](${ansiPath}) | ![Markdown](${markdownPath}) | ![Grayscale](${grayscalePath}) |`;
+        }
+
+        screenshotSection = `![${scenario.description}](${comparisonPath})
+
+<details>
+<summary>View individual modes</summary>
+
+${individualModesTable}
+
+</details>`;
+      } else if (hasAnsi) {
+        // Fall back to single ANSI image
+        screenshotSection = `![${scenario.description}](${ansiPath})`;
+      } else {
+        screenshotSection =
+          "_Screenshot not yet generated. Run `pnpm docs:screenshots` to generate._";
+      }
 
       return `### ${scenario.name}
 
@@ -328,10 +378,11 @@ ${configTable}
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -343,6 +394,9 @@ const ansiContext = createRenderContext({ renderMode: 'ansi' });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: 'markdown' });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: 'grayscale' });
 \`\`\`
 
 ## API

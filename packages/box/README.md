@@ -2,8 +2,6 @@
 
 Renders content in a bordered box/panel
 
-![Box Example](../../docs/screenshots/box/rounded.png)
-
 ## Installation
 
 ```bash
@@ -35,7 +33,16 @@ console.log(result.output);
 
 Simple box with content
 
-![Simple box with content](../../docs/screenshots/box/simple.png)
+![Simple box with content](../../docs/screenshots/box/simple-comparison.png)
+
+<details>
+<summary>View individual modes</summary>
+
+| ANSI                                           | Markdown                                                    | Grayscale                                                     |
+| ---------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------- |
+| ![ANSI](../../docs/screenshots/box/simple.png) | ![Markdown](../../docs/screenshots/box/simple-markdown.png) | ![Grayscale](../../docs/screenshots/box/simple-grayscale.png) |
+
+</details>
 
 <details>
 <summary>Input</summary>
@@ -53,7 +60,16 @@ Simple box with content
 
 Box with title
 
-![Box with title](../../docs/screenshots/box/with-title.png)
+![Box with title](../../docs/screenshots/box/with-title-comparison.png)
+
+<details>
+<summary>View individual modes</summary>
+
+| ANSI                                               | Markdown                                                        | Grayscale                                                         |
+| -------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------- |
+| ![ANSI](../../docs/screenshots/box/with-title.png) | ![Markdown](../../docs/screenshots/box/with-title-markdown.png) | ![Grayscale](../../docs/screenshots/box/with-title-grayscale.png) |
+
+</details>
 
 <details>
 <summary>Input</summary>
@@ -72,7 +88,16 @@ Box with title
 
 Box with rounded corners
 
-![Box with rounded corners](../../docs/screenshots/box/rounded.png)
+![Box with rounded corners](../../docs/screenshots/box/rounded-comparison.png)
+
+<details>
+<summary>View individual modes</summary>
+
+| ANSI                                            | Markdown                                                     | Grayscale                                                      |
+| ----------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------- |
+| ![ANSI](../../docs/screenshots/box/rounded.png) | ![Markdown](../../docs/screenshots/box/rounded-markdown.png) | ![Grayscale](../../docs/screenshots/box/rounded-grayscale.png) |
+
+</details>
 
 <details>
 <summary>Input</summary>
@@ -103,10 +128,11 @@ Box with rounded corners
 
 ## Render Modes
 
-The component supports two render modes:
+The component supports three render modes:
 
 - **ANSI**: Rich terminal output with colors and Unicode characters
 - **Markdown**: Plain text suitable for AI assistants and documentation
+- **Grayscale**: ANSI output without colors (for terminals that don't support color)
 
 You can specify the render mode when creating the context:
 
@@ -118,6 +144,9 @@ const ansiContext = createRenderContext({ renderMode: "ansi" });
 
 // Markdown mode
 const mdContext = createRenderContext({ renderMode: "markdown" });
+
+// Grayscale mode
+const grayscaleContext = createRenderContext({ renderMode: "grayscale" });
 ```
 
 ## API
