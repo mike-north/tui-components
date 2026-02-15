@@ -11,7 +11,7 @@ import { ZodType } from 'zod';
 import { ZodTypeDef } from 'zod';
 
 // @public
-export function anchorLine(content: string, anchor?: string): string;
+export function anchorLine(content: string, anchor?: string, options?: MarkdownRendererOptions): string;
 
 // @public
 export function applyMarkdownStyle(text: string, style: MarkdownStyle): string;
@@ -73,11 +73,16 @@ export class ComponentRegistry {
 }
 
 // @public
+export function createGrayscaleStyleFunctions(): GrayscaleStyleFunctions;
+
+// @public
 export function createRenderContext(options?: CreateRenderContextOptions): RenderContext;
 
 // @public
 export interface CreateRenderContextOptions {
+    agent?: string;
     autoDetectMode?: boolean;
+    markdownOptions?: MarkdownRendererOptions;
     noColor?: boolean;
     renderMode?: RenderMode;
     theme?: TuiTheme;
@@ -85,7 +90,7 @@ export interface CreateRenderContextOptions {
 }
 
 // @public
-export function createStyleFunctions(renderMode: RenderMode, theme?: TuiTheme): StyleFunctions;
+export function createStyleFunctions(renderMode: RenderMode, theme?: TuiTheme, markdownOptions?: MarkdownRendererOptions): StyleFunctions;
 
 // @public
 export function createThemeSync(): TuiTheme;
@@ -126,6 +131,9 @@ export function getMarkdownRenderedWidth(str: string): number;
 export function getProcessTree(): ProcessAncestor[];
 
 // @public
+export function getShadeForValue(normalizedValue: number): string;
+
+// @public
 export function getStringWidth(str: string): number;
 
 // @public
@@ -138,7 +146,25 @@ export function getTerminalSize(): {
 export function getTerminalWidth(): number;
 
 // @public
-export function inlineCode(text: string): string;
+export const GRAYSCALE_CHARS: Record<GrayscaleShade, string>;
+
+// @public
+export type GrayscaleShade = "light" | "medium" | "dark" | "solid";
+
+// @public
+export interface GrayscaleStyleFunctions {
+    border: (text: string) => string;
+    error: (text: string) => string;
+    header: (text: string) => string;
+    info: (text: string) => string;
+    primary: (text: string) => string;
+    secondary: (text: string) => string;
+    success: (text: string) => string;
+    warning: (text: string) => string;
+}
+
+// @public
+export function inlineCode(text: string, options?: MarkdownRendererOptions): string;
 
 // @public
 export function isRunningInAIAssistant(): boolean;
@@ -147,7 +173,13 @@ export function isRunningInAIAssistant(): boolean;
 export function isTTY(): boolean;
 
 // @public
-export function joinAnchoredLines(lines: string[], anchor?: string): string;
+export function joinAnchoredLines(lines: string[], anchor?: string, options?: MarkdownRendererOptions): string;
+
+// @public
+export interface MarkdownRendererOptions {
+    multilineMode?: "full" | "inline";
+    spacingMode?: "tight" | "relaxed";
+}
 
 // @public
 export type MarkdownStyle = "primary" | "secondary";
@@ -183,6 +215,7 @@ export const registry: ComponentRegistry;
 export interface RenderContext {
     colorLevel: 0 | 1 | 2 | 3;
     isTTY: boolean;
+    markdownOptions?: MarkdownRendererOptions;
     renderMode: RenderMode;
     style: StyleFunctions;
     theme?: TuiTheme;
@@ -190,7 +223,7 @@ export interface RenderContext {
 }
 
 // @public
-export type RenderMode = "ansi" | "markdown";
+export type RenderMode = "ansi" | "markdown" | "grayscale";
 
 // @public
 export interface RenderResult {
