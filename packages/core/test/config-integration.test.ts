@@ -34,10 +34,7 @@ describe("config integration", () => {
       configPath,
       `
 render:
-  defaultMode: markdown
-  agents:
-    test-agent:
-      mode: grayscale
+  defaultMode: grayscale
 terminal:
   width: 100
   colorLevel: 2
@@ -48,19 +45,10 @@ terminal:
     const config = loadConfig(tempDir);
     expect(config).not.toBeNull();
 
-    // In a real application, you would:
-    // 1. Load the config
-    // 2. Extract the relevant settings
-    // 3. Pass them to createRenderContext
-
-    // Get agent-specific config if available
-    const agentConfig = config?.render?.agents?.["test-agent"];
-
-    // Use the config to create a render context
+    // The recommended approach is to pass the loaded config via userConfig option
+    // createRenderContext handles type conversions internally
     const ctx = createRenderContext({
-      width: config?.terminal?.width,
-      renderMode: agentConfig?.mode ?? config?.render?.defaultMode,
-      markdownOptions: agentConfig?.markdownOptions,
+      ...(config !== null && { userConfig: config }),
     });
 
     // Verify the config was applied

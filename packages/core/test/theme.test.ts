@@ -227,7 +227,7 @@ describe("Theme Presets", () => {
 
       // Rapidly switch between themes
       for (let i = 0; i < 10; i++) {
-        const preset = presets[i % presets.length];
+        const preset = presets[i % presets.length]!;
         const theme = getThemePreset(preset);
         const output = theme.semantic.success("test");
 
