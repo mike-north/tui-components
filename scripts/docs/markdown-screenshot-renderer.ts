@@ -7,15 +7,60 @@
  *
  * Features:
  * - White/light background
- * - Monospace font
+ * - JetBrains Mono font (embedded for consistent box-drawing characters)
  * - Backtick highlighting with tan/yellow background
  * - Visual representation of │ anchor characters
  */
 
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/**
+ * Load font file and convert to base64 data URI
+ */
+function loadFontAsBase64(filename: string): string {
+  const fontPath = path.join(__dirname, "fonts", filename);
+  const fontData = fs.readFileSync(fontPath);
+  return `data:font/woff2;base64,${fontData.toString("base64")}`;
+}
+
+// Load fonts at module initialization
+const jetBrainsMonoRegular = loadFontAsBase64("JetBrainsMono-Regular.woff2");
+const jetBrainsMonoBold = loadFontAsBase64("JetBrainsMono-Bold.woff2");
+
+/**
+ * Generate @font-face declarations with embedded fonts
+ */
+function getFontFaceDeclarations(): string {
+  return `
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('${jetBrainsMonoRegular}') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('${jetBrainsMonoBold}') format('woff2');
+  }`;
+}
+
 /**
  * CSS styles for markdown rendering
  */
-const MARKDOWN_STYLES = `
+function getMarkdownStyles(): string {
+  return `
+  ${getFontFaceDeclarations()}
+
   * {
     margin: 0;
     padding: 0;
@@ -25,7 +70,7 @@ const MARKDOWN_STYLES = `
   body {
     background: #ffffff;
     color: #1a1a1a;
-    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'DejaVu Sans Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
     line-height: 1.5;
     padding: 16px;
@@ -36,6 +81,7 @@ const MARKDOWN_STYLES = `
     display: inline-block;
     white-space: pre;
     margin: 0;
+    font-family: 'JetBrains Mono', monospace;
     font-variant-ligatures: none;
     letter-spacing: 0;
     font-feature-settings: "liga" 0;
@@ -67,6 +113,7 @@ const MARKDOWN_STYLES = `
     color: #cc6600;
   }
 `;
+}
 
 /**
  * Escape HTML special characters
@@ -157,7 +204,7 @@ export function renderMarkdownToHtml(markdownText: string): string {
   <meta charset="UTF-8">
   <title>Markdown TUI Preview</title>
   <style>
-${MARKDOWN_STYLES}
+${getMarkdownStyles()}
   </style>
 </head>
 <body>
