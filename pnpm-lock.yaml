@@ -187,6 +187,9 @@ importers:
       "@tuicomponents/box":
         specifier: workspace:*
         version: link:../box
+      "@tuicomponents/callout":
+        specifier: workspace:*
+        version: link:../callout
       "@tuicomponents/chart":
         specifier: workspace:*
         version: link:../chart
@@ -205,6 +208,9 @@ importers:
       "@tuicomponents/keyvalue":
         specifier: workspace:*
         version: link:../keyvalue
+      "@tuicomponents/layout":
+        specifier: workspace:*
+        version: link:../layout
       "@tuicomponents/list":
         specifier: workspace:*
         version: link:../list
@@ -455,6 +461,9 @@ importers:
       "@tuicomponents/chart":
         specifier: workspace:*
         version: link:../chart
+      "@tuicomponents/cli":
+        specifier: workspace:*
+        version: link:../cli
       "@tuicomponents/core":
         specifier: workspace:*
         version: link:../core

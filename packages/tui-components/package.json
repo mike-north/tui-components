@@ -3,6 +3,9 @@
   "version": "0.2.1",
   "description": "Terminal UI components for beautiful CLI output",
   "type": "module",
+  "bin": {
+    "tui-components": "./dist/bin.js"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -192,6 +195,7 @@
     "@types/node": "^22.0.0"
   },
   "dependencies": {
+    "@tuicomponents/cli": "workspace:*",
     "@tuicomponents/core": "workspace:*",
     "@tuicomponents/box": "workspace:*",
     "@tuicomponents/chart": "workspace:*",
