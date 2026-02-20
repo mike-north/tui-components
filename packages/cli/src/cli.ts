@@ -12,11 +12,13 @@ import {
 
 // Import components to register them with the registry
 import "@tuicomponents/box";
+import "@tuicomponents/callout";
 import "@tuicomponents/chart";
 import "@tuicomponents/diff";
 import "@tuicomponents/gauge";
 import "@tuicomponents/graph";
 import "@tuicomponents/keyvalue";
+import "@tuicomponents/layout";
 import "@tuicomponents/list";
 import "@tuicomponents/progress";
 import "@tuicomponents/sparkline";

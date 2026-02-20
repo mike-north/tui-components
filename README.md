@@ -42,7 +42,7 @@ Create data visualizations with multiple chart types: bar, line, scatter, pie, d
 
 ## Features
 
-- **11 component types**: chart, table, tree, list, progress, gauge, sparkline, diff, keyvalue, graph, box
+- **14 component types**: chart, table, tree, list, progress, gauge, sparkline, diff, keyvalue, graph, box, callout, vertical-layout, horizontal-layout
 - **Dual rendering modes**: ANSI (colored terminal) and Markdown (for AI assistants)
 - **TypeScript-first**: Full type safety with Zod schema validation
 - **Minimal runtime dependencies**: Designed to stay lightweight and fast
@@ -125,6 +125,8 @@ const context = createRenderContext({ renderMode: "markdown" });
 | [@tuicomponents/keyvalue](packages/keyvalue)   | Aligned key-value pairs                        |
 | [@tuicomponents/graph](packages/graph)         | DAG visualization (git log style)              |
 | [@tuicomponents/box](packages/box)             | Bordered containers with titles                |
+| [@tuicomponents/callout](packages/callout)     | Semantic alert boxes (tip, warning, error)     |
+| [@tuicomponents/layout](packages/layout)       | Vertical and horizontal layout composition     |
 | [@tuicomponents/core](packages/core)           | Shared utilities and registry                  |
 | [@tuicomponents/cli](packages/cli)             | Command-line tool for rendering                |
 
@@ -134,19 +136,19 @@ Render components directly from the command line:
 
 ```bash
 # Using npx
-npx @tuicomponents/cli tui render chart --json '{"type":"bar","series":[{"name":"Data","data":[{"x":"A","y":10},{"x":"B","y":20}]}]}'
+npx tui-components render chart --json '{"type":"bar","series":[{"name":"Data","data":[{"x":"A","y":10},{"x":"B","y":20}]}]}'
 
 # List available components
-npx @tuicomponents/cli tui list
+npx tui-components list
 
 # View component schema
-npx @tuicomponents/cli tui schema chart
+npx tui-components schema chart
 ```
 
 If installed globally or in a project:
 
 ```bash
-tui render chart --json '{"type":"bar","series":[{"name":"Data","data":[{"x":"A","y":10},{"x":"B","y":20}]}]}'
+tui-components render chart --json '{"type":"bar","series":[{"name":"Data","data":[{"x":"A","y":10},{"x":"B","y":20}]}]}'
 ```
 
 ## License
