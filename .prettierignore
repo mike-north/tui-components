@@ -5,5 +5,8 @@
 **/dist/
 **/temp/
 
+# Lockfiles
+pnpm-lock.yaml
+
 # Dependencies
 **/node_modules/
